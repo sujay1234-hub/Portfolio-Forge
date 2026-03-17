@@ -910,39 +910,50 @@ function showSuccessScreen(orderId){
 const CASHFREE_API_URL='https://portfolioforge-backend.onrender.com/create-order';
 const CASHFREE_VERIFY_URL='https://your-backend.vercel.app/verify-payment';
 
-async function initiateCashfreePayment(orderId,total,orderData){
-  const btn=document.getElementById('submitBtn');
-  btn.disabled=true;
-  document.getElementById('submitBtnText').textContent='Redirecting to payment…';
-  try{
-    const res=await fetch(CASHFREE_API_URL,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        order_id:orderId,order_amount:total,
-        customer_details:{
-          customer_id:'cust_'+Date.now(),
-          customer_email:orderData.email,
-          customer_phone:orderData.phone,
-          customer_name:orderData.name,
-        },
-        order_meta:{return_url:window.location.href+'?payment=success&order_id='+orderId+'&cf_order_id={cf_order_id}'},
+async function initiateCashfreePayment(orderId, total, orderData) {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  document.getElementById('submitBtnText').textContent = 'Redirecting to payment…';
+
+  try {
+    const res = await fetch(CASHFREE_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+
+      // ✅ FIXED BODY (IMPORTANT)
+      body: JSON.stringify({
+        amount: total
       })
     });
-    const data=await res.json();
-    if(!data.payment_session_id) throw new Error(data.message||'Failed to create payment session');
-    orderData.cashfreeSessionId=data.payment_session_id;
-    orderData.cfOrderId=data.cf_order_id||'';
-    localStorage.setItem('pf_order',JSON.stringify(orderData));
-    const cashfree=Cashfree({mode:'production'});
-    cashfree.checkout({paymentSessionId:data.payment_session_id,redirectTarget:'_self'});
-  }catch(err){
-    console.error('Cashfree error:',err);
-    btn.disabled=false;
-    document.getElementById('submitBtnText').textContent='Place Order & Pay via Cashfree →';
+
+    const data = await res.json();
+    console.log("Backend response:", data);
+
+    if (!data.payment_session_id) {
+      throw new Error(data.message || 'Failed to create payment session');
+    }
+
+    // Optional: store order info
+    orderData.cashfreeSessionId = data.payment_session_id;
+    localStorage.setItem('pf_order', JSON.stringify(orderData));
+
+    // ✅ Cashfree init
+    const cashfree = Cashfree({ mode: 'production' }); // or 'sandbox' if testing
+
+    cashfree.checkout({
+      paymentSessionId: data.payment_session_id,
+      redirectTarget: "_self"
+    });
+
+  } catch (err) {
+    console.error('Cashfree error:', err);
+
+    btn.disabled = false;
+    document.getElementById('submitBtnText').textContent = 'Place Order & Pay via Cashfree →';
+
     showPaymentError(err.message);
   }
 }
-
 /* ── HANDLE CASHFREE RETURN ── */
 async function checkCashfreeReturn(){
   const params=new URLSearchParams(window.location.search);
