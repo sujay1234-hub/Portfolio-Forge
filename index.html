@@ -98,15 +98,24 @@ a { color: inherit; text-decoration: none; }
 ═══════════════════════════════════════════ */
 #loader {
   position: fixed; inset: 0; background: var(--bg); z-index: 9000;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.75rem;
-  transition: opacity .6s, visibility .6s;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem;
+  transition: opacity .5s, visibility .5s;
 }
 #loader.gone { opacity: 0; visibility: hidden; }
-.loader-logo { font-family: var(--font-display); font-size: 2.8rem; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
+.loader-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--teal), #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; box-shadow: 0 0 32px rgba(0,245,200,.3);
+  animation: loaderPulse 2s ease-in-out infinite;
+}
+@keyframes loaderPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+.loader-logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
 .loader-logo span { color: var(--teal); }
-.loader-bar-wrap { width: 180px; height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; }
-.loader-bar { height: 100%; width: 0%; background: var(--teal); animation: loadBar 1.8s ease forwards; }
-.loader-pct { font-family: var(--font-mono); font-size: .72rem; color: var(--text3); }
+.loader-tagline { font-size: .72rem; color: var(--text3); font-weight: 400; letter-spacing: .04em; }
+.loader-bar-wrap { width: 140px; height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; }
+.loader-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--teal), #8b5cf6); animation: loadBar 1.6s ease forwards; }
+.loader-pct { font-family: var(--font-mono); font-size: .65rem; color: var(--text3); }
 @keyframes loadBar { 0%{width:0} 60%{width:72%} 100%{width:100%} }
 
 /* ═══════════════════════════════════════════
@@ -125,7 +134,7 @@ body::after {
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 400;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 5vw; height: 66px;
+  padding: 0 4vw; height: 58px;
   background: rgba(6,8,16,.88);
   backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid var(--border);
@@ -161,8 +170,8 @@ nav {
 @media (max-width: 860px) { .nav-links { display: none; } .ham-btn { display: flex; } }
 
 .mob-menu {
-  position: fixed; inset: 0; top: 66px; background: var(--bg); z-index: 300;
-  display: none; flex-direction: column; padding: 1.5rem 5vw;
+  position: fixed; inset: 0; top: 58px; background: var(--bg); z-index: 300;
+  display: none; flex-direction: column; padding: 1.25rem 5vw;
   border-top: 1px solid var(--border);
 }
 .mob-menu.show { display: flex; }
@@ -195,13 +204,13 @@ nav {
    WHATSAPP FAB
 ═══════════════════════════════════════════ */
 .wa-fab {
-  position: fixed; bottom: 88px; right: 2rem; z-index: 300;
-  width: 52px; height: 52px; border-radius: 50%; background: #25d366;
+  position: fixed; bottom: 80px; right: 1.5rem; z-index: 300;
+  width: 50px; height: 50px; border-radius: 50%; background: #25d366;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 4px 20px rgba(37,211,102,.4); transition: transform .2s;
 }
 .wa-fab:hover { transform: scale(1.1); }
-.wa-fab svg { width: 26px; height: 26px; fill: #fff; }
+.wa-fab svg { width: 24px; height: 24px; fill: #fff; }
 .wa-pulse {
   position: absolute; inset: -4px; border-radius: 50%;
   border: 2px solid #25d366; opacity: 0;
@@ -213,7 +222,7 @@ nav {
    HERO
 ═══════════════════════════════════════════ */
 .hero {
-  min-height: 100vh; padding: 100px 5vw 4rem;
+  min-height: 100svh; padding: 80px 5vw 3rem;
   display: flex; flex-direction: column; justify-content: center;
   position: relative; overflow: hidden;
 }
@@ -238,7 +247,8 @@ nav {
   display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
   max-width: 1200px;
 }
-@media (max-width: 860px) { .hero-inner { grid-template-columns: 1fr; gap: 3rem; } }
+@media (max-width: 860px) { .hero-inner { grid-template-columns: 1fr; gap: 2rem; } }
+@media (max-width: 480px) { .hero-inner { gap: 1.5rem; } }
 
 .hero-left {}
 .hero-eyebrow {
@@ -256,8 +266,8 @@ nav {
 
 h1.hero-headline {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 4.5vw, 4.8rem);
-  line-height: .93; letter-spacing: -.03em;
+  font-size: clamp(1.85rem, 6vw, 4.8rem);
+  line-height: .95; letter-spacing: -.03em;
   color: var(--text); font-weight: 800;
 }
 h1.hero-headline .accent { color: var(--teal); display: inline-block; }
@@ -409,7 +419,7 @@ h1.hero-headline .outline { -webkit-text-stroke: 1.5px var(--text2); color: tran
 /* ═══════════════════════════════════════════
    SECTION COMMONS
 ═══════════════════════════════════════════ */
-.sec { padding: 6.5rem 5vw; }
+.sec { padding: 4rem 5vw; }
 .sec-tag {
   font-family: var(--font-mono); font-size: .68rem; color: var(--teal);
   letter-spacing: .16em; text-transform: uppercase; margin-bottom: .8rem;
@@ -418,7 +428,7 @@ h1.hero-headline .outline { -webkit-text-stroke: 1.5px var(--text2); color: tran
 .sec-tag::before { content: '//'; opacity: .4; }
 .sec-h {
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 4.5vw, 4.5rem);
+  font-size: clamp(1.7rem, 5vw, 4.5rem);
   letter-spacing: -.025em; line-height: .95; color: var(--text); font-weight: 800;
 }
 .sec-h .g { color: var(--teal); }
@@ -440,7 +450,7 @@ h1.hero-headline .outline { -webkit-text-stroke: 1.5px var(--text2); color: tran
 .offer-sec {
   background: var(--bg2); border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  padding: 6rem 5vw; position: relative; overflow: hidden;
+  padding: 4rem 5vw; position: relative; overflow: hidden;
 }
 .offer-sec::before {
   content: '';
@@ -469,9 +479,9 @@ h1.hero-headline .outline { -webkit-text-stroke: 1.5px var(--text2); color: tran
 }
 .offer-headline {
   font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(2.5rem, 5vw, 5.2rem);
-  letter-spacing: -.03em; line-height: .88;
-  color: var(--text); margin-bottom: 1.5rem;
+  font-size: clamp(1.9rem, 5.5vw, 5.2rem);
+  letter-spacing: -.03em; line-height: .9;
+  color: var(--text); margin-bottom: 1.2rem;
 }
 .offer-headline .price-tag { color: var(--teal); }
 .offer-headline .crossed {
@@ -597,8 +607,8 @@ h1.hero-headline .outline { -webkit-text-stroke: 1.5px var(--text2); color: tran
    EXAMPLES SECTION
 ═══════════════════════════════════════════ */
 .examples-sec { background: var(--bg); border-bottom: 1px solid var(--border); }
-.examples-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; margin-top: 3rem; }
-@media (max-width: 900px) { .examples-grid { grid-template-columns: 1fr; } }
+.examples-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; margin-top: 2.5rem; }
+@media (max-width: 900px) { .examples-grid { grid-template-columns: 1fr; gap: 1.25rem; } }
 
 .ex-card {
   position: relative; background: rgba(19,23,41,.7);
@@ -666,7 +676,7 @@ h1.hero-headline .outline { -webkit-text-stroke: 1.5px var(--text2); color: tran
 
 .pricing-header {
   display: flex; align-items: flex-end; justify-content: space-between;
-  flex-wrap: wrap; gap: 1.5rem; margin-bottom: 3.5rem;
+  flex-wrap: wrap; gap: 1.25rem; margin-bottom: 2.5rem;
 }
 .delivery-badge {
   display: inline-flex; align-items: center; gap: .5rem;
@@ -680,7 +690,7 @@ h1.hero-headline .outline { -webkit-text-stroke: 1.5px var(--text2); color: tran
 }
 
 .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; align-items: start; }
-@media (max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; max-width: 440px; } }
+@media (max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; } }
 
 /* ── Base card ── */
 .pc {
@@ -958,6 +968,88 @@ footer {
 .footer-copy { font-size: .77rem; color: var(--text3); }
 .footer-copy a { color: var(--teal); }
 .footer-mono { font-family: var(--font-mono); font-size: .68rem; color: var(--text3); opacity: .4; }
+/* ═══════════════════════════════════════════
+   MOBILE-FIRST OPTIMIZATIONS
+═══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  /* Nav */
+  nav { padding: 0 4vw; height: 58px; }
+  .nav-logo { font-size: 1.25rem; }
+  .nav-cta { padding: .42rem 1rem; font-size: .75rem; }
+
+  /* Hero */
+  .hero { padding: 70px 5vw 2.5rem; min-height: 100svh; }
+  .hero-inner { gap: 2rem; }
+  h1.hero-headline { font-size: clamp(1.7rem, 8.5vw, 2.4rem); line-height: 1; }
+  .hero-sub { font-size: .85rem; margin-top: 1rem; line-height: 1.7; }
+  .hero-ctas { gap: .75rem; margin-top: 1.5rem; }
+  .btn-primary { padding: .8rem 1.6rem; font-size: .85rem; }
+  .btn-ghost { padding: .8rem 1.4rem; font-size: .85rem; }
+  .hero-mini-stats { gap: 1.2rem; margin-top: 1.25rem; }
+  .hms-num { font-size: .95rem; }
+  .hms-item { font-size: .72rem; }
+  .trust-row { gap: 1rem; margin-top: 1rem; }
+  .trust-badge { font-size: .7rem; }
+
+  /* Benefit cards on mobile — more compact */
+  .hero-benefit-card { padding: 1rem 1.2rem; gap: 1rem; }
+  .hb-icon { width: 38px; height: 38px; font-size: 1.1rem; }
+  .hb-title { font-size: .95rem; }
+  .hb-desc { font-size: .74rem; }
+
+  /* Eyebrow */
+  .hero-eyebrow { font-size: .6rem; padding: .28rem .85rem; margin-bottom: 1rem; }
+
+  /* Sections */
+  .sec { padding: 3rem 5vw; }
+  .offer-sec { padding: 3rem 5vw; }
+
+  /* Offer */
+  .offer-grid { gap: 2rem; }
+  .offer-card-head { padding: 1.5rem 1.5rem 1.25rem; }
+  .offer-card-body { padding: 1.25rem 1.5rem; }
+  .offer-price-new { font-size: 3rem; }
+  .offer-price-old { font-size: 1.2rem; }
+  .cd-num { font-size: 1.6rem; min-width: 44px; padding: .35rem .55rem; }
+  .countdown-digits { gap: .4rem; }
+  .cd-sep { font-size: 1.4rem; }
+
+  /* Examples grid */
+  .examples-grid { grid-template-columns: 1fr; gap: 1.25rem; margin-top: 2rem; }
+
+  /* Pricing */
+  .pricing-grid { gap: 1rem; }
+
+  /* Footer */
+  footer { padding: 2.5rem 5vw 2rem; }
+
+  /* Sticky bar */
+  #sticky-bar { padding: .7rem 4vw; }
+  .sticky-text { font-size: .8rem; }
+  .sticky-cta { padding: .42rem 1.1rem; font-size: .78rem; }
+
+  /* WA FAB */
+  .wa-fab { bottom: 76px; right: 1.25rem; width: 46px; height: 46px; }
+  .wa-fab svg { width: 22px; height: 22px; }
+
+  /* Ticker */
+  .ticker { padding: .6rem 0; }
+  .ticker-track span { font-size: .65rem; }
+
+  /* Mob menu */
+  .mob-menu a { font-size: .92rem; padding: .9rem 0; }
+
+  /* Sec headings */
+  .sec-h { font-size: clamp(1.6rem, 7.5vw, 2.2rem); }
+  .sec-sub { font-size: .85rem; }
+  .offer-headline { font-size: clamp(1.75rem, 8vw, 2.5rem); }
+}
+
+@media (max-width: 360px) {
+  h1.hero-headline { font-size: 1.55rem; }
+  .btn-primary, .btn-ghost { padding: .75rem 1.2rem; font-size: .8rem; }
+  .offer-price-new { font-size: 2.6rem; }
+}
 </style>
 </head>
 <body>
@@ -968,7 +1060,9 @@ footer {
 
 <!-- LOADER -->
 <div id="loader">
+  <div class="loader-icon">⚡</div>
   <div class="loader-logo">Portfolio<span>Forge</span></div>
+  <div class="loader-tagline">Building your future</div>
   <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
   <div class="loader-pct" id="loaderPct">0%</div>
 </div>
@@ -1003,7 +1097,7 @@ footer {
 </nav>
 
 <!-- PAYMENT SUCCESS BANNER (shown only after confirmed payment) -->
-<div id="paySuccessBanner" style="display:none;position:fixed;top:66px;left:0;right:0;z-index:399;background:linear-gradient(90deg,rgba(0,245,200,.12),rgba(139,92,246,.08));border-bottom:1px solid rgba(0,245,200,.25);padding:.7rem 5vw;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+<div id="paySuccessBanner" style="display:none;position:fixed;top:58px;left:0;right:0;z-index:399;background:linear-gradient(90deg,rgba(0,245,200,.12),rgba(139,92,246,.08));border-bottom:1px solid rgba(0,245,200,.25);padding:.7rem 5vw;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
   <div style="display:flex;align-items:center;gap:.75rem">
     <span style="font-size:1.1rem">🎉</span>
     <div>
@@ -1550,7 +1644,7 @@ document.querySelectorAll('[data-count]').forEach(el => {
       const bannerOid = document.getElementById('bannerOrderId');
       if (bannerOid) bannerOid.textContent = order.id ? ('Order ' + order.id + ' · In progress') : 'Order in progress';
       const hero = document.querySelector('.hero');
-      if (hero) hero.style.paddingTop = '148px';
+      if (hero) hero.style.paddingTop = '132px';
     }
   }
 })();
