@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>Place Your Order — PortfolioForge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -28,7 +28,7 @@
   --border:#d8ddf0; --border2:#c8cfe8;
   --text:#0a0d1e; --text2:#4a527a; --text3:#8890b4;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:16px;line-height:1.6;overflow-x:hidden;transition:background .3s,color .3s;min-height:100vh}
 ::selection{background:var(--teal);color:#000}
@@ -248,6 +248,11 @@ nav{
   font-size:.81rem;color:var(--text2);line-height:1.7;
 }
 .pay-info.show{display:block}
+
+/* Demo payment card */
+.pay-demo:hover{border-color:rgba(245,158,11,.5)!important;background:rgba(245,158,11,.08)!important}
+.pay-demo.selected{border-color:var(--amber)!important;background:rgba(245,158,11,.12)!important}
+.pay-demo.selected .pay-label{color:var(--amber)!important}
 .pay-info strong{color:var(--text)}
 
 /* ════════════════════════════════
@@ -320,12 +325,84 @@ nav{
 .confetti-piece{position:absolute;width:8px;height:8px;border-radius:1px;animation:confettiFall linear forwards}
 @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 
+/* ═══ MOBILE — COMPREHENSIVE ═══ */
 @media(max-width:700px){
-  .order-hero{padding:72px 4vw 0}
-  .order-main{padding:2rem 4vw 5rem}
-  .form-body{padding:1.25rem}
-  .sc-body{padding:.9rem 1.1rem}
-  .payment-grid{grid-template-columns:1fr}
+  .order-hero { padding: 68px 4vw 0; }
+  .order-hero h1 { font-size: clamp(1.8rem, 8vw, 2.8rem); }
+  .order-hero p { font-size: .84rem; margin-bottom: 1.1rem; }
+  .order-hero-inner { padding: 1.25rem 0 1rem; }
+  .trust-strip { gap: 1rem; }
+  .ts-item { font-size: .72rem; }
+
+  .order-main { padding: 1.5rem 4vw 5rem; gap: 1.5rem; }
+  .form-body { padding: 1.1rem; }
+  .form-card-head { padding: 1.25rem 1.25rem 1rem; }
+  .fch-title { font-size: 1.25rem; }
+
+  .sc-body { padding: .85rem 1rem; }
+  .summary-plan-price { font-size: 1.8rem; }
+  .summary-total-line .sl-val { font-size: 1.3rem; }
+
+  /* Payment grid */
+  .payment-grid { grid-template-columns: 1fr; gap: .55rem; }
+  .pay-option { flex-direction: row; align-items: center; gap: .75rem; padding: .75rem 1rem; }
+  .pay-icon { font-size: 1.2rem; }
+
+  /* Plan cards */
+  .plan-grid { grid-template-columns: 1fr; }
+  .plan-option { padding: .8rem 1rem; }
+  .plan-price { font-size: 1.2rem; }
+
+  /* Addon grid */
+  .addon-grid { grid-template-columns: repeat(3,1fr); gap: .45rem; }
+  .addon-toggle { padding: .55rem .4rem; }
+  .addon-icon { font-size: 1rem; }
+  .addon-label span { font-size: .68rem; }
+  .addon-label small { font-size: .58rem; }
+  .addon-price { font-size: .62rem; }
+
+  /* Steps */
+  .step-progress { padding: 0 3vw; }
+  .step-circle { width: 30px; height: 30px; font-size: .62rem; }
+  .step-label { font-size: .52rem; }
+
+  /* Buttons */
+  .btn-next { padding: .68rem 1.5rem; font-size: .82rem; }
+  .btn-back { padding: .62rem 1.2rem; font-size: .8rem; }
+  .btn-submit { padding: .82rem 1.75rem; font-size: .88rem; }
+  .form-nav { padding-top: .85rem; gap: .5rem; }
+
+  /* Success screen */
+  .success-title { font-size: 1.8rem; }
+  .success-sub { font-size: .83rem; }
+  .success-btn-primary, .success-btn-ghost { padding: .78rem 1.5rem; font-size: .83rem; }
+
+  /* Sidebar order summary — show compact on mobile below form */
+  .order-sidebar { display: flex; flex-direction: row; flex-wrap: wrap; gap: .75rem; }
+  .sidebar-card { flex: 1; min-width: 240px; }
+  .sc-head { padding: .85rem 1rem; }
+  .sc-head-title { font-size: .9rem; }
+}
+
+@media(max-width:480px){
+  .addon-grid { grid-template-columns: repeat(2,1fr); }
+  .plan-price { font-size: 1.1rem; }
+  .field-row { grid-template-columns: 1fr; }
+
+  /* Nav */
+  nav { height: 56px; padding: 0 4vw; }
+  .nav-logo { font-size: 1.2rem; }
+  .nav-back span { display: none; } /* hide text, keep arrow */
+  .nav-back { gap: .3rem; font-size: .78rem; }
+
+  /* Demo payment grid 2-col on small phones */
+  .payment-grid { grid-template-columns: 1fr 1fr; }
+  .pay-option { flex-direction: column; padding: .75rem .5rem; gap: .35rem; text-align: center; }
+  .pay-sub { font-size: .6rem; }
+
+  /* countdown */
+  .cd-num { font-size: 1.5rem; min-width: 40px; }
+  .cd-sep { font-size: 1.2rem; }
 }
 </style>
 </head>
@@ -342,7 +419,7 @@ nav{
     Back to home
   </a>
   <div class="nav-right">
-    <a href="dashboard.html" style="font-size:.76rem;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:.3rem;transition:color .2s,border-color .2s;padding:.38rem .72rem;border:1px solid var(--border2);border-radius:6px" onmouseover="this.style.color='var(--teal)';this.style.borderColor='var(--teal)'" onmouseout="this.style.color='var(--text2)';this.style.borderColor='var(--border2)'">📊 Dashboard</a>
+    <a href="track-order.html" style="font-size:.76rem;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:.3rem;transition:color .2s,border-color .2s;padding:.38rem .72rem;border:1px solid var(--border2);border-radius:6px" onmouseover="this.style.color='var(--teal)';this.style.borderColor='var(--teal)'" onmouseout="this.style.color='var(--text2)';this.style.borderColor='var(--border2)'">📊Track Order</a>
     <div class="secure-badge">
       <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
       Secure
@@ -412,7 +489,7 @@ nav{
         <div class="field-row">
           <div class="field-group">
             <div class="field-label">Phone / WhatsApp <span class="req">*</span></div>
-            <input class="field-input" id="f-phone" type="tel" placeholder="+91 99999 99999" autocomplete="tel"/>
+            <input class="field-input" id="f-phone" type="tel" placeholder="+91 96128 71060" autocomplete="tel"/>
             <div class="field-error" id="e-phone">Please enter your phone number</div>
           </div>
           <div class="field-group">
@@ -570,7 +647,14 @@ nav{
 
         <!-- Payment -->
         <div class="form-section-title">Payment Method</div>
-        <div class="payment-grid">
+
+        <!-- DEMO BANNER -->
+        <div style="background:rgba(245,158,11,.08);border:1.5px dashed rgba(245,158,11,.4);border-radius:var(--r);padding:.7rem 1rem;margin-bottom:.85rem;display:flex;align-items:center;gap:.65rem;font-size:.8rem;color:var(--amber)">
+          <span style="font-size:1.1rem;flex-shrink:0">🧪</span>
+          <div><strong style="color:var(--text)">Test Mode Available</strong> — Select "Demo Test" below to simulate a real payment without any charges. Toggle success/failure to test both flows.</div>
+        </div>
+
+        <div class="payment-grid" style="grid-template-columns:repeat(2,1fr)">
           <label class="pay-option" onclick="selectPayment(this,'cashfree')">
             <input type="radio" name="payment" value="cashfree"/>
             <div class="pay-icon">💳</div>
@@ -589,6 +673,13 @@ nav{
             <div class="pay-label">Bank Transfer</div>
             <div class="pay-sub">NEFT · IMPS</div>
           </label>
+          <label class="pay-option pay-demo" onclick="selectPayment(this,'demo')" id="demoPayOption" style="position:relative;border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.06)">
+            <input type="radio" name="payment" value="demo"/>
+            <div class="pay-icon">🧪</div>
+            <div class="pay-label" style="color:var(--amber)">Demo Test</div>
+            <div class="pay-sub">Simulate payment — no charge</div>
+            <div style="position:absolute;top:-8px;right:8px;background:var(--amber);color:#000;font-family:var(--font-m);font-size:.5rem;font-weight:800;padding:.13rem .48rem;border-radius:100px;letter-spacing:.08em;text-transform:uppercase">TEST</div>
+          </label>
         </div>
         <div class="field-error" id="e-payment" style="margin-bottom:.75rem">Please select a payment method</div>
 
@@ -600,6 +691,25 @@ nav{
         </div>
         <div id="pay-info-bank" class="pay-info">
           <strong>🏦 Bank Transfer</strong> — Bank details shared on WhatsApp/Email after order confirmation. Send the exact amount and share the UTR with us.
+        </div>
+
+        <!-- DEMO PAYMENT SIMULATOR -->
+        <div id="pay-info-demo" class="pay-info" style="border-color:rgba(245,158,11,.3)">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+            <span style="font-size:1rem">🧪</span>
+            <strong style="color:var(--text)">Demo Test Payment</strong>
+            <span style="font-family:var(--font-m);font-size:.55rem;background:rgba(245,158,11,.15);color:var(--amber);padding:.1rem .45rem;border-radius:100px;letter-spacing:.06em">NO REAL CHARGE</span>
+          </div>
+          <div style="margin-bottom:.75rem;font-size:.8rem;color:var(--text2)">Choose which outcome to simulate:</div>
+          <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+            <label style="display:flex;align-items:center;gap:.5rem;padding:.55rem .9rem;background:rgba(0,245,200,.08);border:1.5px solid rgba(0,245,200,.3);border-radius:var(--r);cursor:pointer;font-size:.82rem;font-weight:600;color:var(--teal);transition:all .2s" id="demoSuccessLabel">
+              <input type="radio" name="demoOutcome" value="success" checked style="accent-color:var(--teal);width:14px;height:14px"/> ✅ Payment Success
+            </label>
+            <label style="display:flex;align-items:center;gap:.5rem;padding:.55rem .9rem;background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.25);border-radius:var(--r);cursor:pointer;font-size:.82rem;font-weight:600;color:var(--red);transition:all .2s" id="demoFailLabel">
+              <input type="radio" name="demoOutcome" value="failure" style="accent-color:var(--red);width:14px;height:14px"/> ❌ Payment Failed
+            </label>
+          </div>
+          <div style="margin-top:.65rem;font-size:.74rem;color:var(--t3)">⚡ Simulates the full Cashfree return flow — success shows live tracker, failure shows retry screen.</div>
         </div>
 
         <div class="terms-check" id="termsBox" onclick="toggleTerms()">
@@ -615,17 +725,62 @@ nav{
         </div>
       </div>
 
-      <!-- SUCCESS STATE -->
+      <!-- SUCCESS STATE — payment-aware -->
       <div class="success-screen" id="successScreen">
-        <div class="success-icon">🎉</div>
-        <div class="success-title">Order Placed!</div>
-        <p class="success-sub">We've received your order and will reach out within <strong>30 minutes</strong> on WhatsApp/Email to confirm payment and kick things off.</p>
-        <div class="success-order-id" id="orderId">Order ID: PF-2026-XXXX</div>
-        <div class="success-next">
-          <a href="dashboard.html" class="success-btn-primary">📊 Track Your Order →</a>
-          <a href="https://wa.me/919999999999" target="_blank" class="success-btn-ghost">💬 WhatsApp Us</a>
-          <a href="index.html" class="success-btn-ghost">← Back to Home</a>
+
+        <!-- PAID STATE -->
+        <div id="ss-paid" style="display:none">
+          <div class="success-icon" style="background:rgba(0,245,200,.12);border-color:rgba(0,245,200,.35)">🎉</div>
+          <div class="success-title" style="color:var(--teal)">Payment Confirmed!</div>
+          <p class="success-sub">Your payment went through successfully. We've started working on your portfolio — delivery in <strong>24 hours</strong>.</p>
+          <div class="success-order-id" id="orderId">Order ID: PF-2026-XXXX</div>
+          <div style="background:var(--teal-dim);border:1px solid rgba(0,245,200,.25);border-radius:var(--r);padding:.85rem 1.1rem;margin-bottom:1.5rem;font-size:.83rem;color:var(--text2);text-align:left;line-height:1.7">
+            ✅ <strong style="color:var(--text)">What happens next:</strong> Your portfolio build starts now. You'll get a preview in ~12h and final delivery within 24h. Track live below.
+          </div>
+          <div class="success-next">
+            <a href="track-order.html" class="success-btn-primary">📊 Track Your Order Live →</a>
+            <a href="https://wa.me/919999999999" target="_blank" class="success-btn-ghost">💬 WhatsApp Us</a>
+          </div>
         </div>
+
+        <!-- PENDING / MANUAL PAYMENT STATE -->
+        <div id="ss-pending" style="display:none">
+          <div class="success-icon" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3)">📋</div>
+          <div class="success-title" style="color:var(--amber)">Order Received!</div>
+          <p class="success-sub">Your order is confirmed. We'll send payment details to your WhatsApp/Email within <strong>30 minutes</strong>. Work starts after payment.</p>
+          <div class="success-order-id" id="orderId2">Order ID: PF-2026-XXXX</div>
+          <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--r);padding:.85rem 1.1rem;margin-bottom:1.5rem;font-size:.83rem;color:var(--text2);text-align:left;line-height:1.7">
+            ⏳ <strong style="color:var(--text)">Awaiting payment:</strong> Complete payment to unlock your live order tracker and start your build.
+          </div>
+          <div class="success-next">
+            <a href="https://wa.me/919999999999" target="_blank" class="success-btn-primary">💬 Send Payment on WhatsApp →</a>
+            <a href="index.html" class="success-btn-ghost">← Back to Home</a>
+          </div>
+        </div>
+
+        <!-- FAILED STATE -->
+        <div id="ss-failed" style="display:none">
+          <div class="success-icon" style="background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3)">❌</div>
+          <div class="success-title" style="color:var(--red)">Payment Failed</div>
+          <p class="success-sub">Your payment could not be processed. No amount was charged. Please try again or contact us on WhatsApp.</p>
+          <div class="success-order-id" id="orderId3">Order ID: PF-2026-XXXX</div>
+          <div class="success-next">
+            <button class="success-btn-primary" onclick="retryPayment()" style="background:var(--red);border:none;cursor:pointer">🔄 Try Again</button>
+            <a href="https://wa.me/919999999999" target="_blank" class="success-btn-ghost">💬 Contact Support</a>
+            <a href="index.html" class="success-btn-ghost">← Back to Home</a>
+          </div>
+        </div>
+
+        <!-- VERIFYING STATE (shown briefly while checking) -->
+        <div id="ss-verifying">
+          <div class="success-icon" style="background:var(--teal-dim);border-color:rgba(0,245,200,.2)">⏳</div>
+          <div class="success-title">Verifying Payment…</div>
+          <p class="success-sub">Please wait a moment while we confirm your payment with Cashfree.</p>
+          <div style="width:160px;height:3px;background:var(--border);border-radius:2px;margin:.5rem auto 0;overflow:hidden">
+            <div style="height:100%;background:var(--teal);border-radius:2px;animation:verifySlide 1.5s ease-in-out infinite"></div>
+          </div>
+        </div>
+        <style>@keyframes verifySlide{0%{width:0;margin-left:0}50%{width:100%;margin-left:0}100%{width:0;margin-left:100%}}</style>
       </div>
 
     </div>
@@ -812,15 +967,18 @@ function toggleAddon(el,price,label){
 }
 
 /* ── PAYMENT SELECT ── */
-function selectPayment(el,val){
-  document.querySelectorAll('.pay-option').forEach(p=>p.classList.remove('selected'));
+function selectPayment(el, val) {
+  document.querySelectorAll('.pay-option').forEach(p => p.classList.remove('selected'));
   el.classList.add('selected');
-  selectedPayment=val;
-  ['cashfree','upi','bank'].forEach(v=>{
-    document.getElementById('pay-info-'+v).className='pay-info'+(v===val?' show':'');
+  selectedPayment = val;
+  ['cashfree','upi','bank','demo'].forEach(v => {
+    const el = document.getElementById('pay-info-'+v);
+    if (el) el.className = 'pay-info' + (v === val ? ' show' : '');
   });
-  const btn=document.getElementById('submitBtnText');
-  btn.textContent=val==='cashfree'?'Place Order & Pay via Cashfree →':'Place Order →';
+  const btn = document.getElementById('submitBtnText');
+  if (val === 'cashfree') btn.textContent = 'Place Order & Pay via Cashfree →';
+  else if (val === 'demo') btn.textContent = '🧪 Run Demo Payment →';
+  else btn.textContent = 'Place Order →';
 }
 
 /* ── TERMS ── */
@@ -894,99 +1052,147 @@ function pushToAdminOrders(orderData){
   }catch(e){console.warn('Admin sync failed',e);}
 }
 
-/* ── SHOW SUCCESS ── */
-function showSuccessScreen(orderId){
-  document.getElementById('formCard').style.display='none';
-  document.getElementById('orderSidebar').style.display='none';
-  const sp=document.getElementById('successScreen');
-  sp.style.display='block';
-  document.getElementById('orderId').textContent='Order ID: '+orderId;
-  launchConfetti();
-  const waMsg=encodeURIComponent('Hi! My Order ID is '+orderId+'. I just placed an order for '+selectedPlan.name+'.');
-  document.querySelector('.success-btn-ghost[href*="wa.me"]').href='https://wa.me/919999999999?text='+waMsg;
+/* ── SHOW SUCCESS SCREEN (payment-aware) ── */
+function showSuccessScreen(orderId, payState) {
+  // payState: 'paid' | 'pending' | 'failed'
+  document.getElementById('formCard').style.display = 'none';
+  const sidebar = document.getElementById('orderSidebar');
+  if (sidebar) sidebar.style.display = 'none';
+  const sp = document.getElementById('successScreen');
+  sp.style.display = 'block';
+
+  // Hide all states first
+  ['ss-paid','ss-pending','ss-failed','ss-verifying'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+
+  if (payState === 'paid') {
+    document.getElementById('ss-paid').style.display = 'block';
+    document.getElementById('orderId').textContent = 'Order ID: ' + orderId;
+    launchConfetti();
+    localStorage.setItem('pf_payment_status', 'paid');
+  } else if (payState === 'failed') {
+    document.getElementById('ss-failed').style.display = 'block';
+    document.getElementById('orderId3').textContent = 'Order ID: ' + orderId;
+    localStorage.setItem('pf_payment_status', 'failed');
+  } else {
+    // pending / manual payment
+    document.getElementById('ss-pending').style.display = 'block';
+    document.getElementById('orderId2').textContent = 'Order ID: ' + orderId;
+    localStorage.setItem('pf_payment_status', 'pending');
+  }
+}
+
+function retryPayment() {
+  document.getElementById('successScreen').style.display = 'none';
+  document.getElementById('formCard').style.display = 'block';
+  const sidebar = document.getElementById('orderSidebar');
+  if (sidebar) sidebar.style.display = 'flex';
 }
 
 /* ── CASHFREE PAYMENT ── */
-const CASHFREE_API_URL='https://portfolioforge-backend.onrender.com/create-order';
-const CASHFREE_VERIFY_URL='https://your-backend.vercel.app/verify-payment';
+const CASHFREE_API_URL = 'https://portfolioforge-backend.onrender.com/create-order';
+const CASHFREE_VERIFY_URL = 'https://portfolioforge-backend.onrender.com/verify-payment';
 
 async function initiateCashfreePayment(orderId, total, orderData) {
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
   document.getElementById('submitBtnText').textContent = 'Redirecting to payment…';
-
   try {
     const res = await fetch(CASHFREE_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-
-      // ✅ FIXED BODY (IMPORTANT)
-      body: JSON.stringify({
-        amount: total
-      })
+      body: JSON.stringify({ amount: total, order_id: orderId })
     });
-
     const data = await res.json();
-    console.log("Backend response:", data);
-
-    if (!data.payment_session_id) {
-      throw new Error(data.message || 'Failed to create payment session');
-    }
-
-    // Optional: store order info
+    if (!data.payment_session_id) throw new Error(data.message || 'Failed to create payment session');
     orderData.cashfreeSessionId = data.payment_session_id;
+    orderData.cfOrderId = data.cf_order_id || '';
     localStorage.setItem('pf_order', JSON.stringify(orderData));
-
-    // ✅ Cashfree init
-    const cashfree = Cashfree({ mode: 'production' }); // or 'sandbox' if testing
-
-    cashfree.checkout({
-      paymentSessionId: data.payment_session_id,
-      redirectTarget: "_self"
-    });
-
+    const cashfree = Cashfree({ mode: 'production' });
+    cashfree.checkout({ paymentSessionId: data.payment_session_id, redirectTarget: '_self' });
   } catch (err) {
     console.error('Cashfree error:', err);
-
     btn.disabled = false;
     document.getElementById('submitBtnText').textContent = 'Place Order & Pay via Cashfree →';
-
     showPaymentError(err.message);
   }
 }
+
 /* ── HANDLE CASHFREE RETURN ── */
-async function checkCashfreeReturn(){
-  const params=new URLSearchParams(window.location.search);
-  if(params.get('payment')!=='success') return;
-  const orderId=params.get('order_id')||'';
-  const cfOrderId=params.get('cf_order_id')||orderId;
-  const savedOrder=JSON.parse(localStorage.getItem('pf_order')||'null');
-  window.history.replaceState({},document.title,window.location.pathname);
-  document.getElementById('formCard').style.display='none';
-  const sidebar=document.getElementById('orderSidebar');
-  if(sidebar) sidebar.style.display='none';
-  document.getElementById('successScreen').style.display='block';
-  document.getElementById('orderId').textContent='Verifying payment…';
-  try{
-    const vRes=await fetch(CASHFREE_VERIFY_URL+'/'+cfOrderId);
-    const vData=await vRes.json();
-    const paid=vData.order_status==='PAID';
-    if(paid&&savedOrder){
-      savedOrder.status='Payment Confirmed';savedOrder.paymentStatus='paid';savedOrder.progress=30;
-      savedOrder.cfOrderId=cfOrderId;
-      if(savedOrder.timeline&&savedOrder.timeline[1]){savedOrder.timeline[1].done=true;savedOrder.timeline[1].time=new Date().toLocaleString();}
-      localStorage.setItem('pf_order',JSON.stringify(savedOrder));
+async function checkCashfreeReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has('payment') && !params.has('order_id')) return;
+
+  const cfStatus   = params.get('payment');     // 'success' or 'failure' from Cashfree
+  const orderId    = params.get('order_id') || '';
+  const cfOrderId  = params.get('cf_order_id') || orderId;
+  const savedOrder = JSON.parse(localStorage.getItem('pf_order') || 'null');
+
+  // Clean URL immediately
+  window.history.replaceState({}, document.title, window.location.pathname);
+
+  // Show form hidden, success screen visible with verifying state
+  document.getElementById('formCard').style.display = 'none';
+  const sidebar = document.getElementById('orderSidebar');
+  if (sidebar) sidebar.style.display = 'none';
+  const sp = document.getElementById('successScreen');
+  sp.style.display = 'block';
+  ['ss-paid','ss-pending','ss-failed'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.getElementById('ss-verifying').style.display = 'block';
+
+  // If Cashfree already told us it failed, no need to verify
+  if (cfStatus === 'FAILED' || cfStatus === 'failure') {
+    document.getElementById('ss-verifying').style.display = 'none';
+    if (savedOrder) {
+      savedOrder.status = 'Payment Failed';
+      savedOrder.paymentStatus = 'failed';
+      localStorage.setItem('pf_order', JSON.stringify(savedOrder));
       pushToAdminOrders(savedOrder);
-      document.getElementById('orderId').textContent='Order ID: '+(savedOrder.id||orderId);
-      launchConfetti();
-    } else {
-      document.getElementById('orderId').textContent='Order ID: '+(savedOrder?.id||orderId);
-      showPaymentError('Payment status: '+(vData.order_status||'unknown')+'. If you were charged, please WhatsApp us with your Order ID.');
     }
-  }catch(e){
-    if(savedOrder){savedOrder.status='Payment Pending Verification';localStorage.setItem('pf_order',JSON.stringify(savedOrder));pushToAdminOrders(savedOrder);}
-    document.getElementById('orderId').textContent='Order ID: '+(savedOrder?.id||orderId);
-    launchConfetti();
+    showSuccessScreen(savedOrder?.id || orderId, 'failed');
+    return;
+  }
+
+  // Verify with backend
+  try {
+    const vRes  = await fetch(CASHFREE_VERIFY_URL + '/' + cfOrderId);
+    const vData = await vRes.json();
+    const paid  = vData.order_status === 'PAID';
+
+    document.getElementById('ss-verifying').style.display = 'none';
+
+    if (paid && savedOrder) {
+      savedOrder.status        = 'Payment Confirmed';
+      savedOrder.paymentStatus = 'paid';
+      savedOrder.progress      = 30;
+      savedOrder.cfOrderId     = cfOrderId;
+      if (savedOrder.timeline && savedOrder.timeline[1]) {
+        savedOrder.timeline[1].done = true;
+        savedOrder.timeline[1].time = new Date().toLocaleString();
+      }
+      localStorage.setItem('pf_order', JSON.stringify(savedOrder));
+      pushToAdminOrders(savedOrder);
+      showSuccessScreen(savedOrder.id || orderId, 'paid');
+    } else if (!paid) {
+      if (savedOrder) {
+        savedOrder.status = 'Payment Failed';
+        savedOrder.paymentStatus = 'failed';
+        localStorage.setItem('pf_order', JSON.stringify(savedOrder));
+        pushToAdminOrders(savedOrder);
+      }
+      showSuccessScreen(savedOrder?.id || orderId, 'failed');
+    }
+  } catch (e) {
+    // Network error during verify — optimistic pending
+    document.getElementById('ss-verifying').style.display = 'none';
+    if (savedOrder) {
+      savedOrder.status = 'Payment Pending Verification';
+      savedOrder.paymentStatus = 'pending_verify';
+      localStorage.setItem('pf_order', JSON.stringify(savedOrder));
+      pushToAdminOrders(savedOrder);
+    }
+    showSuccessScreen(savedOrder?.id || orderId, 'pending');
   }
 }
 
@@ -1010,11 +1216,157 @@ async function submitOrder(){
   const orderData=buildOrderData(orderId);
   localStorage.setItem('pf_order',JSON.stringify(orderData));
   pushToAdminOrders(orderData);
+
   if(selectedPayment==='cashfree'){
     await initiateCashfreePayment(orderId,total,orderData);
+  } else if(selectedPayment==='demo'){
+    // ── DEMO PAYMENT SIMULATOR ──
+    runDemoPayment(orderId, orderData);
   } else {
-    showSuccessScreen(orderId);
+    // Manual payment — show pending state
+    showSuccessScreen(orderId, 'pending');
   }
+}
+
+/* ── DEMO PAYMENT SIMULATOR ── */
+function runDemoPayment(orderId, orderData) {
+  const outcome = document.querySelector('input[name="demoOutcome"]:checked')?.value || 'success';
+
+  // Hide form, show full-screen gateway simulator
+  document.getElementById('formCard').style.display = 'none';
+  const sidebar = document.getElementById('orderSidebar');
+  if(sidebar) sidebar.style.display = 'none';
+
+  // Inject the fake payment gateway overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'demoGateway';
+  overlay.innerHTML = `
+    <style>
+    #demoGateway {
+      position:fixed;inset:0;z-index:9999;
+      background:#0a0c14;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      font-family:'DM Sans',sans-serif;padding:2rem;
+      animation:dgFadeIn .4s ease;
+    }
+    @keyframes dgFadeIn{from{opacity:0}to{opacity:1}}
+    .dg-card{
+      width:100%;max-width:400px;
+      background:#131729;border:1px solid #252d4a;border-radius:20px;
+      overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.7);
+    }
+    .dg-card::before{content:'';display:block;height:2px;background:linear-gradient(90deg,#00f5c8,#8b5cf6)}
+    .dg-head{padding:1.5rem 2rem 1.25rem;border-bottom:1px solid #1e2440;text-align:center}
+    .dg-logo{font-size:1rem;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:.25rem}
+    .dg-logo span{color:#00f5c8}
+    .dg-secure{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:#4a5278;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;gap:.3rem}
+    .dg-secure::before{content:'🔒'}
+    .dg-body{padding:1.75rem 2rem}
+    .dg-amount{text-align:center;margin-bottom:1.5rem}
+    .dg-amt-label{font-size:.72rem;color:#8892b8;margin-bottom:.2rem}
+    .dg-amt-val{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:#00f5c8;letter-spacing:-.03em;line-height:1}
+    .dg-merchant{font-size:.76rem;color:#8892b8;margin-top:.25rem}
+    .dg-steps{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+    .dg-step{display:flex;align-items:center;gap:.75rem;padding:.7rem .9rem;border-radius:10px;font-size:.82rem;font-weight:500;transition:all .4s ease}
+    .dg-step.waiting{background:rgba(255,255,255,.03);color:#4a5278}
+    .dg-step.active{background:rgba(0,245,200,.08);color:#00f5c8;border:1px solid rgba(0,245,200,.2)}
+    .dg-step.done{background:rgba(0,245,200,.06);color:#f0f2fa;border:1px solid transparent}
+    .dg-step.fail{background:rgba(239,68,68,.08);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+    .dg-step-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0}
+    .dg-step.waiting .dg-step-icon{background:#1a1f35}
+    .dg-step.active  .dg-step-icon{background:rgba(0,245,200,.15);animation:dgSpin 1s linear infinite}
+    .dg-step.done    .dg-step-icon{background:rgba(0,245,200,.15)}
+    .dg-step.fail    .dg-step-icon{background:rgba(239,68,68,.15)}
+    @keyframes dgSpin{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.85);opacity:.5}}
+    .dg-progress{height:3px;background:#1e2440;border-radius:2px;overflow:hidden;margin-bottom:1rem}
+    .dg-prog-fill{height:100%;background:linear-gradient(90deg,#00f5c8,#8b5cf6);border-radius:2px;width:0%;transition:width .6s ease}
+    .dg-footer{padding:.85rem 2rem;border-top:1px solid #1e2440;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#4a5278;letter-spacing:.05em}
+    </style>
+    <div class="dg-card">
+      <div class="dg-head">
+        <div class="dg-logo">Portfolio<span>Forge</span> × Cashfree</div>
+        <div class="dg-secure">256-bit SSL · Secured by Cashfree</div>
+      </div>
+      <div class="dg-body">
+        <div class="dg-amount">
+          <div class="dg-amt-label">Amount to Pay</div>
+          <div class="dg-amt-val">₹<span id="dgAmt">0</span></div>
+          <div class="dg-merchant">PortfolioForge · ${orderId}</div>
+        </div>
+        <div class="dg-progress"><div class="dg-prog-fill" id="dgProg"></div></div>
+        <div class="dg-steps">
+          <div class="dg-step waiting" id="dgS1"><div class="dg-step-icon">1</div><span>Connecting to Cashfree gateway</span></div>
+          <div class="dg-step waiting" id="dgS2"><div class="dg-step-icon">2</div><span>Authenticating UPI session</span></div>
+          <div class="dg-step waiting" id="dgS3"><div class="dg-step-icon">3</div><span>Processing payment</span></div>
+          <div class="dg-step waiting" id="dgS4"><div class="dg-step-icon">4</div><span id="dgS4text">Verifying with bank</span></div>
+        </div>
+      </div>
+      <div class="dg-footer">DEMO MODE — NO REAL TRANSACTION · TEST ONLY</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Set amount
+  const total = selectedPlan.price + addons.reduce((s,a)=>s+a.price,0);
+  document.getElementById('dgAmt').textContent = total;
+
+  // Animate through steps
+  const steps = ['dgS1','dgS2','dgS3','dgS4'];
+  const delays = [600, 1400, 2400, 3400];
+  const progSteps = ['18%','42%','72%','95%'];
+
+  steps.forEach((stepId, i) => {
+    setTimeout(() => {
+      // Mark previous done
+      if(i > 0) {
+        const prev = document.getElementById(steps[i-1]);
+        if(prev) { prev.className='dg-step done'; prev.querySelector('.dg-step-icon').textContent='✓'; }
+      }
+      // Activate current
+      const cur = document.getElementById(stepId);
+      if(cur) { cur.className='dg-step active'; cur.querySelector('.dg-step-icon').textContent='⟳'; }
+      const prog = document.getElementById('dgProg');
+      if(prog) prog.style.width = progSteps[i];
+    }, delays[i]);
+  });
+
+  // Final resolution
+  setTimeout(() => {
+    const lastStep = document.getElementById('dgS4');
+    const prog = document.getElementById('dgProg');
+
+    if(outcome === 'success') {
+      if(lastStep) { lastStep.className='dg-step done'; lastStep.querySelector('.dg-step-icon').textContent='✓'; lastStep.querySelector('span').textContent='Payment verified ✅'; }
+      if(prog) prog.style.width='100%';
+      // Update order data as paid
+      orderData.status        = 'Payment Confirmed';
+      orderData.paymentStatus = 'paid';
+      orderData.progress      = 30;
+      if(orderData.timeline && orderData.timeline[1]){
+        orderData.timeline[1].done = true;
+        orderData.timeline[1].time = new Date().toLocaleString();
+      }
+      localStorage.setItem('pf_order', JSON.stringify(orderData));
+      pushToAdminOrders(orderData);
+      setTimeout(() => {
+        overlay.style.transition='opacity .5s';
+        overlay.style.opacity='0';
+        setTimeout(()=>{ overlay.remove(); showSuccessScreen(orderId, 'paid'); }, 500);
+      }, 800);
+    } else {
+      if(lastStep) { lastStep.className='dg-step fail'; lastStep.querySelector('.dg-step-icon').textContent='✗'; lastStep.querySelector('span').textContent='Payment declined by bank ❌'; }
+      if(prog) { prog.style.width='85%'; document.getElementById('dgProg').style.background='#ef4444'; }
+      orderData.status        = 'Payment Failed';
+      orderData.paymentStatus = 'failed';
+      localStorage.setItem('pf_order', JSON.stringify(orderData));
+      pushToAdminOrders(orderData);
+      setTimeout(() => {
+        overlay.style.transition='opacity .5s';
+        overlay.style.opacity='0';
+        setTimeout(()=>{ overlay.remove(); showSuccessScreen(orderId, 'failed'); }, 500);
+      }, 1200);
+    }
+  }, 4400);
 }
 
 /* ── CONFETTI ── */

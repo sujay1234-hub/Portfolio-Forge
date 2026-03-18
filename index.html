@@ -984,7 +984,9 @@ footer {
   </div>
   <div class="nav-actions">
     <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
-    <a href="submit-order.html" class="nav-cta">Get Started →</a>
+    <!-- Show Track Order only if payment confirmed -->
+    <a href="track-order.html" class="nav-cta nav-track-btn" id="navTrackBtn" style="display:none;background:rgba(0,245,200,.15);border:1px solid rgba(0,245,200,.3);color:var(--teal)">📊 Track Order</a>
+    <a href="submit-order.html" class="nav-cta" id="navOrderBtn">Get Started →</a>
     <button class="ham-btn" id="hamBtn" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -997,7 +999,20 @@ footer {
   <a href="#examples" onclick="closeMob()">Examples</a>
   <a href="#pricing" onclick="closeMob()">Pricing</a>
   <a href="submit-order.html" style="color:var(--teal);font-weight:700;margin-top:.5rem">Get Started →</a>
+  <a href="track-order.html" id="mobTrackBtn" style="display:none;color:var(--teal);font-weight:700;border:1px solid rgba(0,245,200,.3);border-radius:var(--r);padding:.6rem 1rem;text-align:center;margin-top:.5rem">📊 Track Your Order →</a>
 </nav>
+
+<!-- PAYMENT SUCCESS BANNER (shown only after confirmed payment) -->
+<div id="paySuccessBanner" style="display:none;position:fixed;top:66px;left:0;right:0;z-index:399;background:linear-gradient(90deg,rgba(0,245,200,.12),rgba(139,92,246,.08));border-bottom:1px solid rgba(0,245,200,.25);padding:.7rem 5vw;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <span style="font-size:1.1rem">🎉</span>
+    <div>
+      <div style="font-size:.82rem;font-weight:700;color:var(--teal)">Payment Confirmed! Your portfolio is being built.</div>
+      <div style="font-family:var(--font-mono);font-size:.62rem;color:var(--text3)" id="bannerOrderId">Order in progress</div>
+    </div>
+  </div>
+  <a href="track-order.html" style="display:inline-flex;align-items:center;gap:.4rem;background:var(--teal);color:#000;padding:.42rem 1.15rem;border-radius:var(--r);font-size:.78rem;font-weight:700;white-space:nowrap;flex-shrink:0">📊 Track Live →</a>
+</div>
 
 <!-- STICKY BAR -->
 <div id="sticky-bar">
@@ -1209,7 +1224,7 @@ footer {
         <div class="ex-plan-tag">// Starter Plan · ₹49–₹179</div>
         <div class="ex-title">Clean Portfolio</div>
         <div class="ex-desc">Simple, professional HTML digital portfolio — responsive, fast, and ready to impress.</div>
-        <a href="https://sujay1234-hub.github.io/S-bastien-Lempens/" target="_blank" rel="noopener" class="ex-btn basic-btn">View Demo <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+        <a href="https://sujay1234-hub.github.io/Sujay-Banarjee/" target="_blank" rel="noopener" class="ex-btn basic-btn">View Demo <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>
       </div>
     </div>
 
@@ -1418,28 +1433,36 @@ footer {
    JAVASCRIPT
 ═══════════════════════════════════════════ -->
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+document.addEventListener('DOMContentLoaded', function() {
+
 /* ── CURSOR ── */
 const dot = document.getElementById('dot');
 const ring = document.getElementById('ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
-(function animateRing() {
-  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-  requestAnimationFrame(animateRing);
-})();
+if (dot && ring) {
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+  });
+  (function animateRing() {
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  })();
+}
 
 /* ── LOADER ── */
 (function() {
-  const bar = document.querySelector('.loader-bar');
   const pct = document.getElementById('loaderPct');
+  const loaderEl = document.getElementById('loader');
+  if (!loaderEl) return;
   let p = 0;
   const t = setInterval(() => {
     p = Math.min(p + Math.random() * 12, 100);
     if (pct) pct.textContent = Math.round(p) + '%';
     if (p >= 100) {
       clearInterval(t);
-      setTimeout(() => document.getElementById('loader').classList.add('gone'), 300);
+      setTimeout(() => loaderEl.classList.add('gone'), 300);
     }
   }, 100);
 })();
@@ -1447,23 +1470,29 @@ document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; do
 /* ── THEME ── */
 const themeBtn = document.getElementById('themeBtn');
 const html = document.documentElement;
-themeBtn.addEventListener('click', () => {
-  const isLight = html.getAttribute('data-theme') === 'light';
-  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
-  themeBtn.textContent = isLight ? '🌙' : '☀️';
-});
+if (themeBtn) {
+  themeBtn.addEventListener('click', () => {
+    const isLight = html.getAttribute('data-theme') === 'light';
+    html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    themeBtn.textContent = isLight ? '🌙' : '☀️';
+  });
+}
 
 /* ── MOBILE MENU ── */
 const hamBtn = document.getElementById('hamBtn');
 const mobMenu = document.getElementById('mobMenu');
-hamBtn.addEventListener('click', () => mobMenu.classList.toggle('show'));
-function closeMob() { mobMenu.classList.remove('show'); }
+if (hamBtn && mobMenu) {
+  hamBtn.addEventListener('click', () => mobMenu.classList.toggle('show'));
+}
+function closeMob() { if (mobMenu) mobMenu.classList.remove('show'); }
 
 /* ── STICKY BAR ── */
 const stickyBar = document.getElementById('sticky-bar');
-window.addEventListener('scroll', () => {
-  stickyBar.classList.toggle('visible', window.scrollY > 400);
-});
+if (stickyBar) {
+  window.addEventListener('scroll', () => {
+    stickyBar.classList.toggle('visible', window.scrollY > 400);
+  });
+}
 
 /* ── SCROLL REVEAL ── */
 const rvObs = new IntersectionObserver(entries => entries.forEach(e => {
@@ -1490,7 +1519,43 @@ document.querySelectorAll('[data-count]').forEach(el => {
   el.textContent = '0' + suffix;
 });
 
-/* ── BENEFIT CARDS active state ── */
+/* ── PAYMENT STATUS DETECTION ── */
+(function checkPaymentStatus() {
+  const status = localStorage.getItem('pf_payment_status');
+  const order  = JSON.parse(localStorage.getItem('pf_order') || 'null');
+
+  // Check if order is completed — if so, clean up everything
+  const orderDone = order && (
+    (order.status || '').toLowerCase().includes('complet') ||
+    (order.status || '').toLowerCase().includes('deliver') ||
+    (order.timeline || []).every(t => t.done)
+  );
+
+  if (orderDone) {
+    localStorage.removeItem('pf_payment_status');
+    return;
+  }
+
+  if (status === 'paid' && order) {
+    const trackBtn = document.getElementById('navTrackBtn');
+    const orderBtn = document.getElementById('navOrderBtn');
+    const mobTrack = document.getElementById('mobTrackBtn');
+    const banner   = document.getElementById('paySuccessBanner');
+
+    if (trackBtn)  trackBtn.style.display = 'flex';
+    if (orderBtn)  orderBtn.style.display = 'none';
+    if (mobTrack)  mobTrack.style.display = 'block';
+    if (banner) {
+      banner.style.display = 'flex';
+      const bannerOid = document.getElementById('bannerOrderId');
+      if (bannerOid) bannerOid.textContent = order.id ? ('Order ' + order.id + ' · In progress') : 'Order in progress';
+      const hero = document.querySelector('.hero');
+      if (hero) hero.style.paddingTop = '148px';
+    }
+  }
+})();
+
+/* ── BENEFIT CARD HOVER ── */
 document.querySelectorAll('.hero-benefit-card').forEach(card => {
   card.addEventListener('mouseenter', () => {
     document.querySelectorAll('.hero-benefit-card').forEach(c => c.classList.remove('active'));
@@ -1498,8 +1563,6 @@ document.querySelectorAll('.hero-benefit-card').forEach(card => {
   });
   card.addEventListener('mouseleave', () => card.classList.remove('active'));
 });
-
-
 
 /* ── COUNTDOWN TIMER ── */
 (function() {
@@ -1520,6 +1583,8 @@ document.querySelectorAll('.hero-benefit-card').forEach(card => {
   }
   tick(); setInterval(tick, 1000);
 })();
+
+}); // end DOMContentLoaded
 </script>
 
 </body>

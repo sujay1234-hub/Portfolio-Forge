@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>Track Your Order — PortfolioForge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -37,7 +37,7 @@
   --text:#0a0d1e; --t2:#4a527a; --t3:#8890b4;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html { scroll-behavior: smooth; }
 body {
   background: var(--bg); color: var(--text);
@@ -138,9 +138,18 @@ nav {
 .s-pending  { background: rgba(245,158,11,.12); color: var(--amber); border: 1px solid rgba(245,158,11,.25); }
 .s-building { background: var(--tdim); color: var(--teal); border: 1px solid rgba(0,245,200,.25); }
 .s-preview  { background: rgba(139,92,246,.12); color: var(--violet); border: 1px solid rgba(139,92,246,.25); }
-.s-done     { background: var(--tdim); color: var(--teal); border: 1px solid rgba(0,245,200,.25); }
+.s-done     { background: rgba(34,197,94,.12); color: #22c55e; border: 1px solid rgba(34,197,94,.3); }
 .s-pending .dot { animation: blink 1.4s ease infinite; }
+.s-done .dot    { background: #22c55e; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+/* completed order header gets a green top bar */
+.order-header.completed::before {
+  background: linear-gradient(90deg, #22c55e, var(--teal));
+}
+.order-header.completed {
+  box-shadow: 0 0 0 1px rgba(34,197,94,.15), 0 8px 32px rgba(34,197,94,.06);
+}
 
 /* progress bar */
 .prog-wrap { margin-bottom: 1.25rem; }
@@ -384,10 +393,98 @@ nav {
 .fade-in { animation: fadeUp .35s ease both; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
 
+/* ═══ MOBILE — COMPREHENSIVE ═══ */
 @media (max-width: 600px) {
-  .page-wrap { padding: 1.5rem 4vw 5rem; }
-  .oh-body { padding: 1.25rem; }
-  .chat-messages { height: 240px; }
+  .page-wrap { padding: 1.25rem 4vw 5rem; }
+  .oh-body { padding: 1.1rem 1.15rem; }
+  .chat-messages { height: 220px; }
+}
+
+@media (max-width: 520px) {
+  .guarantee-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  /* Nav */
+  nav { height: 56px; padding: 0 4vw; }
+  .nav-logo { font-size: 1.2rem; }
+  .nav-wa { padding: .35rem .85rem; font-size: .72rem; }
+  .nav-wa svg { display: none; }
+  .theme-btn { width: 30px; height: 30px; font-size: .78rem; }
+
+  /* Payment banner */
+  #payBanner { flex-direction: column; align-items: flex-start; padding: .65rem 4vw; gap: .5rem; }
+  #payBanner a { width: 100%; text-align: center; justify-content: center; }
+
+  /* Order header */
+  .oh-name { font-size: 1.2rem; }
+  .oh-id { font-size: .58rem; }
+  .oh-top { margin-bottom: .9rem; }
+  .status-pill { font-size: .56rem; padding: .25rem .7rem; }
+
+  /* Progress */
+  .prog-label { font-size: .55rem; }
+  .prog-pct { font-size: .65rem; }
+
+  /* Steps row — compact on phone */
+  .steps-row { gap: 0; }
+  .step-circle { width: 22px; height: 22px; font-size: .5rem; }
+  .step-label { font-size: .5rem; line-height: 1.2; }
+  .step-node:not(:last-child)::after { top: 11px; }
+
+  /* Action cards — single column */
+  .actions-grid { grid-template-columns: 1fr; gap: .65rem; }
+  .action-card { padding: 1rem 1.1rem; }
+  .ac-icon { width: 38px; height: 38px; font-size: 1.1rem; }
+  .ac-title { font-size: .9rem; }
+  .ac-desc { font-size: .72rem; }
+
+  /* Chat */
+  .chat-head { padding: .85rem 1.1rem; }
+  .chat-name { font-size: .84rem; }
+  .chat-messages { height: 200px; padding: .85rem 1rem; }
+  .msg-bubble { font-size: .78rem; padding: .5rem .75rem; }
+  .chat-input-row { padding: .7rem .9rem; gap: .5rem; }
+  .chat-input { font-size: .82rem; padding: .58rem .8rem; }
+  .chat-send { padding: .58rem 1rem; font-size: .8rem; }
+
+  /* Revision */
+  .rev-head { padding: .85rem 1.1rem; }
+  .rev-body { padding: 1.1rem; }
+  .rev-textarea { font-size: .84rem; min-height: 75px; }
+  .rev-note { font-size: .7rem; }
+
+  /* Details */
+  .det-head { padding: .85rem 1.1rem; }
+  .det-body { padding: 1.1rem; }
+  .det-key, .det-val { font-size: .76rem; }
+
+  /* Guarantees */
+  .guarantee-item { padding: .9rem .85rem; }
+  .gi-icon { font-size: 1.2rem; }
+  .gi-title { font-size: .78rem; }
+  .gi-desc { font-size: .68rem; }
+
+  /* Review card */
+  .review-unlock-card { padding: 1.5rem 1.1rem; }
+  .ruc-title { font-size: 1.1rem; }
+  .ruc-sub { font-size: .8rem; }
+  .star-btn { font-size: 1.5rem; }
+  .ruc-textarea { font-size: .83rem; min-height: 70px; }
+  .ruc-actions { flex-direction: column; gap: .6rem; }
+  .btn-green-solid { width: 100%; justify-content: center; }
+  .ruc-submitted-title { font-size: 1.1rem; }
+  .ruc-submitted-sub { font-size: .8rem; }
+
+  /* Empty state */
+  .empty-icon { font-size: 2.5rem; }
+  .empty-title { font-size: 1.3rem; }
+  .empty-sub { font-size: .83rem; }
+  .btn-teal { padding: .72rem 1.5rem; font-size: .84rem; }
+  .btn-ghost { padding: .7rem 1.5rem; font-size: .82rem; }
+
+  /* Toast */
+  #toast { font-size: .76rem; padding: .55rem 1.2rem; white-space: normal; text-align: center; max-width: 88vw; }
 }
 </style>
 </head>
@@ -406,6 +503,21 @@ nav {
     </a>
   </div>
 </nav>
+
+<!-- PAYMENT SUCCESS BANNER (shown only when payment confirmed) -->
+<div id="payBanner" style="display:none;background:linear-gradient(90deg,rgba(0,245,200,.1),rgba(139,92,246,.07));border-bottom:1px solid rgba(0,245,200,.2);padding:.7rem 5vw;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <span style="font-size:1.2rem">🎉</span>
+    <div>
+      <div style="font-size:.84rem;font-weight:700;color:var(--teal)">Payment Confirmed — Your portfolio build has started!</div>
+      <div style="font-family:var(--fm);font-size:.62rem;color:var(--t3)" id="bannerMeta">Expect a preview in ~12 hours</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:.4rem;font-family:var(--fm);font-size:.6rem;color:var(--teal);letter-spacing:.06em">
+    <span style="width:6px;height:6px;border-radius:50%;background:var(--teal);display:inline-block;animation:blink 1.4s ease infinite"></span>
+    LIVE TRACKING
+  </div>
+</div>
 
 <div class="page-wrap">
 
@@ -570,6 +682,19 @@ document.getElementById('themeBtn').addEventListener('click', () => {
   document.getElementById('themeBtn').textContent = d.dataset.theme === 'dark' ? '🌙' : '☀️';
 });
 
+/* ── PAYMENT BANNER ── */
+function checkAndShowBanner() {
+  const status = localStorage.getItem('pf_payment_status');
+  const o = JSON.parse(localStorage.getItem('pf_order') || 'null');
+  const banner = document.getElementById('payBanner');
+  if (status === 'paid' && o && banner) {
+    banner.style.display = 'flex';
+    const meta = document.getElementById('bannerMeta');
+    if (meta) meta.textContent = (o.id || '') + ' · Placed ' + (o.placedAt ? new Date(o.placedAt).toLocaleDateString('en-IN', {day:'numeric',month:'short'}) : '') + ' · Expect preview in ~12h';
+  }
+}
+checkAndShowBanner();
+
 /* ── LOAD ORDER ── */
 const raw = localStorage.getItem('pf_order');
 const order = raw ? JSON.parse(raw) : null;
@@ -580,11 +705,11 @@ const STEP_ICONS  = ['📋', '💳', '🔨', '👁️', '✅'];
 let msgs = [];
 
 function statusClass(s) {
-  const m = s?.toLowerCase() || '';
-  if (m.includes('paid') || m.includes('confirmed')) return 's-building';
-  if (m.includes('progress') || m.includes('building'))  return 's-building';
+  const m = (s || '').toLowerCase();
+  if (m.includes('complet') || m.includes('deliver') || m.includes('final')) return 's-done';
   if (m.includes('preview'))  return 's-preview';
-  if (m.includes('delivered') || m.includes('complete')) return 's-done';
+  if (m.includes('progress') || m.includes('building') || m.includes('work')) return 's-building';
+  if (m.includes('paid') || m.includes('confirmed') || m.includes('payment confirm')) return 's-building';
   return 's-pending';
 }
 
@@ -622,6 +747,32 @@ function renderDetails() {
   ).join('');
 }
 
+/* ── COMPUTE REAL PROGRESS FROM TIMELINE + STATUS ── */
+function calcProgress(order) {
+  // If status explicitly says completed/delivered, always 100%
+  const s = (order.status || '').toLowerCase();
+  if (s.includes('complet') || s.includes('deliver') || s.includes('final')) return 100;
+
+  // Count done timeline steps → map to %
+  const timeline = order.timeline || [];
+  const totalSteps = timeline.length || 5;
+  const doneSteps  = timeline.filter(t => t.done).length;
+
+  // If ALL steps done, 100%
+  if (doneSteps >= totalSteps) return 100;
+
+  // Map step completion to percentage milestones
+  const milestones = [10, 30, 55, 80, 100];
+  const idx = Math.min(doneSteps, milestones.length - 1);
+  const timelinePct = milestones[idx];
+
+  // Also consider the stored progress (admin may have manually set it)
+  const storedPct = order.progress || 10;
+
+  // Take the higher of the two — never go backwards
+  return Math.max(timelinePct, storedPct);
+}
+
 function populate() {
   if (!order) {
     document.getElementById('emptyState').classList.add('show');
@@ -636,9 +787,16 @@ function populate() {
   pill.className = 'status-pill ' + sc;
   document.getElementById('oh-status-text').textContent = order.status || 'Pending Payment';
 
-  const pct = order.progress || 10;
-  document.getElementById('oh-pct').textContent     = pct + '%';
-  document.getElementById('oh-bar').style.width     = pct + '%';
+  // ✅ Always derive progress from timeline + status, not just stored value
+  const pct = calcProgress(order);
+  document.getElementById('oh-pct').textContent = pct + '%';
+  document.getElementById('oh-bar').style.width = pct + '%';
+
+  // ✅ If completed, green progress bar + header glow
+  if (sc === 's-done') {
+    document.getElementById('oh-bar').style.background = 'linear-gradient(90deg, #22c55e, var(--teal))';
+    document.querySelector('.order-header').classList.add('completed');
+  }
 
   renderSteps(order.timeline);
   renderDetails();
@@ -738,6 +896,47 @@ function toast(msg) {
 
 /* ── INIT ── */
 populate();
+
+/* ── REAL-TIME POLL (every 8s — picks up admin status updates) ── */
+setInterval(() => {
+  const fresh = JSON.parse(localStorage.getItem('pf_order') || 'null');
+  if (!fresh || !order) return;
+
+  // Check if status changed
+  if (fresh.status !== order.status || fresh.progress !== order.progress || fresh.paymentStatus !== order.paymentStatus) {
+    // Reload
+    Object.assign(order, fresh);
+    msgs = fresh.messages || msgs;
+
+    // Re-render status elements
+    document.getElementById('oh-name').textContent = order.plan?.name || 'Your Portfolio';
+    document.getElementById('oh-id').textContent   = 'Order ' + (order.id || '#—');
+    const pill = document.getElementById('oh-status');
+    const sc   = statusClass(order.status);
+    pill.className = 'status-pill ' + sc;
+    document.getElementById('oh-status-text').textContent = order.status || 'Pending';
+    const pct = calcProgress(order);
+    document.getElementById('oh-pct').textContent  = pct + '%';
+    document.getElementById('oh-bar').style.width  = pct + '%';
+    if (sc === 's-done') {
+      document.getElementById('oh-bar').style.background = 'linear-gradient(90deg, #22c55e, var(--teal))';
+      document.querySelector('.order-header').classList.add('completed');
+    }
+    renderSteps(order.timeline);
+    renderDetails();
+
+    // If payment just confirmed, show banner
+    if (order.paymentStatus === 'paid') {
+      localStorage.setItem('pf_payment_status', 'paid');
+      checkAndShowBanner();
+    }
+
+    // If chat is open, re-render messages
+    if (chatOpen) renderMsgs();
+    
+    toast('🔄 Order status updated');
+  }
+}, 8000);
 </script>
 </body>
 </html>
