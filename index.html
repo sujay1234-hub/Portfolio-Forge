@@ -135,10 +135,12 @@ nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 400;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 4vw; height: 58px;
-  background: rgba(6,8,16,.88);
-  backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(6,8,16,.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  transition: background .3s;
+  will-change: transform;
+  transform: translateZ(0);
 }
 [data-theme="light"] nav { background: rgba(244,246,253,.9); }
 .nav-logo {
@@ -175,12 +177,264 @@ nav {
 .ham-btn span { display: block; width: 20px; height: 1.5px; background: var(--text); border-radius: 1px; transition: .3s; }
 @media (max-width: 860px) { .nav-links { display: none; } .ham-btn { display: flex; } }
 
+/* ═══════════════════════════════════════════
+   TERMS & CONDITIONS MODAL (first-visit)
+   — site visible + blurred behind the modal
+═══════════════════════════════════════════ */
+#tnc-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(4,6,14,.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  will-change: opacity;
+  opacity: 0;
+  animation: tncFadeIn .35s ease forwards;
+}
+@keyframes tncFadeIn { to { opacity: 1; } }
+#tnc-overlay.gone { animation: tncFadeOut .3s ease forwards; pointer-events: none; }
+@keyframes tncFadeOut { to { opacity: 0; } }
+
+/* ── Modal card ── */
+.tnc-modal {
+  background: #0d1020;
+  border: 1px solid rgba(0,245,200,.2);
+  border-radius: 18px;
+  width: 100%; max-width: 540px;
+  height: 88vh; max-height: 680px;
+  display: flex; flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0,0,0,.7), 0 0 0 1px rgba(0,245,200,.06);
+  overflow: hidden;
+  will-change: transform;
+  transform: translateZ(0);
+  animation: tncSlideIn .4s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes tncSlideIn {
+  from { transform: translateY(20px) scale(.98); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* top teal accent line — static, no animation */
+.tnc-modal::before {
+  content: '';
+  display: block; height: 2px; flex-shrink: 0;
+  background: linear-gradient(90deg, var(--teal), #8b5cf6, var(--teal));
+}
+
+/* ── Step indicator bar ── */
+.tnc-steps {
+  display: flex; align-items: center; gap: 0;
+  padding: .9rem 1.75rem;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  flex-shrink: 0;
+  background: rgba(255,255,255,.02);
+}
+.tnc-step {
+  display: flex; align-items: center; gap: .5rem;
+  font-family: var(--font-mono); font-size: .62rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: rgba(255,255,255,.25);
+  transition: color .4s;
+  white-space: nowrap;
+}
+.tnc-step.active { color: var(--teal); }
+.tnc-step.done   { color: rgba(0,245,200,.5); }
+.tnc-step-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  border: 1.5px solid rgba(255,255,255,.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .62rem; font-weight: 900;
+  transition: background .4s, border-color .4s, color .4s;
+  flex-shrink: 0;
+}
+.tnc-step.active .tnc-step-num {
+  background: var(--teal); border-color: var(--teal); color: #000;
+}
+.tnc-step.done .tnc-step-num {
+  background: rgba(0,245,200,.12); border-color: rgba(0,245,200,.35); color: var(--teal);
+}
+.tnc-step-connector {
+  flex: 1; height: 1px; margin: 0 .75rem;
+  background: rgba(255,255,255,.08);
+  transition: background .4s;
+}
+.tnc-step-connector.done { background: rgba(0,245,200,.3); }
+
+/* ── Step panels ── */
+.tnc-panel { display: none; flex-direction: column; flex: 1; overflow: hidden; min-height: 0; }
+.tnc-panel.active { display: flex; }
+
+/* ── Step 3: get started celebration ── */
+.tnc-party {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .85rem; padding: 1.75rem 1.75rem 1.5rem; text-align: center; flex: 1;
+  overflow-y: auto;
+}
+.tnc-party-icon {
+  width: 68px; height: 68px; border-radius: 20px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--teal) 0%, #8b5cf6 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 0 32px rgba(0,245,200,.3);
+}
+.tnc-party-title {
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+  letter-spacing: -.03em; color: var(--text); flex-shrink: 0;
+}
+.tnc-party-title em { font-style: normal; color: var(--teal); }
+.tnc-party-sub { font-size: .82rem; color: var(--text2); max-width: 320px; line-height: 1.6; flex-shrink: 0; }
+.tnc-party-pills {
+  display: flex; gap: .45rem; flex-wrap: wrap; justify-content: center; flex-shrink: 0;
+}
+.tnc-party-pill {
+  background: rgba(0,245,200,.08); border: 1px solid rgba(0,245,200,.2);
+  color: var(--teal); font-size: .7rem; font-weight: 600;
+  padding: .25rem .75rem; border-radius: 100px;
+}
+.tnc-enter-btn {
+  background: linear-gradient(135deg, var(--teal) 0%, #00d4aa 100%);
+  color: #000; padding: .8rem 2rem; border-radius: var(--r);
+  font-size: .92rem; font-weight: 800; letter-spacing: .02em;
+  border: none; cursor: pointer; font-family: var(--font-body);
+  box-shadow: 0 0 28px rgba(0,245,200,.4);
+  transition: box-shadow .2s, transform .15s;
+  display: flex; align-items: center; gap: .45rem; flex-shrink: 0;
+  margin-top: .25rem;
+}
+.tnc-enter-btn:hover { box-shadow: 0 0 44px rgba(0,245,200,.6); transform: translateY(-1px); }
+
+/* ── Panel header ── */
+.tnc-head {
+  padding: 1.5rem 1.75rem 1.1rem;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  flex-shrink: 0;
+}
+.tnc-head-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-family: var(--font-mono); font-size: .58rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: .22rem .7rem; border-radius: 100px; margin-bottom: .7rem;
+}
+.tnc-head-badge.red   { background: rgba(239,68,68,.1);  border: 1px solid rgba(239,68,68,.25);  color: #f87171; }
+.tnc-head-badge.teal  { background: rgba(0,245,200,.1);  border: 1px solid rgba(0,245,200,.25);  color: var(--teal); }
+.tnc-head-badge.green { background: rgba(34,197,94,.1);  border: 1px solid rgba(34,197,94,.25);  color: #4ade80; }
+.tnc-head h2 {
+  font-family: var(--font-display); font-size: 1.25rem; font-weight: 800;
+  letter-spacing: -.03em; color: var(--text); margin-bottom: .3rem;
+}
+.tnc-head h2 em { font-style: normal; color: var(--teal); }
+.tnc-head p { font-size: .8rem; color: var(--text2); line-height: 1.55; }
+
+/* ── Scroll progress ── */
+.tnc-progress-wrap { height: 2px; background: rgba(255,255,255,.06); flex-shrink: 0; }
+.tnc-progress-bar  { height: 100%; width: 0; background: linear-gradient(90deg, var(--teal), #8b5cf6); transition: width .12s linear; }
+
+/* ── Scrollable body ── */
+.tnc-body {
+  flex: 1; overflow-y: auto; padding: 1.25rem 1.75rem;
+  scroll-behavior: smooth;
+}
+.tnc-body::-webkit-scrollbar { width: 3px; }
+.tnc-body::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 2px; }
+
+.tnc-sec { margin-bottom: 1.2rem; }
+.tnc-sec h3 {
+  font-family: var(--font-display); font-size: .85rem; font-weight: 700;
+  color: var(--teal); margin-bottom: .4rem;
+}
+.tnc-sec p { font-size: .81rem; color: var(--text2); line-height: 1.65; margin-bottom: .35rem; }
+.tnc-sec strong { color: var(--text); }
+.tnc-sec a { color: var(--teal); border-bottom: 1px solid rgba(0,245,200,.25); }
+.tnc-divider { height: 1px; background: rgba(255,255,255,.06); margin: 1rem 0; }
+
+/* ── Footer / actions ── */
+.tnc-foot {
+  padding: 1.1rem 1.75rem;
+  border-top: 1px solid rgba(255,255,255,.06);
+  flex-shrink: 0;
+  background: rgba(0,0,0,.25);
+}
+.tnc-agree-row {
+  display: flex; align-items: flex-start; gap: .7rem; margin-bottom: .9rem;
+}
+.tnc-cb-wrap { position: relative; flex-shrink: 0; margin-top: 2px; }
+.tnc-cb {
+  width: 17px; height: 17px; border-radius: 4px;
+  border: 1.5px solid rgba(255,255,255,.2); background: rgba(255,255,255,.05);
+  appearance: none; cursor: pointer; transition: .2s;
+}
+.tnc-cb:checked { background: var(--teal); border-color: var(--teal); }
+.tnc-cb-wrap::after {
+  content: '✓'; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-52%); font-size: .6rem; color: #000;
+  font-weight: 900; pointer-events: none; opacity: 0; transition: opacity .15s;
+}
+.tnc-cb-wrap:has(:checked)::after { opacity: 1; }
+.tnc-agree-txt { font-size: .78rem; color: var(--text2); line-height: 1.5; }
+.tnc-agree-txt a { color: var(--teal); }
+
+.tnc-btn-row { display: flex; gap: .6rem; }
+.tnc-btn-primary {
+  flex: 1; background: linear-gradient(135deg, var(--teal), #00d4aa);
+  color: #000; padding: .72rem 1.25rem; border-radius: var(--r);
+  font-size: .86rem; font-weight: 800; letter-spacing: .02em;
+  border: none; cursor: pointer; font-family: var(--font-body);
+  opacity: .35; pointer-events: none;
+  transition: box-shadow .2s, transform .15s, opacity .25s;
+}
+.tnc-btn-primary.on { opacity: 1; pointer-events: auto; }
+.tnc-btn-primary.on:hover { box-shadow: 0 0 28px rgba(0,245,200,.45); transform: translateY(-1px); }
+.tnc-btn-primary.always-on { opacity: 1; pointer-events: auto; }
+.tnc-btn-primary.always-on:hover { box-shadow: 0 0 28px rgba(0,245,200,.45); transform: translateY(-1px); }
+.tnc-btn-ghost {
+  padding: .72rem 1rem; border-radius: var(--r);
+  font-size: .8rem; font-weight: 600; color: var(--text3);
+  background: none; border: 1px solid rgba(255,255,255,.1);
+  cursor: pointer; font-family: var(--font-body);
+  transition: border-color .2s, color .2s;
+}
+.tnc-btn-ghost:hover { border-color: #ef4444; color: #f87171; }
+.tnc-hint {
+  font-size: .68rem; color: rgba(255,255,255,.22);
+  text-align: center; margin-top: .65rem;
+  font-family: var(--font-mono); letter-spacing: .04em;
+  transition: color .4s;
+}
+.tnc-hint.ok { color: var(--teal); }
+
+/* ── Step 2: confirm highlight cards ── */
+.tnc-highlights {
+  display: flex; flex-direction: column; gap: .6rem;
+  padding: 1.25rem 1.75rem;
+}
+.tnc-hl {
+  display: flex; align-items: center; gap: .9rem;
+  background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+  border-radius: 10px; padding: .85rem 1rem;
+}
+.tnc-hl-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: var(--teal-dim); border: 1px solid rgba(0,245,200,.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .95rem; flex-shrink: 0;
+}
+.tnc-hl-text { display: flex; flex-direction: column; gap: .15rem; }
+.tnc-hl-title { font-size: .82rem; font-weight: 700; color: var(--text); }
+.tnc-hl-sub   { font-size: .74rem; color: var(--text2); }
+
+/* ── Mobile menu — smooth slide, no display:none jank ── */
 .mob-menu {
   position: fixed; inset: 0; top: 58px; background: var(--bg); z-index: 300;
-  display: none; flex-direction: column; padding: 1.25rem 5vw;
+  flex-direction: column; padding: 1.25rem 5vw;
   border-top: 1px solid var(--border);
+  /* use transform instead of display:none for smooth open/close */
+  transform: translateX(100%);
+  transition: transform .25s cubic-bezier(.4,0,.2,1);
+  display: flex; /* always flex, moved by transform */
 }
-.mob-menu.show { display: flex; }
+.mob-menu.show { transform: translateX(0); }
 .mob-menu a {
   padding: 1.1rem 0; font-size: 1rem; font-weight: 600; color: var(--text);
   border-bottom: 1px solid var(--border);
@@ -191,61 +445,160 @@ nav {
 ═══════════════════════════════════════════ */
 #sticky-bar {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
-  background: linear-gradient(90deg, #071a14 0%, #060f1c 50%, #0d0820 100%);
-  border-top: 1.5px solid rgba(0,245,200,.35);
-  box-shadow: 0 -4px 40px rgba(0,245,200,.15), 0 -1px 0 rgba(0,245,200,.1);
-  backdrop-filter: blur(20px);
-  padding: .9rem 5vw;
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  transform: translateY(100%); transition: transform .4s cubic-bezier(.16,1,.3,1);
-  flex-wrap: wrap;
-  animation: sbarGlow 3s ease-in-out infinite alternate;
-}
-@keyframes sbarGlow {
-  0%  { box-shadow: 0 -4px 40px rgba(0,245,200,.12), 0 -1px 0 rgba(0,245,200,.08); }
-  100%{ box-shadow: 0 -4px 60px rgba(0,245,200,.28), 0 -1px 0 rgba(0,245,200,.2); }
+  background: linear-gradient(90deg, #071a14 0%, #060f1c 60%, #0c0820 100%);
+  border-top: 1.5px solid rgba(0,245,200,.3);
+  box-shadow: 0 -4px 32px rgba(0,245,200,.12);
+  transform: translateY(100%);
+  transition: transform .4s cubic-bezier(.16,1,.3,1);
+  overflow: hidden;
+  will-change: transform;
 }
 #sticky-bar.visible { transform: translateY(0); }
 
-.sticky-left { display: flex; align-items: center; gap: .85rem; min-width: 0; }
+/* confetti canvas — absolute, behind content */
+#sbar-confetti {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+
+/* shimmer sweep */
+#sticky-bar::after {
+  content: '';
+  position: absolute; top: 0; left: -80%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0,245,200,.04), transparent);
+  animation: sbarShimmer 5s ease-in-out infinite;
+  pointer-events: none; z-index: 0;
+}
+@keyframes sbarShimmer { 0%{left:-60%} 100%{left:130%} }
+
+/* left accent stripe */
+.sbar-accent {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, var(--teal), #8b5cf6, #ef4444);
+  z-index: 2;
+}
+
+/* inner row */
+.sbar-inner {
+  position: relative; z-index: 1;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  gap: 1rem; padding: .85rem 5vw .85rem 1.5rem;
+}
+
+/* LEFT section — icon + copy, all left-aligned */
+.sticky-left {
+  display: flex; align-items: center; gap: .9rem; min-width: 0; flex: 1;
+}
 .sticky-fire {
-  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
-  background: linear-gradient(135deg, rgba(0,245,200,.15), rgba(0,245,200,.05));
-  border: 1px solid rgba(0,245,200,.3);
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(239,68,68,.22), rgba(249,115,22,.16));
+  border: 1.5px solid rgba(239,68,68,.4);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem;
-  box-shadow: 0 0 16px rgba(0,245,200,.2);
+  font-size: 1.4rem; position: relative;
+  box-shadow: 0 0 18px rgba(239,68,68,.22);
   animation: fireWiggle 2s ease-in-out infinite;
 }
-@keyframes fireWiggle { 0%,100%{transform:rotate(-4deg) scale(1)} 50%{transform:rotate(4deg) scale(1.06)} }
+.fire-ring {
+  position: absolute; inset: -4px; border-radius: 15px;
+  border: 1px solid rgba(239,68,68,.18);
+  animation: firePing 2s ease-out infinite;
+}
+@keyframes firePing  { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(1.4);opacity:0} }
+@keyframes fireWiggle{ 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
 
-.sticky-copy { min-width: 0; }
+.sticky-copy { min-width: 0; text-align: left; }
+
+/* badge row */
+.sbar-badge-row {
+  display: flex; align-items: center; gap: .4rem; margin-bottom: .2rem;
+}
+.sbar-badge-hot {
+  display: inline-flex; align-items: center; gap: .25rem;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  color: #fff; font-family: var(--font-mono); font-size: .56rem; font-weight: 700;
+  padding: .16rem .6rem; border-radius: 100px; letter-spacing: .08em;
+  text-transform: uppercase; flex-shrink: 0;
+}
+.sbar-badge-save {
+  display: inline-flex; align-items: center;
+  background: rgba(0,245,200,.1); border: 1px solid rgba(0,245,200,.3);
+  color: var(--teal); font-family: var(--font-mono); font-size: .56rem; font-weight: 700;
+  padding: .16rem .6rem; border-radius: 100px; letter-spacing: .06em;
+  text-transform: uppercase; flex-shrink: 0;
+}
+
+/* headline */
 .sticky-headline {
-  font-family: var(--font-display); font-size: 1rem; font-weight: 800;
-  color: var(--text); letter-spacing: -.01em; line-height: 1.1;
+  font-family: var(--font-display); font-size: 1.05rem; font-weight: 800;
+  color: var(--text); letter-spacing: -.02em; line-height: 1.15;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  text-align: left;
 }
-.sticky-headline .hl { color: var(--teal); }
-.sticky-sub {
-  font-size: .72rem; color: var(--text2); font-weight: 400; margin-top: .1rem;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.sticky-headline .hl-price {
+  color: var(--teal);
+  text-shadow: 0 0 18px rgba(0,245,200,.45);
+}
+.sticky-headline .hl-strike {
+  font-size: .72em; color: var(--text3);
+  text-decoration: line-through; text-decoration-color: #ef4444;
+  font-weight: 600; margin-right: .15em;
 }
 
+/* sub line — left-aligned dots */
+.sticky-sub {
+  display: flex; align-items: center; gap: .4rem;
+  margin-top: .18rem; flex-wrap: wrap; text-align: left;
+}
+.sticky-sub-dot {
+  width: 3px; height: 3px; border-radius: 50%; background: var(--text3); flex-shrink: 0;
+}
+.sticky-sub-item {
+  font-size: .68rem; color: var(--text2); font-weight: 400;
+  display: flex; align-items: center; gap: .22rem; white-space: nowrap;
+}
+.sticky-sub-item .ssi-icon { font-size: .7rem; }
+@media (max-width: 600px) { .sticky-sub { display: none; } }
+
+/* CTA button */
 .sticky-cta {
-  background: var(--teal); color: #000;
-  padding: .6rem 1.6rem; border-radius: var(--r);
-  font-size: .84rem; font-weight: 700; letter-spacing: .02em;
+  background: linear-gradient(135deg, var(--teal) 0%, #00d4aa 100%);
+  color: #000; padding: .72rem 1.6rem; border-radius: var(--r);
+  font-size: .88rem; font-weight: 800; letter-spacing: .02em;
   white-space: nowrap; flex-shrink: 0;
-  box-shadow: 0 0 24px rgba(0,245,200,.35);
+  box-shadow: 0 0 24px rgba(0,245,200,.38), 0 4px 14px rgba(0,0,0,.3);
   transition: box-shadow .2s, transform .15s;
   position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; gap: .4rem;
+  z-index: 1;
 }
 .sticky-cta::before {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,.2) 0%, transparent 55%);
+  background: linear-gradient(135deg, rgba(255,255,255,.22) 0%, transparent 55%);
 }
-.sticky-cta:hover { box-shadow: 0 0 40px rgba(0,245,200,.55); transform: translateY(-2px); }
+.sticky-cta::after {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+  animation: ctaShimmer 2.8s ease-in-out infinite;
+}
+@keyframes ctaShimmer { 0%{left:-50%} 100%{left:150%} }
+.sticky-cta:hover {
+  box-shadow: 0 0 44px rgba(0,245,200,.65), 0 6px 20px rgba(0,0,0,.4);
+  transform: translateY(-2px);
+}
+.cta-arrow { font-size: .95rem; transition: transform .2s; }
+.sticky-cta:hover .cta-arrow { transform: translateX(3px); }
+
+/* mobile */
+@media (max-width: 480px) {
+  .sbar-inner { padding: .72rem 4vw .72rem 1.1rem; gap: .6rem; }
+  .sticky-fire { width: 36px; height: 36px; font-size: 1.1rem; border-radius: 10px; }
+  .sticky-headline { font-size: .88rem; }
+  .sticky-cta { padding: .6rem 1.1rem; font-size: .8rem; }
+  .sbar-badge-row { margin-bottom: .12rem; }
+}
 
 /* ═══════════════════════════════════════════
    WHATSAPP FAB
@@ -1177,11 +1530,11 @@ h1.hero-headline {
 
 /* ── Sticky bar: mobile ── */
 @media (max-width: 480px) {
-  #sticky-bar { padding: .7rem 4vw; gap: .75rem; }
-  .sticky-headline { font-size: .84rem; }
-  .sticky-sub { display: none; }
-  .sticky-fire { width: 30px; height: 30px; font-size: .9rem; }
-  .sticky-cta { padding: .5rem 1rem; font-size: .78rem; }
+  #sticky-bar { padding: 0; }
+  .sbar-inner { padding: .65rem 4vw .65rem .85rem; gap: .6rem; }
+  .sticky-headline { font-size: .82rem; }
+  .sticky-fire { width: 32px; height: 32px; font-size: 1rem; }
+  .sticky-cta { padding: .55rem 1rem; font-size: .78rem; }
 }
 
 /* ── WA fab: adjust for sticky bar ── */
@@ -1273,9 +1626,10 @@ section, footer, nav { overflow-x: hidden; }
 
 /* Sticky bar */
 @media (max-width: 480px) {
-  #sticky-bar { flex-wrap: nowrap; padding: .65rem 4vw; }
-  .sticky-text { font-size: .74rem; }
-  .sticky-cta { padding: .38rem .9rem; font-size: .73rem; white-space: nowrap; flex-shrink: 0; }
+  #sticky-bar { flex-wrap: nowrap; }
+  .sbar-inner { padding: .6rem 4vw .6rem .85rem; }
+  .sticky-headline { font-size: .8rem; }
+  .sticky-cta { padding: .42rem .9rem; font-size: .75rem; white-space: nowrap; flex-shrink: 0; }
 }
 
 /* WA fab */
@@ -1312,6 +1666,382 @@ section, footer, nav { overflow-x: hidden; }
 @media (max-width: 480px) {
   .pc-view-example { padding: .7rem; font-size: .8rem; }
 }
+
+/* ═══════════════════════════════════════════
+   HERO OFFER COUPON
+═══════════════════════════════════════════ */
+.hero-offer-coupon {
+  margin-top: 2rem;
+  background: linear-gradient(135deg, rgba(0,245,200,.07) 0%, rgba(139,92,246,.06) 100%);
+  border: 1.5px dashed rgba(0,245,200,.35);
+  border-radius: var(--r-lg);
+  padding: 1.2rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column; gap: .7rem;
+  box-shadow: 0 8px 32px rgba(0,245,200,.06), inset 0 0 40px rgba(0,245,200,.02);
+}
+.hero-offer-coupon::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 5%, var(--teal) 40%, #8b5cf6 70%, transparent 95%);
+}
+/* Notch circles on sides */
+.hero-offer-coupon::after {
+  content: '';
+  position: absolute; left: -10px; top: 50%; transform: translateY(-50%);
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--bg); border: 1.5px dashed rgba(0,245,200,.35);
+  box-shadow: 180px 0 0 0 var(--bg), 180px 0 0 1.5px rgba(0,245,200,.35);
+}
+.hoc-left { display: flex; flex-direction: column; gap: .35rem; }
+.hoc-badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--font-mono); font-size: .63rem; color: #f87171;
+  letter-spacing: .1em; font-weight: 700;
+  background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.25);
+  padding: .2rem .7rem; border-radius: 100px; width: fit-content;
+  animation: badgePulse 2.5s ease-in-out infinite;
+}
+@keyframes badgePulse { 0%,100%{opacity:1} 50%{opacity:.7} }
+.hoc-price-row { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
+.hoc-old {
+  font-family: var(--font-display); font-size: 1.3rem; font-weight: 700;
+  color: var(--text3); text-decoration: line-through; text-decoration-color: var(--red);
+  letter-spacing: -.02em;
+}
+.hoc-new {
+  font-family: var(--font-display); font-size: 2.8rem; font-weight: 800;
+  color: var(--teal); letter-spacing: -.04em; line-height: 1;
+}
+.hoc-save {
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  color: #fff; font-family: var(--font-mono); font-size: .65rem;
+  font-weight: 700; padding: .22rem .7rem; border-radius: 100px;
+  letter-spacing: .08em; align-self: center;
+}
+.hoc-tagline {
+  font-size: .82rem; color: var(--text2); font-weight: 300;
+}
+.hoc-tagline strong { color: var(--text); font-weight: 700; }
+.hoc-right { display: flex; align-items: center; }
+.hoc-code-wrap {
+  display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+}
+.hoc-code-label {
+  font-family: var(--font-mono); font-size: .6rem; color: var(--text3);
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.hoc-code {
+  font-family: var(--font-mono); font-size: 1rem; font-weight: 700;
+  color: var(--teal); letter-spacing: .18em;
+  background: rgba(0,245,200,.08); border: 1.5px dashed rgba(0,245,200,.3);
+  padding: .35rem 1rem; border-radius: var(--r);
+  user-select: all; cursor: pointer;
+  transition: background .2s;
+}
+.hoc-code:hover { background: rgba(0,245,200,.14); }
+.hoc-copy-btn {
+  font-family: var(--font-mono); font-size: .66rem; font-weight: 600;
+  color: var(--teal); background: rgba(0,245,200,.1);
+  border: 1px solid rgba(0,245,200,.25); padding: .28rem .7rem;
+  border-radius: var(--r); cursor: pointer; transition: background .2s, color .2s;
+  letter-spacing: .06em;
+}
+.hoc-copy-btn:hover { background: rgba(0,245,200,.2); }
+.hoc-cta-btn {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: var(--teal); color: #000;
+  padding: .8rem 2rem; border-radius: var(--r);
+  font-size: .9rem; font-weight: 800; letter-spacing: .02em;
+  width: fit-content;
+  transition: box-shadow .25s, transform .2s;
+  box-shadow: 0 0 28px rgba(0,245,200,.3);
+  position: relative; overflow: hidden;
+}
+.hoc-cta-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.22) 0%, transparent 55%);
+}
+.hoc-cta-btn:hover { box-shadow: 0 0 44px rgba(0,245,200,.5); transform: translateY(-2px); }
+.hoc-expires {
+  font-family: var(--font-mono); font-size: .65rem; color: var(--text3);
+  display: flex; align-items: center; letter-spacing: .05em;
+}
+.hoc-expires span {
+  font-family: var(--font-display); font-weight: 800; color: #f87171;
+  font-size: .78rem; letter-spacing: -.01em;
+}
+@media (max-width: 560px) {
+  .hero-offer-coupon { padding: .95rem 1.1rem; }
+  .hoc-new { font-size: 2.2rem; }
+  .hoc-cta-btn { width: 100%; justify-content: center; }
+}
+
+/* ═══════════════════════════════════════════
+   RIGHT SIDEBAR PANEL
+═══════════════════════════════════════════ */
+#sidebar-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  backdrop-filter: blur(4px); z-index: 800;
+  opacity: 0; pointer-events: none;
+  transition: opacity .35s;
+}
+#sidebar-overlay.open { opacity: 1; pointer-events: all; }
+
+#right-sidebar {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 900;
+  width: 340px; max-width: 92vw;
+  background: var(--bg2);
+  border-left: 1px solid var(--border2);
+  box-shadow: -24px 0 80px rgba(0,0,0,.7), -4px 0 0 rgba(0,245,200,.04);
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .42s cubic-bezier(.16,1,.3,1);
+  overflow: hidden;
+}
+#right-sidebar.open { transform: translateX(0); }
+
+.rsb-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(0,245,200,.06), rgba(139,92,246,.04));
+  flex-shrink: 0;
+  position: relative;
+}
+.rsb-header::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, var(--teal), #8b5cf6, transparent);
+  opacity: .4;
+}
+.rsb-title {
+  font-family: var(--font-display); font-size: 1.1rem; font-weight: 800;
+  letter-spacing: -.02em; color: var(--text);
+}
+.rsb-title span { color: var(--teal); }
+.rsb-header-sub {
+  font-family: var(--font-mono); font-size: .58rem; color: var(--text3);
+  letter-spacing: .08em; margin-top: .15rem;
+}
+.rsb-close {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--border2); background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text2); font-size: .9rem;
+  transition: border-color .2s, color .2s, background .2s, transform .2s;
+}
+.rsb-close:hover { border-color: #ef4444; color: #ef4444; background: rgba(239,68,68,.08); transform: rotate(90deg); }
+
+.rsb-body {
+  flex: 1; overflow-y: auto; padding: 1.25rem 1.4rem;
+  display: flex; flex-direction: column; gap: 1.5rem;
+  scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
+}
+.rsb-body::-webkit-scrollbar { width: 3px; }
+.rsb-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* Section heading inside sidebar */
+.rsb-sec-title {
+  font-family: var(--font-mono); font-size: .6rem;
+  color: var(--text3); letter-spacing: .16em; text-transform: uppercase;
+  margin-bottom: .75rem; display: flex; align-items: center; gap: .4rem;
+}
+.rsb-sec-title::before { content: '//'; opacity: .4; }
+
+/* Nav links block */
+.rsb-nav-links { display: flex; flex-direction: column; gap: .3rem; }
+.rsb-nav-link {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .8rem 1rem; border-radius: var(--r);
+  font-size: .88rem; font-weight: 600; color: var(--text2);
+  border: 1px solid transparent;
+  transition: background .2s, color .2s, border-color .2s;
+  text-decoration: none;
+}
+.rsb-nav-link .rsb-link-icon {
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+  background: var(--surface2);
+  transition: background .2s;
+}
+.rsb-nav-link:hover {
+  background: var(--surface); color: var(--teal);
+  border-color: rgba(0,245,200,.18);
+}
+.rsb-nav-link:hover .rsb-link-icon { background: var(--teal-dim); }
+.rsb-nav-link .rsb-link-arr { margin-left: auto; font-size: .7rem; opacity: .4; transition: opacity .2s, transform .2s; }
+.rsb-nav-link:hover .rsb-link-arr { opacity: 1; transform: translateX(3px); }
+
+/* Mini offer card */
+.rsb-offer-card {
+  background: linear-gradient(135deg, rgba(0,245,200,.07), rgba(139,92,246,.06));
+  border: 1.5px dashed rgba(0,245,200,.3);
+  border-radius: var(--r-lg); padding: 1.1rem 1.2rem;
+  position: relative; overflow: hidden;
+}
+.rsb-offer-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--teal), #8b5cf6);
+}
+.rsb-offer-price { display: flex; align-items: baseline; gap: .4rem; margin: .4rem 0 .25rem; }
+.rsb-offer-old { font-size: .9rem; color: var(--text3); text-decoration: line-through; text-decoration-color: var(--red); font-family: var(--font-display); font-weight: 700; }
+.rsb-offer-new { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--teal); letter-spacing: -.03em; line-height: 1; }
+.rsb-offer-desc { font-size: .75rem; color: var(--text2); font-weight: 300; margin-bottom: .85rem; }
+.rsb-offer-link {
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+  background: var(--teal); color: #000; padding: .65rem;
+  border-radius: var(--r); font-size: .82rem; font-weight: 700;
+  text-decoration: none; transition: box-shadow .2s, transform .2s;
+}
+.rsb-offer-link:hover { box-shadow: 0 0 24px rgba(0,245,200,.4); transform: translateY(-1px); }
+
+/* Quick stats */
+.rsb-stats { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.rsb-stat {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: .8rem .9rem; text-align: center;
+  transition: border-color .2s;
+}
+.rsb-stat:hover { border-color: rgba(0,245,200,.3); }
+.rsb-stat-val { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--teal); letter-spacing: -.02em; line-height: 1; }
+.rsb-stat-lbl { font-family: var(--font-mono); font-size: .58rem; color: var(--text3); letter-spacing: .08em; margin-top: .25rem; }
+
+/* Contact block */
+.rsb-contact { display: flex; flex-direction: column; gap: .5rem; }
+.rsb-contact-btn {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .8rem 1rem; border-radius: var(--r);
+  font-size: .85rem; font-weight: 600; text-decoration: none;
+  border: 1px solid var(--border);
+  transition: border-color .2s, background .2s;
+  color: var(--text2);
+}
+.rsb-contact-btn .rsb-cb-icon { font-size: 1.1rem; flex-shrink: 0; }
+.rsb-contact-btn:hover { background: var(--surface); border-color: rgba(0,245,200,.25); color: var(--text); }
+.rsb-wa-btn { border-color: rgba(37,211,102,.3); }
+.rsb-wa-btn:hover { border-color: rgba(37,211,102,.5); background: rgba(37,211,102,.06); }
+
+/* FAQ accordion */
+.rsb-faq { display: flex; flex-direction: column; gap: .5rem; }
+.rsb-faq-item {
+  border: 1px solid var(--border); border-radius: var(--r);
+  overflow: hidden; background: var(--surface);
+}
+.rsb-faq-q {
+  padding: .75rem 1rem; display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; font-size: .82rem; font-weight: 600; color: var(--text);
+  transition: color .2s;
+  user-select: none;
+}
+.rsb-faq-q:hover { color: var(--teal); }
+.rsb-faq-arr { font-size: .7rem; color: var(--text3); transition: transform .25s; flex-shrink: 0; }
+.rsb-faq-item.open .rsb-faq-arr { transform: rotate(90deg); color: var(--teal); }
+.rsb-faq-a {
+  font-size: .78rem; color: var(--text2); font-weight: 300; line-height: 1.65;
+  max-height: 0; overflow: hidden; padding: 0 1rem;
+  transition: max-height .3s ease, padding .3s ease;
+}
+.rsb-faq-item.open .rsb-faq-a { max-height: 120px; padding: 0 1rem .85rem; }
+
+/* Theme toggle in sidebar */
+.rsb-theme-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: .75rem 1rem;
+}
+.rsb-theme-lbl { font-size: .83rem; font-weight: 500; color: var(--text2); display: flex; align-items: center; gap: .5rem; }
+.rsb-toggle {
+  width: 42px; height: 23px; border-radius: 100px; border: 1px solid var(--border2);
+  background: var(--bg); cursor: pointer; position: relative; transition: background .2s;
+  flex-shrink: 0;
+}
+.rsb-toggle::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--text3); transition: transform .25s, background .25s;
+}
+[data-theme="light"] .rsb-toggle { background: var(--teal); border-color: var(--teal); }
+[data-theme="light"] .rsb-toggle::after { transform: translateX(19px); background: #000; }
+
+/* The sidebar trigger button on right edge */
+#sb-trigger { display: none; } /* hidden — using nav button instead */
+
+/* ── NAV QUICK MENU BUTTON ── */
+.nav-qmenu-btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r);
+  padding: .45rem 1rem .45rem .7rem;
+  cursor: pointer;
+  color: var(--text2);
+  font-family: var(--font-body);
+  font-size: .8rem; font-weight: 600;
+  letter-spacing: .01em;
+  transition: background .2s, border-color .2s, color .2s, box-shadow .2s;
+  position: relative;
+}
+.nav-qmenu-btn:hover {
+  background: var(--surface2);
+  border-color: rgba(0,245,200,.45);
+  color: var(--teal);
+  box-shadow: 0 0 18px rgba(0,245,200,.12);
+}
+.nqm-icon {
+  display: flex; flex-direction: column; gap: 3.5px;
+  width: 16px; align-items: flex-start;
+}
+.nqm-icon span {
+  display: block; height: 1.5px; background: currentColor; border-radius: 1px;
+  transition: width .2s;
+}
+.nqm-icon span:nth-child(1) { width: 100%; }
+.nqm-icon span:nth-child(2) { width: 70%; }
+.nqm-icon span:nth-child(3) { width: 85%; }
+.nav-qmenu-btn:hover .nqm-icon span { width: 100%; }
+.nqm-label { color: inherit; }
+
+/* Floating pill CTA above sidebar on mobile */
+#sb-float-pill {
+  position: fixed;
+  bottom: 90px; right: 1.2rem;
+  z-index: 499;
+  background: var(--surface2);
+  border: 1.5px solid rgba(0,245,200,.3);
+  border-radius: 100px;
+  padding: .6rem 1.1rem .6rem .85rem;
+  display: flex; align-items: center; gap: .5rem;
+  cursor: pointer;
+  font-family: var(--font-body); font-size: .78rem; font-weight: 700;
+  color: var(--teal);
+  box-shadow: 0 4px 24px rgba(0,0,0,.4), 0 0 20px rgba(0,245,200,.1);
+  transition: transform .2s, box-shadow .2s, background .2s;
+  animation: pillEntrance .5s cubic-bezier(.16,1,.3,1) 2.5s both;
+}
+@keyframes pillEntrance {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+#sb-float-pill:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 32px rgba(0,245,200,.2);
+  background: var(--surface);
+}
+.pill-icon { display: flex; flex-direction: column; gap: 3px; width: 14px; }
+.pill-icon span { display: block; height: 1.5px; background: var(--teal); border-radius: 1px; }
+.pill-icon span:nth-child(2) { width: 70%; }
+.pill-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--teal);
+  animation: blink 1.5s ease infinite; flex-shrink: 0;
+}
+/* Hide float pill on desktop since nav button is there */
+@media (min-width: 861px) { #sb-float-pill { display: none; } }
+/* Hide nav menu btn on small screens — float pill handles it */
+@media (max-width: 860px) { .nav-qmenu-btn .nqm-label { display: none; } .nav-qmenu-btn { padding: .45rem .7rem; } }
+@media (max-width: 560px) { .nav-qmenu-btn { display: none; } }
+
 </style>
 </head>
 <body>
@@ -1320,7 +2050,98 @@ section, footer, nav { overflow-x: hidden; }
 <div id="dot"></div>
 <div id="ring"></div>
 
-<!-- LOADER -->
+<!-- ═══ FIRST-VISIT TERMS & CONDITIONS MODAL ═══ -->
+<div id="tnc-overlay">
+  <div class="tnc-modal" role="dialog" aria-modal="true" aria-labelledby="tncTitle">
+
+    <!-- Step indicator -->
+    <div class="tnc-steps">
+      <div class="tnc-step active" id="tncS1"><div class="tnc-step-num" id="tncN1">1</div>Read Terms</div>
+      <div class="tnc-step-connector" id="tncC1"></div>
+      <div class="tnc-step" id="tncS2"><div class="tnc-step-num" id="tncN2">2</div>Confirm</div>
+      <div class="tnc-step-connector" id="tncC2"></div>
+      <div class="tnc-step" id="tncS3"><div class="tnc-step-num" id="tncN3">3</div>Get Started</div>
+    </div>
+
+    <!-- ── PANEL 1: Read Terms ── -->
+    <div class="tnc-panel active" id="tncP1">
+      <div class="tnc-head">
+        <div class="tnc-head-badge red">⚠ Required — Please Read</div>
+        <h2 id="tncTitle">Terms &amp; <em>Conditions</em></h2>
+        <p>Scroll through and read our terms before you can continue to the site.</p>
+      </div>
+      <div class="tnc-progress-wrap"><div class="tnc-progress-bar" id="tncProgress"></div></div>
+      <div class="tnc-body" id="tncBody">
+        <div class="tnc-sec"><h3>1. Introduction</h3><p>Welcome to <strong>Portfolio Forge</strong>. By accessing or using our website and services, you agree to these Terms and Conditions. Portfolio Forge is a digital service based in India providing portfolio website design, development, and delivery to students, professionals, and freelancers.</p></div>
+        <div class="tnc-divider"></div>
+        <div class="tnc-sec"><h3>2. Acceptance of Terms</h3><p>By placing an order, making a payment, or using any part of our service, you confirm that you have read, understood, and agreed to these terms. If you do not agree, please do not use our services.</p></div>
+        <div class="tnc-divider"></div>
+        <div class="tnc-sec"><h3>3. Services</h3><p>Portfolio Forge offers portfolio website creation services including UI/UX design, front-end development, revisions, and optional deployment. Exact deliverables are defined at the time of order and may vary by plan.</p></div>
+        <div class="tnc-divider"></div>
+        <div class="tnc-sec"><h3>4. Payments &amp; Refunds</h3><p><strong>No refunds are issued once work has begun.</strong> A refund may be considered only if work has not yet started. By paying, you acknowledge this policy. Contact us before initiating any chargeback.</p></div>
+        <div class="tnc-divider"></div>
+        <div class="tnc-sec"><h3>5. Intellectual Property</h3><p>Once full payment is received, the final source code and design assets are transferred to the client. Portfolio Forge retains the right to showcase completed work in its portfolio unless you request otherwise in writing.</p></div>
+        <div class="tnc-divider"></div>
+        <div class="tnc-sec"><h3>6. Delivery &amp; Revisions</h3><p>We aim to deliver all projects within <strong>24 hours</strong> of confirmed payment. Revision rounds are included per your plan. Additional revisions may be charged separately.</p></div>
+        <div class="tnc-divider"></div>
+        <div class="tnc-sec"><h3>7. Limitation of Liability</h3><p>Portfolio Forge is not liable for any indirect, incidental, or consequential damages. Our total liability shall not exceed the amount paid for the specific service in question.</p></div>
+        <div class="tnc-divider"></div>
+        <div class="tnc-sec"><h3>8. Privacy</h3><p>We collect only the information necessary to deliver your order. Your personal data is never sold to third parties. See our <a href="terms.html">full Terms page</a> for details.</p></div>
+        <div class="tnc-divider"></div>
+        <div class="tnc-sec"><h3>9. Changes to Terms</h3><p>Portfolio Forge reserves the right to update these terms at any time. Continued use of our services constitutes acceptance of revised terms. Last updated: <strong>March 2026</strong>.</p></div>
+      </div>
+      <div class="tnc-foot">
+        <div class="tnc-btn-row">
+          <button class="tnc-btn-primary" id="tncBtn1" onclick="tncGoStep(2)">Next →</button>
+          <button class="tnc-btn-ghost" onclick="tncDecline()">Decline</button>
+        </div>
+        <p class="tnc-hint" id="tncHint1">↓ Scroll to the bottom to unlock Next</p>
+      </div>
+    </div>
+
+    <!-- ── PANEL 2: Confirm ── -->
+    <div class="tnc-panel" id="tncP2">
+      <div class="tnc-head">
+        <div class="tnc-head-badge teal">✓ Almost There</div>
+        <h2>Confirm Your <em>Agreement</em></h2>
+        <p>Check the box to confirm you've read and agree to our terms.</p>
+      </div>
+      <div class="tnc-highlights">
+        <div class="tnc-hl"><div class="tnc-hl-icon">💰</div><div class="tnc-hl-text"><div class="tnc-hl-title">No Refunds After Work Begins</div><div class="tnc-hl-sub">Payments are final once development starts</div></div></div>
+        <div class="tnc-hl"><div class="tnc-hl-icon">⚡</div><div class="tnc-hl-text"><div class="tnc-hl-title">24-Hour Delivery Guarantee</div><div class="tnc-hl-sub">We deliver within 24h or you get a full refund</div></div></div>
+        <div class="tnc-hl"><div class="tnc-hl-icon">💻</div><div class="tnc-hl-text"><div class="tnc-hl-title">You Own the Source Code</div><div class="tnc-hl-sub">Full ownership transferred upon payment</div></div></div>
+        <div class="tnc-hl"><div class="tnc-hl-icon">🔒</div><div class="tnc-hl-text"><div class="tnc-hl-title">Your Data Stays Private</div><div class="tnc-hl-sub">We never sell or share your personal information</div></div></div>
+      </div>
+      <div class="tnc-foot">
+        <div class="tnc-agree-row">
+          <div class="tnc-cb-wrap"><input type="checkbox" class="tnc-cb" id="tncCb" onchange="tncToggleCb(this)"/></div>
+          <label for="tncCb" class="tnc-agree-txt">I have read and agree to Portfolio Forge's <a href="terms.html" target="_blank">Terms &amp; Conditions</a>, including the refund policy and delivery timelines.</label>
+        </div>
+        <div class="tnc-btn-row">
+          <button class="tnc-btn-primary" id="tncBtn2" onclick="tncGoStep(3)">I Agree — Next →</button>
+          <button class="tnc-btn-ghost" onclick="tncGoStep(1)">← Back</button>
+        </div>
+        <p class="tnc-hint" id="tncHint2">Check the box above to continue</p>
+      </div>
+    </div>
+
+    <!-- ── PANEL 3: Get Started ── -->
+    <div class="tnc-panel" id="tncP3">
+      <div class="tnc-party">
+        <div class="tnc-party-icon">🚀</div>
+        <div class="tnc-party-title">Welcome to <em>PortfolioForge</em></div>
+        <p class="tnc-party-sub">You're all set! Your professional portfolio is just a few clicks away — hand-crafted and delivered in 24 hours.</p>
+        <div class="tnc-party-pills">
+          <div class="tnc-party-pill">⚡ 24h Delivery</div>
+          <div class="tnc-party-pill">💻 Source Code</div>
+          <div class="tnc-party-pill">🔒 Secure UPI</div>
+        </div>
+        <button class="tnc-enter-btn" onclick="tncEnterSite()"><span>Enter Site</span><span>→</span></button>
+      </div>
+    </div>
+
+  </div>
+</div><!-- end T&C overlay -->
 <div id="loader">
   <div class="loader-icon">⚡</div>
   <div class="loader-logo">Portfolio<span>Forge</span></div>
@@ -1341,10 +2162,14 @@ section, footer, nav { overflow-x: hidden; }
     <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
     <!-- Show Track Order only if payment confirmed -->
     <a href="track-order.html" class="nav-cta nav-track-btn" id="navTrackBtn" style="display:none;background:rgba(0,245,200,.15);border:1px solid rgba(0,245,200,.3);color:var(--teal)">📊 Track Order</a>
-    
-    <button class="ham-btn" id="hamBtn" aria-label="Menu">
-      <span></span><span></span><span></span>
+    <!-- QUICK MENU BUTTON — always visible -->
+    <button class="nav-qmenu-btn" id="navMenuBtn" onclick="document.getElementById('right-sidebar').classList.add('open');document.getElementById('sidebar-overlay').classList.add('open')" title="Quick Menu">
+      <span class="nqm-icon">
+        <span></span><span></span><span></span>
+      </span>
+      <span class="nqm-label">Menu</span>
     </button>
+  
   </div>
 </nav>
 
@@ -1352,6 +2177,7 @@ section, footer, nav { overflow-x: hidden; }
 <nav class="mob-menu" id="mobMenu">
   <a href="#pricing" onclick="closeMob()">Our Services</a>
   <a href="about.html" onclick="closeMob()">About Us</a>
+  <a href="terms.html" onclick="closeMob()">Terms &amp; Conditions</a>
   <a href="submit-order.html" style="color:var(--teal);font-weight:700;margin-top:.5rem">Get Started →</a>
   <a href="track-order.html" id="mobTrackBtn" style="display:none;color:var(--teal);font-weight:700;border:1px solid rgba(0,245,200,.3);border-radius:var(--r);padding:.6rem 1rem;text-align:center;margin-top:.5rem">📊 Track Your Order →</a>
 </nav>
@@ -1365,16 +2191,49 @@ section, footer, nav { overflow-x: hidden; }
   <a href="track-order.html" style="display:inline-flex;align-items:center;gap:.3rem;background:var(--teal);color:#000;padding:.32rem .9rem;border-radius:var(--r);font-size:.72rem;font-weight:700;white-space:nowrap;flex-shrink:0;">Track →</a>
 </div>
 
-<!-- STICKY BAR -->
+<!-- STICKY OFFER BAR -->
 <div id="sticky-bar">
-  <div class="sticky-left">
-    <div class="sticky-fire">⚡</div>
-    <div class="sticky-copy">
-      <div class="sticky-headline">Get your portfolio for <span class="hl">₹49</span> — save 50%</div>
-      <div class="sticky-sub">Professional · Hand-coded · Delivered in 24 hours</div>
+
+  <!-- Confetti canvas — JS-driven bursts -->
+  <canvas id="sbar-confetti" aria-hidden="true"></canvas>
+
+  <!-- Left accent stripe -->
+  <div class="sbar-accent"></div>
+
+  <!-- Inner content -->
+  <div class="sbar-inner">
+
+    <!-- LEFT: fire icon + copy (LEFT-ALIGNED) -->
+    <div class="sticky-left">
+      <div class="sticky-fire">🔥
+        <div class="fire-ring"></div>
+      </div>
+      <div class="sticky-copy">
+        <div class="sbar-badge-row">
+          <span class="sbar-badge-hot">🎉 LIMITED OFFER</span>
+          <span class="sbar-badge-save">50% OFF</span>
+        </div>
+        <div class="sticky-headline">
+          Portfolio for just
+          <span class="hl-strike">₹99</span>
+          <span class="hl-price">₹49</span>
+        </div>
+        <div class="sticky-sub">
+          <span class="sticky-sub-item"><span class="ssi-icon">⚡</span> Hand-coded</span>
+          <span class="sticky-sub-dot"></span>
+          <span class="sticky-sub-item"><span class="ssi-icon">🚀</span> Delivered in 24h</span>
+          <span class="sticky-sub-dot"></span>
+          <span class="sticky-sub-item"><span class="ssi-icon">🔥</span> Only a few spots left!</span>
+        </div>
+      </div>
     </div>
+
+    <!-- RIGHT: CTA -->
+    <a href="submit-order.html" class="sticky-cta">
+      Grab This Deal <span class="cta-arrow">→</span>
+    </a>
+
   </div>
-  <a href="submit-order.html" class="sticky-cta">Get Started →</a>
 </div>
 
 <!-- WHATSAPP FAB -->
@@ -1400,10 +2259,7 @@ section, footer, nav { overflow-x: hidden; }
       <p class="hero-sub rv d2">
         Professional portfolio websites built by a developer who knows what recruiters want. Starting at just <strong>₹49.</strong> Delivered in <strong>24 hours.</strong>
       </p>
-      <div class="hero-ctas rv d3">
-        <a href="submit-order.html" class="btn-primary">Get Your Portfolio <span>→</span></a>
-        <a href="#pricing" class="btn-ghost">See Pricing <span>↓</span></a>
-      </div>
+
       <div class="trust-row rv d3">
         <div class="trust-badge"><span class="icon">✅</span> 24h Delivery</div>
         <div class="trust-badge"><span class="icon">🔒</span> Secure Pay</div>
@@ -1657,6 +2513,88 @@ section, footer, nav { overflow-x: hidden; }
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 document.addEventListener('DOMContentLoaded', function() {
 
+/* ══════════════════════════════════════════
+   TERMS & CONDITIONS MODAL — 3-step flow
+══════════════════════════════════════════ */
+(function() {
+  const TNC_KEY = 'pf_tnc_accepted_v1';
+  const overlay  = document.getElementById('tnc-overlay');
+  if (!overlay) return;
+
+  // Already accepted → hide immediately, no animation
+  if (localStorage.getItem(TNC_KEY) === 'yes') {
+    overlay.style.display = 'none';
+    return;
+  }
+
+  // ── Scroll-to-read unlock on panel 1 ──
+  const body1   = document.getElementById('tncBody');
+  const prog    = document.getElementById('tncProgress');
+  const btn1    = document.getElementById('tncBtn1');
+  const hint1   = document.getElementById('tncHint1');
+  let p1Unlocked = false;
+
+  if (body1) {
+    body1.addEventListener('scroll', function() {
+      const pct = Math.min(100, Math.round(body1.scrollTop / Math.max(1, body1.scrollHeight - body1.clientHeight) * 100));
+      if (prog) prog.style.width = pct + '%';
+      if (pct >= 90 && !p1Unlocked) {
+        p1Unlocked = true;
+        if (btn1) { btn1.classList.add('always-on'); }
+        if (hint1) { hint1.textContent = '✓ All read — you may continue'; hint1.classList.add('ok'); }
+      }
+    });
+  }
+
+  // ── Checkbox unlock on panel 2 ──
+  window.tncToggleCb = function(cb) {
+    const btn2  = document.getElementById('tncBtn2');
+    const hint2 = document.getElementById('tncHint2');
+    if (btn2) btn2.classList.toggle('on', cb.checked);
+    if (hint2) { hint2.textContent = cb.checked ? '✓ Ready to continue' : 'Check the box above to continue'; hint2.classList.toggle('ok', cb.checked); }
+  };
+
+  // ── Step navigation ──
+  window.tncGoStep = function(n) {
+    // hide all panels
+    [1,2,3].forEach(i => {
+      const p = document.getElementById('tncP' + i);
+      if (p) p.classList.remove('active');
+    });
+    // show target panel
+    const target = document.getElementById('tncP' + n);
+    if (target) target.classList.add('active');
+
+    // update step indicators
+    [1,2,3].forEach(i => {
+      const s = document.getElementById('tncS' + i);
+      const num = document.getElementById('tncN' + i);
+      if (!s) return;
+      s.classList.remove('active','done');
+      if (i < n)  { s.classList.add('done');   if (num) num.textContent = '✓'; }
+      if (i === n) { s.classList.add('active'); if (num) num.textContent = String(i); }
+      if (i > n)  { if (num) num.textContent = String(i); }
+    });
+    // update connectors
+    const c1 = document.getElementById('tncC1');
+    const c2 = document.getElementById('tncC2');
+    if (c1) c1.classList.toggle('done', n > 1);
+    if (c2) c2.classList.toggle('done', n > 2);
+
+    // save on step 3
+    if (n === 3) localStorage.setItem(TNC_KEY, 'yes');
+  };
+
+  window.tncEnterSite = function() {
+    overlay.classList.add('gone');
+    setTimeout(() => { overlay.style.display = 'none'; }, 420);
+  };
+
+  window.tncDecline = function() {
+    window.history.back();
+  };
+})();
+
 /* ── CURSOR ── */
 const dot = document.getElementById('dot');
 const ring = document.getElementById('ring');
@@ -1700,21 +2638,92 @@ if (themeBtn) {
   });
 }
 
-/* ── MOBILE MENU ── */
-const hamBtn = document.getElementById('hamBtn');
-const mobMenu = document.getElementById('mobMenu');
-if (hamBtn && mobMenu) {
-  hamBtn.addEventListener('click', () => mobMenu.classList.toggle('show'));
-}
-function closeMob() { if (mobMenu) mobMenu.classList.remove('show'); }
 
-/* ── STICKY BAR ── */
-const stickyBar = document.getElementById('sticky-bar');
-if (stickyBar) {
+
+/* ── STICKY BAR + CONFETTI ── */
+(function() {
+  const bar = document.getElementById('sticky-bar');
+  const canvas = document.getElementById('sbar-confetti');
+  if (!bar || !canvas) return;
+
+  // Show bar on scroll
+  let barVisible = false;
   window.addEventListener('scroll', () => {
-    stickyBar.classList.toggle('visible', window.scrollY > 400);
-  });
-}
+    const shouldShow = window.scrollY > 400;
+    if (shouldShow !== barVisible) {
+      barVisible = shouldShow;
+      bar.classList.toggle('visible', shouldShow);
+      if (shouldShow) burst(); // confetti burst when bar appears
+    }
+  }, { passive: true });
+
+  // ── Canvas confetti ──
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0, particles = [], raf = null;
+  const COLORS = ['#00f5c8','#8b5cf6','#f59e0b','#ef4444','#60a5fa','#34d399','#f472b6','#facc15'];
+
+  function resize() {
+    W = canvas.offsetWidth; H = canvas.offsetHeight;
+    canvas.width = W; canvas.height = H;
+  }
+  new ResizeObserver(resize).observe(bar);
+  resize();
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  function burst() {
+    resize();
+    // spawn 60 particles spread across the bar width
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: rand(0, W),
+        y: H + rand(0, 10),
+        vx: rand(-2.5, 2.5),
+        vy: rand(-6, -2),
+        size: rand(4, 9),
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        rot: rand(0, Math.PI * 2),
+        rotV: rand(-.18, .18),
+        gravity: rand(.12, .22),
+        alpha: 1,
+        shape: Math.random() > .5 ? 'rect' : 'circle'
+      });
+    }
+    if (!raf) loop();
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    particles = particles.filter(p => p.alpha > .02);
+    for (const p of particles) {
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.vy += p.gravity;
+      p.vx *= .99;
+      p.rot += p.rotV;
+      p.alpha -= .013;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.alpha);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      if (p.shape === 'rect') {
+        ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+    if (particles.length > 0) {
+      raf = requestAnimationFrame(loop);
+    } else {
+      raf = null;
+      ctx.clearRect(0, 0, W, H);
+    }
+  }
+})();
 
 /* ── SCROLL REVEAL ── */
 const rvObs = new IntersectionObserver(entries => entries.forEach(e => {
@@ -1786,7 +2795,7 @@ document.querySelectorAll('.hero-benefit-card').forEach(card => {
   card.addEventListener('mouseleave', () => card.classList.remove('active'));
 });
 
-/* ── COUNTDOWN TIMER ── */
+/* ── HERO OFFER COUNTDOWN ── */
 (function() {
   const KEY = 'pf_offer_end_v2';
   let end = sessionStorage.getItem(KEY);
@@ -1798,6 +2807,13 @@ document.querySelectorAll('.hero-benefit-card').forEach(card => {
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
     const pad = n => String(n).padStart(2, '0');
+    const hEl = document.getElementById('hocH');
+    const mEl = document.getElementById('hocM');
+    const sEl = document.getElementById('hocS');
+    if (hEl) hEl.textContent = pad(h);
+    if (mEl) mEl.textContent = pad(m);
+    if (sEl) sEl.textContent = pad(s);
+    // also update original countdown
     ['H','M','S'].forEach((id, i) => {
       const el = document.getElementById('cd' + id);
       if (el) el.textContent = pad([h,m,s][i]);
@@ -1808,6 +2824,177 @@ document.querySelectorAll('.hero-benefit-card').forEach(card => {
 
 }); // end DOMContentLoaded
 </script>
+
+<!-- FLOATING MENU PILL (mobile only) -->
+<button id="sb-float-pill" onclick="document.getElementById('right-sidebar').classList.add('open');document.getElementById('sidebar-overlay').classList.add('open')" aria-label="Open Quick Menu">
+  <span class="pill-icon">
+    <span style="width:100%"></span>
+    <span style="width:70%"></span>
+    <span style="width:85%"></span>
+  </span>
+  Quick Menu
+  <span class="pill-dot"></span>
+</button>
+
+<!-- (old trigger hidden) -->
+<button id="sb-trigger" style="display:none" aria-hidden="true"></button>
+
+<!-- SIDEBAR OVERLAY -->
+<div id="sidebar-overlay" onclick="document.getElementById('right-sidebar').classList.remove('open');this.classList.remove('open')"></div>
+
+<!-- ═══ RIGHT SIDEBAR ═══ -->
+<aside id="right-sidebar" role="navigation" aria-label="Quick Access Panel">
+
+  <div class="rsb-header">
+    <div>
+      <div class="rsb-title">Portfolio<span>Forge</span></div>
+      <div class="rsb-header-sub">QUICK ACCESS PANEL</div>
+    </div>
+    <button class="rsb-close" onclick="document.getElementById('right-sidebar').classList.remove('open');document.getElementById('sidebar-overlay').classList.remove('open')" title="Close">✕</button>
+  </div>
+
+  <div class="rsb-body">
+
+    <!-- Navigation -->
+    <div>
+      <div class="rsb-sec-title">Navigation</div>
+      <div class="rsb-nav-links">
+        <a href="#home" class="rsb-nav-link" onclick="document.getElementById('right-sidebar').classList.remove('open');document.getElementById('sidebar-overlay').classList.remove('open')">
+          <div class="rsb-link-icon">🏠</div>
+          Home
+          <span class="rsb-link-arr">›</span>
+        </a>
+        <a href="#pricing" class="rsb-nav-link" onclick="document.getElementById('right-sidebar').classList.remove('open');document.getElementById('sidebar-overlay').classList.remove('open')">
+          <div class="rsb-link-icon">💰</div>
+          Pricing & Plans
+          <span class="rsb-link-arr">›</span>
+        </a>
+        <a href="submit-order.html" class="rsb-nav-link">
+          <div class="rsb-link-icon">📋</div>
+          Place an Order
+          <span class="rsb-link-arr">›</span>
+        </a>
+        <a href="track-order.html" class="rsb-nav-link">
+          <div class="rsb-link-icon">📊</div>
+          Track Your Order
+          <span class="rsb-link-arr">›</span>
+        </a>
+        <a href="about.html" class="rsb-nav-link">
+          <div class="rsb-link-icon">👤</div>
+          About Us
+          <span class="rsb-link-arr">›</span>
+        </a>
+        <a href="terms.html" class="rsb-nav-link">
+          <div class="rsb-link-icon">📜</div>
+          Terms and Conditions
+          <span class="rsb-link-arr">›</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Special Offer -->
+    <div>
+      <div class="rsb-sec-title">🔥 Special Offer</div>
+      <div class="rsb-offer-card">
+        <div style="font-family:var(--font-mono);font-size:.6rem;color:#f87171;letter-spacing:.1em;font-weight:700">LIMITED TIME — 50% OFF</div>
+        <div class="rsb-offer-price">
+          <span class="rsb-offer-old">₹99</span>
+          <span class="rsb-offer-new">₹49</span>
+        </div>
+        <div class="rsb-offer-desc">Professional portfolio delivered in 24 hours. Full source code included.</div>
+        <a href="submit-order.html" class="rsb-offer-link">Grab the Offer →</a>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div>
+      <div class="rsb-sec-title">Our Numbers</div>
+      <div class="rsb-stats">
+        <div class="rsb-stat">
+          <div class="rsb-stat-val">50+</div>
+          <div class="rsb-stat-lbl">PORTFOLIOS BUILT</div>
+        </div>
+        <div class="rsb-stat">
+          <div class="rsb-stat-val">24h</div>
+          <div class="rsb-stat-lbl">DELIVERY TIME</div>
+        </div>
+        <div class="rsb-stat">
+          <div class="rsb-stat-val">100%</div>
+          <div class="rsb-stat-lbl">SATISFACTION</div>
+        </div>
+        <div class="rsb-stat">
+          <div class="rsb-stat-val">₹49</div>
+          <div class="rsb-stat-lbl">STARTING PRICE</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div>
+      <div class="rsb-sec-title">Quick FAQ</div>
+      <div class="rsb-faq">
+        <div class="rsb-faq-item">
+          <div class="rsb-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            How fast will I get my portfolio? <span class="rsb-faq-arr">›</span>
+          </div>
+          <div class="rsb-faq-a">We deliver all portfolios within 24 hours of order placement. If we're late, you get a full refund.</div>
+        </div>
+        <div class="rsb-faq-item">
+          <div class="rsb-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Do I get the source code? <span class="rsb-faq-arr">›</span>
+          </div>
+          <div class="rsb-faq-a">Yes — every plan includes full source code. No lock-in. You own it forever.</div>
+        </div>
+        <div class="rsb-faq-item">
+          <div class="rsb-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Can I request changes? <span class="rsb-faq-arr">›</span>
+          </div>
+          <div class="rsb-faq-a">Pro and Premium plans include free revision rounds. Starter can add revisions for a small fee.</div>
+        </div>
+        <div class="rsb-faq-item">
+          <div class="rsb-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            What payment methods are accepted? <span class="rsb-faq-arr">›</span>
+          </div>
+          <div class="rsb-faq-a">We accept all UPI payments (GPay, PhonePe, Paytm) — safe, instant, and hassle-free.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div>
+      <div class="rsb-sec-title">Get in Touch</div>
+      <div class="rsb-contact">
+        <a href="https://wa.me/91139139139?text=Hi!%20I%20want%20to%20order%20a%20portfolio" target="_blank" class="rsb-contact-btn rsb-wa-btn">
+          <span class="rsb-cb-icon">💬</span>
+          Chat on WhatsApp
+        </a>
+        <a href="/cdn-cgi/l/email-protection#167e737a7a79566679646270797a7f797079647173387f78" class="rsb-contact-btn">
+          <span class="rsb-cb-icon">✉️</span>
+          Send us an Email
+        </a>
+      </div>
+    </div>
+
+    <!-- Appearance -->
+    <div>
+      <div class="rsb-sec-title">Appearance</div>
+      <div class="rsb-theme-row">
+        <div class="rsb-theme-lbl">
+          <span id="rsbThemeIcon">🌙</span>
+          Dark Mode
+        </div>
+        <div class="rsb-toggle" id="rsbToggle" onclick="
+          const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+          document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+          const tb = document.getElementById('themeBtn');
+          if(tb) tb.textContent = isLight ? '🌙' : '☀️';
+          document.getElementById('rsbThemeIcon').textContent = isLight ? '🌙' : '☀️';
+        "></div>
+      </div>
+    </div>
+
+  </div><!-- /rsb-body -->
+</aside>
 
 </body>
 </html>

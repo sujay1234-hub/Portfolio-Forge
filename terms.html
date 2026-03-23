@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Terms & Conditions — PortfolioForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS (mirrored from main site)
+═══════════════════════════════════════════ */
+:root {
+  --bg: #060810;
+  --bg2: #0a0d18;
+  --bg3: #0f1220;
+  --surface: #131729;
+  --surface2: #1a1f35;
+  --border: #1e2440;
+  --border2: #252d4a;
+  --teal: #00f5c8;
+  --teal-dim: rgba(0,245,200,.1);
+  --teal-glow: rgba(0,245,200,.22);
+  --teal2: #00d4aa;
+  --violet: #8b5cf6;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --text: #f0f2fa;
+  --text2: #8892b8;
+  --text3: #4a5278;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --r: 8px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+}
+[data-theme="light"] {
+  --bg: #f4f6fd; --bg2: #eceffe; --bg3: #ffffff;
+  --surface: #ffffff; --surface2: #f0f2fc;
+  --border: #d8ddf0; --border2: #c8cfe8;
+  --text: #0a0d1e; --text2: #4a527a; --text3: #8890b4;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.7;
+  overflow-x: hidden; transition: background .3s, color .3s;
+}
+::selection { background: var(--teal); color: #000; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 2px; }
+a { color: inherit; text-decoration: none; }
+
+/* noise */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; opacity: .6;
+}
+
+/* cursor */
+#dot { position: fixed; width: 7px; height: 7px; background: var(--teal); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); }
+#ring { position: fixed; width: 30px; height: 30px; border: 1.5px solid var(--teal); border-radius: 50%; pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); opacity: .35; }
+@media (hover: none) { #dot, #ring { display: none; } }
+
+/* ═══ NAV ═══ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 400;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 4vw; height: 58px;
+  background: rgba(6,8,16,.88);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+}
+[data-theme="light"] nav { background: rgba(244,246,253,.9); }
+.nav-logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; letter-spacing: -.03em; display: flex; align-items: center; gap: .3rem; }
+.nav-logo .g { color: var(--teal); }
+.nav-links { display: flex; align-items: center; gap: 2.25rem; }
+.nav-links a { font-size: .82rem; font-weight: 600; color: var(--text2); letter-spacing: .01em; transition: color .2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--teal); }
+.nav-actions { display: flex; align-items: center; gap: .75rem; }
+.theme-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: .9rem; transition: border-color .2s; }
+.theme-btn:hover { border-color: var(--teal); }
+.nav-cta { background: var(--teal); color: #000; padding: .5rem 1.4rem; border-radius: var(--r); font-size: .8rem; font-weight: 700; letter-spacing: .02em; transition: box-shadow .2s, transform .2s; }
+.nav-cta:hover { box-shadow: 0 0 24px var(--teal-glow); transform: translateY(-1px); }
+@media (max-width: 768px) { .nav-links { display: none; } }
+
+/* ═══ HERO BANNER ═══ */
+.terms-hero {
+  padding: 110px 5vw 3rem;
+  position: relative; overflow: hidden;
+  background: linear-gradient(180deg, rgba(0,245,200,.04) 0%, transparent 60%);
+  border-bottom: 1px solid var(--border);
+}
+.terms-hero::before {
+  content: ''; position: absolute; top: -60px; left: -80px;
+  width: 500px; height: 400px;
+  background: radial-gradient(ellipse, rgba(0,245,200,.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.terms-breadcrumb {
+  display: flex; align-items: center; gap: .5rem; margin-bottom: 1.25rem;
+  font-size: .75rem; color: var(--text3); font-family: var(--font-mono); letter-spacing: .04em;
+}
+.terms-breadcrumb a { color: var(--teal); }
+.terms-breadcrumb span { color: var(--text3); }
+.terms-badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: var(--teal-dim); border: 1px solid rgba(0,245,200,.25);
+  color: var(--teal); font-family: var(--font-mono); font-size: .65rem;
+  font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  padding: .3rem .85rem; border-radius: 100px; margin-bottom: 1rem;
+}
+.terms-hero h1 {
+  font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800; letter-spacing: -.04em; line-height: 1.1;
+  margin-bottom: .75rem;
+}
+.terms-hero h1 .g { color: var(--teal); }
+.terms-hero p { color: var(--text2); font-size: .95rem; max-width: 560px; }
+.terms-meta {
+  display: flex; align-items: center; gap: 1.5rem; margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.terms-meta-item { font-size: .75rem; color: var(--text3); display: flex; align-items: center; gap: .35rem; font-family: var(--font-mono); }
+.terms-meta-item .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+
+/* ═══ LAYOUT ═══ */
+.terms-layout {
+  display: grid; grid-template-columns: 240px 1fr;
+  gap: 0; max-width: 1100px; margin: 0 auto;
+  padding: 3rem 5vw 6rem; align-items: start;
+}
+@media (max-width: 860px) { .terms-layout { grid-template-columns: 1fr; } }
+
+/* ═══ SIDEBAR TOC ═══ */
+.terms-toc {
+  position: sticky; top: 80px;
+  padding-right: 2rem;
+}
+.toc-title { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-bottom: 1rem; }
+.toc-list { list-style: none; display: flex; flex-direction: column; gap: .15rem; }
+.toc-list a {
+  font-size: .8rem; color: var(--text3); padding: .45rem .7rem;
+  border-radius: var(--r); display: block; transition: color .2s, background .2s;
+  border-left: 2px solid transparent; line-height: 1.4;
+}
+.toc-list a:hover { color: var(--teal); background: var(--teal-dim); border-left-color: var(--teal); }
+.toc-list a.active { color: var(--teal); background: var(--teal-dim); border-left-color: var(--teal); font-weight: 600; }
+@media (max-width: 860px) { .terms-toc { display: none; } }
+
+/* ═══ CONTENT ═══ */
+.terms-content { min-width: 0; }
+
+.terms-section {
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: 80px;
+}
+.terms-section:last-child { border-bottom: none; }
+
+.section-num {
+  font-family: var(--font-mono); font-size: .62rem; font-weight: 700;
+  color: var(--teal); letter-spacing: .1em; text-transform: uppercase;
+  margin-bottom: .5rem; display: block;
+}
+.terms-section h2 {
+  font-family: var(--font-display); font-size: 1.3rem; font-weight: 700;
+  letter-spacing: -.02em; margin-bottom: 1rem; color: var(--text);
+}
+.terms-section p { color: var(--text2); margin-bottom: .9rem; font-size: .95rem; }
+.terms-section p:last-child { margin-bottom: 0; }
+.terms-section ul { margin: .75rem 0 .9rem 1.25rem; display: flex; flex-direction: column; gap: .45rem; }
+.terms-section ul li { color: var(--text2); font-size: .93rem; }
+.terms-section ul li::marker { color: var(--teal); }
+.terms-section strong { color: var(--text); font-weight: 600; }
+.terms-section a { color: var(--teal); border-bottom: 1px solid rgba(0,245,200,.3); transition: border-color .2s; }
+.terms-section a:hover { border-color: var(--teal); }
+
+/* highlight boxes */
+.info-box {
+  background: var(--teal-dim); border: 1px solid rgba(0,245,200,.2);
+  border-left: 3px solid var(--teal); border-radius: var(--r);
+  padding: 1rem 1.2rem; margin: 1rem 0; font-size: .88rem; color: var(--text2);
+}
+.warn-box {
+  background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.2);
+  border-left: 3px solid #ef4444; border-radius: var(--r);
+  padding: 1rem 1.2rem; margin: 1rem 0; font-size: .88rem; color: var(--text2);
+}
+.warn-box strong, .info-box strong { color: var(--text); }
+
+/* contact card */
+.contact-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.5rem; margin-top: 1rem;
+  display: flex; flex-direction: column; gap: .75rem;
+}
+.contact-row { display: flex; align-items: center; gap: .75rem; }
+.contact-icon { width: 36px; height: 36px; border-radius: 9px; background: var(--teal-dim); border: 1px solid rgba(0,245,200,.2); display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+.contact-info { display: flex; flex-direction: column; gap: .1rem; }
+.contact-label { font-size: .68rem; color: var(--text3); font-family: var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.contact-val { font-size: .88rem; color: var(--teal); font-weight: 600; }
+
+/* ═══ FIRST VISIT MODAL ═══ */
+#tnc-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(6,8,16,.95);
+  backdrop-filter: blur(12px) saturate(160%);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  animation: overlayIn .4s ease;
+}
+@keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+#tnc-overlay.gone { animation: overlayOut .35s ease forwards; pointer-events: none; }
+@keyframes overlayOut { to { opacity: 0; transform: scale(.98); } }
+
+.tnc-modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-xl);
+  width: 100%; max-width: 620px;
+  max-height: 80vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 40px 100px rgba(0,0,0,.7), 0 0 60px rgba(0,245,200,.06);
+  overflow: hidden;
+  animation: modalIn .45s cubic-bezier(.16,1,.3,1);
+}
+@keyframes modalIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.tnc-modal-head {
+  padding: 1.75rem 2rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.tnc-modal-badge {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.25);
+  color: #f87171; font-family: var(--font-mono); font-size: .6rem;
+  font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  padding: .2rem .7rem; border-radius: 100px; margin-bottom: .75rem;
+}
+.tnc-modal-head h2 {
+  font-family: var(--font-display); font-size: 1.35rem; font-weight: 800;
+  letter-spacing: -.03em; margin-bottom: .35rem;
+}
+.tnc-modal-head h2 span { color: var(--teal); }
+.tnc-modal-head p { font-size: .82rem; color: var(--text2); }
+
+.tnc-modal-body {
+  flex: 1; overflow-y: auto; padding: 1.5rem 2rem;
+  scroll-behavior: smooth;
+}
+.tnc-modal-body::-webkit-scrollbar { width: 3px; }
+.tnc-modal-body::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 2px; }
+
+/* modal content styles */
+.modal-section { margin-bottom: 1.5rem; }
+.modal-section h3 {
+  font-family: var(--font-display); font-size: .88rem; font-weight: 700;
+  color: var(--teal); margin-bottom: .5rem; letter-spacing: -.01em;
+}
+.modal-section p { font-size: .83rem; color: var(--text2); margin-bottom: .4rem; line-height: 1.65; }
+.modal-section ul { margin-left: 1.1rem; display: flex; flex-direction: column; gap: .3rem; }
+.modal-section ul li { font-size: .82rem; color: var(--text2); }
+.modal-section ul li::marker { color: var(--teal); }
+.modal-divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+
+/* scroll progress in modal */
+.tnc-progress-wrap { height: 2px; background: var(--border); flex-shrink: 0; }
+.tnc-progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--teal), var(--violet)); transition: width .1s; }
+
+.tnc-modal-foot {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg3);
+}
+.tnc-agree-row {
+  display: flex; align-items: flex-start; gap: .75rem; margin-bottom: 1rem;
+}
+.tnc-checkbox-wrap { position: relative; flex-shrink: 0; margin-top: .1rem; }
+.tnc-checkbox { width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid var(--border2); background: var(--surface); appearance: none; cursor: pointer; transition: border-color .2s, background .2s; }
+.tnc-checkbox:checked { background: var(--teal); border-color: var(--teal); }
+.tnc-checkbox-wrap::after {
+  content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-52%);
+  font-size: .65rem; color: #000; font-weight: 900; pointer-events: none;
+  opacity: 0; transition: opacity .15s;
+}
+.tnc-checkbox:checked ~ .tnc-check-mark, .tnc-checkbox-wrap:has(:checked)::after { opacity: 1; }
+.tnc-agree-text { font-size: .8rem; color: var(--text2); line-height: 1.55; }
+.tnc-agree-text a { color: var(--teal); border-bottom: 1px solid rgba(0,245,200,.3); }
+
+.tnc-btn-row { display: flex; gap: .75rem; }
+.tnc-accept-btn {
+  flex: 1; background: linear-gradient(135deg, var(--teal), var(--teal2));
+  color: #000; padding: .75rem 1.5rem; border-radius: var(--r);
+  font-size: .88rem; font-weight: 800; letter-spacing: .02em;
+  border: none; cursor: pointer; transition: box-shadow .2s, transform .15s, opacity .2s;
+  font-family: var(--font-body);
+  opacity: .4; pointer-events: none;
+}
+.tnc-accept-btn.active { opacity: 1; pointer-events: auto; }
+.tnc-accept-btn.active:hover { box-shadow: 0 0 32px rgba(0,245,200,.45); transform: translateY(-1px); }
+.tnc-decline-btn {
+  padding: .75rem 1.25rem; border-radius: var(--r);
+  font-size: .82rem; font-weight: 600; color: var(--text3);
+  background: none; border: 1px solid var(--border);
+  cursor: pointer; transition: border-color .2s, color .2s;
+  font-family: var(--font-body);
+}
+.tnc-decline-btn:hover { border-color: #ef4444; color: #f87171; }
+
+.tnc-read-hint {
+  font-size: .72rem; color: var(--text3); text-align: center;
+  margin-top: .75rem; font-family: var(--font-mono);
+}
+
+/* ═══ FOOTER ═══ */
+.terms-footer {
+  border-top: 1px solid var(--border); padding: 2rem 5vw;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  flex-wrap: wrap;
+}
+.tf-logo { font-family: var(--font-display); font-size: 1rem; font-weight: 800; letter-spacing: -.02em; }
+.tf-logo span { color: var(--teal); }
+.tf-copy { font-size: .75rem; color: var(--text3); }
+.tf-links { display: flex; gap: 1.5rem; }
+.tf-links a { font-size: .75rem; color: var(--text3); transition: color .2s; }
+.tf-links a:hover { color: var(--teal); }
+</style>
+</head>
+<body>
+
+<div id="dot"></div>
+<div id="ring"></div>
+
+<!-- ═══ FIRST-VISIT TERMS MODAL ═══ -->
+<div id="tnc-overlay">
+  <div class="tnc-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+
+    <div class="tnc-modal-head">
+      <div class="tnc-modal-badge">⚠ Please Read Before Continuing</div>
+      <h2 id="modalTitle">Terms &amp; <span>Conditions</span></h2>
+      <p>Review our terms below. You must agree to continue using Portfolio&nbsp;Forge.</p>
+    </div>
+
+    <div class="tnc-progress-wrap">
+      <div class="tnc-progress-bar" id="modalProgress"></div>
+    </div>
+
+    <div class="tnc-modal-body" id="modalBody">
+
+      <div class="modal-section">
+        <h3>1. Introduction</h3>
+        <p>Welcome to <strong>Portfolio Forge</strong>. By accessing or using our website and services, you agree to these Terms and Conditions. Portfolio Forge is a digital service based in India that provides portfolio website design, development, and delivery services to students, professionals, and freelancers.</p>
+      </div>
+      <div class="modal-divider"></div>
+
+      <div class="modal-section">
+        <h3>2. Acceptance of Terms</h3>
+        <p>By placing an order, making a payment, or using any part of our service, you confirm that you have read, understood, and agreed to these terms. If you do not agree, please do not use our services.</p>
+      </div>
+      <div class="modal-divider"></div>
+
+      <div class="modal-section">
+        <h3>3. Services</h3>
+        <p>Portfolio Forge offers portfolio website creation services including UI/UX design, front-end development, revisions, and optional deployment. Exact deliverables are defined at the time of order and may vary by plan.</p>
+      </div>
+      <div class="modal-divider"></div>
+
+      <div class="modal-section">
+        <h3>4. Payments & Refunds</h3>
+        <p><strong>No refunds are issued once work has begun.</strong> A refund may be considered only if work has not yet started. By paying, you acknowledge this policy. In the event of a dispute, please contact us before initiating any chargeback.</p>
+      </div>
+      <div class="modal-divider"></div>
+
+      <div class="modal-section">
+        <h3>5. Intellectual Property</h3>
+        <p>Once full payment is received, the final source code and design assets are transferred to the client. Portfolio Forge retains the right to showcase completed work in its portfolio unless you request otherwise in writing.</p>
+      </div>
+      <div class="modal-divider"></div>
+
+      <div class="modal-section">
+        <h3>6. Delivery & Revisions</h3>
+        <p>We aim to deliver all projects within <strong>24 hours</strong> of confirmed payment. Revision rounds are included as per your plan. Additional revisions beyond the included rounds may be charged separately.</p>
+      </div>
+      <div class="modal-divider"></div>
+
+      <div class="modal-section">
+        <h3>7. Limitation of Liability</h3>
+        <p>Portfolio Forge is not liable for any indirect, incidental, or consequential damages arising from the use of our services. Our total liability shall not exceed the amount paid for the specific service in question.</p>
+      </div>
+      <div class="modal-divider"></div>
+
+      <div class="modal-section">
+        <h3>8. Privacy</h3>
+        <p>We collect only the information necessary to deliver your order. Your personal data is never sold to third parties. For full details, please refer to our Privacy Policy.</p>
+      </div>
+      <div class="modal-divider"></div>
+
+      <div class="modal-section">
+        <h3>9. Changes to Terms</h3>
+        <p>Portfolio Forge reserves the right to update these terms at any time. Continued use of our services after changes constitutes acceptance of the revised terms. Last updated: <strong>March 2026</strong>.</p>
+      </div>
+
+    </div><!-- end modal body -->
+
+    <div class="tnc-modal-foot">
+      <div class="tnc-agree-row">
+        <div class="tnc-checkbox-wrap">
+          <input type="checkbox" class="tnc-checkbox" id="tncCheck" onchange="onCheckChange(this)"/>
+        </div>
+        <label for="tncCheck" class="tnc-agree-text">
+          I have read and agree to Portfolio Forge's <a href="terms.html">Terms &amp; Conditions</a>. I understand the refund policy and service delivery timelines.
+        </label>
+      </div>
+      <div class="tnc-btn-row">
+        <button class="tnc-accept-btn" id="acceptBtn" onclick="acceptTerms()">I Agree &amp; Continue →</button>
+        <button class="tnc-decline-btn" onclick="declineTerms()">Decline</button>
+      </div>
+      <p class="tnc-read-hint" id="readHint">↓ Scroll to read all terms before agreeing</p>
+    </div>
+
+  </div>
+</div><!-- end modal overlay -->
+
+<!-- ═══ NAV ═══ -->
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo">Portfolio<span class="g">Forge</span></a>
+  <div class="nav-links">
+    <a href="index.html#pricing">Our Services</a>
+    <a href="about.html">About Us</a>
+    <a href="terms.html" class="active">Terms &amp; Conditions</a>
+    <a href="submit-order.html">Order Now</a>
+  </div>
+  <div class="nav-actions">
+    <button class="theme-btn" id="themeBtn" title="Toggle theme" onclick="toggleTheme()">🌙</button>
+    <a href="submit-order.html" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO BANNER ═══ -->
+<header class="terms-hero">
+  <div class="terms-breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span>Terms &amp; Conditions</span>
+  </div>
+  <div class="terms-badge">📄 Legal Document</div>
+  <h1>Terms &amp; <span class="g">Conditions</span></h1>
+  <p>Please read these terms carefully. By using Portfolio Forge's services, you agree to be bound by the policies described below.</p>
+  <div class="terms-meta">
+    <div class="terms-meta-item"><div class="dot"></div>Last Updated: March 2026</div>
+    <div class="terms-meta-item"><div class="dot"></div>Jurisdiction: India</div>
+    <div class="terms-meta-item"><div class="dot"></div>Effective Immediately</div>
+  </div>
+</header>
+
+<!-- ═══ MAIN LAYOUT ═══ -->
+<div class="terms-layout">
+
+  <!-- Sidebar TOC -->
+  <aside class="terms-toc">
+    <div class="toc-title">On this page</div>
+    <ul class="toc-list" id="tocList">
+      <li><a href="#s1">1. Introduction</a></li>
+      <li><a href="#s2">2. Acceptance of Terms</a></li>
+      <li><a href="#s3">3. Services Description</a></li>
+      <li><a href="#s4">4. User Responsibilities</a></li>
+      <li><a href="#s5">5. Payments &amp; Refunds</a></li>
+      <li><a href="#s6">6. Intellectual Property</a></li>
+      <li><a href="#s7">7. Revisions &amp; Delivery</a></li>
+      <li><a href="#s8">8. Limitation of Liability</a></li>
+      <li><a href="#s9">9. Termination of Service</a></li>
+      <li><a href="#s10">10. Third-Party Tools</a></li>
+      <li><a href="#s11">11. Privacy Reference</a></li>
+      <li><a href="#s12">12. Changes to Terms</a></li>
+      <li><a href="#s13">13. Contact Information</a></li>
+    </ul>
+  </aside>
+
+  <!-- Content -->
+  <main class="terms-content">
+
+    <section class="terms-section" id="s1">
+      <span class="section-num">Section 01</span>
+      <h2>Introduction</h2>
+      <p>Welcome to <strong>Portfolio Forge</strong> ("we," "us," or "our"). We are a digital service provider based in India, specialising in building professional portfolio websites for students, freelancers, and professionals.</p>
+      <p>These Terms and Conditions govern your use of our website and the services we offer, including but not limited to portfolio design, web development, revisions, and deployment. By accessing our website or placing an order, you confirm that you have read, understood, and agreed to these terms.</p>
+      <div class="info-box">
+        <strong>Simple version:</strong> These are the rules of using Portfolio Forge. They protect both you and us. Read them once — they're written in plain language.
+      </div>
+    </section>
+
+    <section class="terms-section" id="s2">
+      <span class="section-num">Section 02</span>
+      <h2>Acceptance of Terms</h2>
+      <p>By accessing this website, placing an order, making a payment, or submitting any form on our platform, you agree to be legally bound by these Terms and Conditions.</p>
+      <p>If you do not agree with any part of these terms, you must not use our services. We may update these terms periodically, and your continued use of our services after any change constitutes your acceptance of the new terms.</p>
+      <p>These terms apply to all users of our services, regardless of how they access the website — whether via desktop, mobile, or any other device.</p>
+    </section>
+
+    <section class="terms-section" id="s3">
+      <span class="section-num">Section 03</span>
+      <h2>Services Description</h2>
+      <p>Portfolio Forge provides the following services to clients:</p>
+      <ul>
+        <li><strong>Portfolio Website Design</strong> — Custom UI/UX design tailored to your profession and brand identity.</li>
+        <li><strong>Web Development</strong> — Hand-coded, responsive websites delivered as source files (HTML, CSS, JavaScript).</li>
+        <li><strong>Revisions</strong> — Modification rounds included as per the selected plan (see pricing page for details).</li>
+        <li><strong>Deployment Assistance</strong> — Guidance or assistance in hosting your website on platforms such as GitHub Pages, Netlify, or Vercel (available in select plans).</li>
+        <li><strong>Custom Add-ons</strong> — Additional features or pages may be available upon request for an additional fee.</li>
+      </ul>
+      <p>The exact scope of work is determined at the time of order based on the plan selected. We reserve the right to modify or update our service offerings at any time without prior notice.</p>
+    </section>
+
+    <section class="terms-section" id="s4">
+      <span class="section-num">Section 04</span>
+      <h2>User Responsibilities</h2>
+      <p>As a client of Portfolio Forge, you agree to the following responsibilities:</p>
+      <ul>
+        <li>Provide accurate and complete information when placing your order, including your name, contact details, and project requirements.</li>
+        <li>Share all necessary content (text, images, links, references) required to build your portfolio in a timely manner.</li>
+        <li>Ensure that any content you provide does not infringe on the intellectual property rights of others.</li>
+        <li>Refrain from using our services for any unlawful, harmful, or fraudulent purpose.</li>
+        <li>Not attempt to resell, redistribute, or misrepresent Portfolio Forge's work as your own original service offering to third parties for commercial gain without our consent.</li>
+        <li>Respond to our communication in a reasonable time to avoid delays in delivery.</li>
+      </ul>
+      <p>We reserve the right to refuse or cancel your order if we determine that any of the above responsibilities have been violated.</p>
+    </section>
+
+    <section class="terms-section" id="s5">
+      <span class="section-num">Section 05</span>
+      <h2>Payments and Refund Policy</h2>
+      <p>All payments must be made in full before work begins, unless otherwise agreed upon in writing. We accept UPI-based payments (Google Pay, PhonePe, Paytm) and other methods as listed at the time of checkout.</p>
+
+      <div class="warn-box">
+        <strong>⚠ No Refund Policy:</strong> Once work has commenced on your project, no refund will be issued under any circumstances. This includes cases where you change your mind, fail to provide required content, or request cancellation mid-project.
+      </div>
+
+      <p>A refund may be considered <strong>only</strong> in the following situations:</p>
+      <ul>
+        <li>Payment was made but Portfolio Forge has not yet started any work on your project.</li>
+        <li>A confirmed technical error resulted in a duplicate payment from your end.</li>
+      </ul>
+      <p>In all refund requests, we require written notice via email within 24 hours of payment. Refund requests after this window will not be entertained.</p>
+      <p>Prices are listed in Indian Rupees (₹) and are subject to change. GST or other applicable taxes may apply where required by Indian law.</p>
+    </section>
+
+    <section class="terms-section" id="s6">
+      <span class="section-num">Section 06</span>
+      <h2>Intellectual Property Rights</h2>
+      <p>Upon receipt of full payment, Portfolio Forge transfers ownership of the final delivered source code and design assets to you, the client. You are free to use, modify, host, and maintain your portfolio website as you see fit.</p>
+      <p>However, the following conditions apply:</p>
+      <ul>
+        <li>Portfolio Forge retains the right to showcase completed projects in our portfolio, social media, or marketing materials, unless you explicitly request otherwise in writing at the time of order.</li>
+        <li>Any third-party libraries, frameworks, or open-source tools used in your project are subject to their own licenses and terms.</li>
+        <li>The design concepts, templates, or base components created by Portfolio Forge may be reused or adapted for other clients, while ensuring your final delivery is customised and unique.</li>
+      </ul>
+      <p>You may not resell or redistribute our work as a standalone template or product without our prior written consent.</p>
+    </section>
+
+    <section class="terms-section" id="s7">
+      <span class="section-num">Section 07</span>
+      <h2>Revisions and Delivery Policy</h2>
+      <p>Portfolio Forge aims to deliver all completed projects within <strong>24 hours</strong> of confirmed payment and receipt of all required content from the client. Delays caused by incomplete or late content submission from the client are not the responsibility of Portfolio Forge.</p>
+      <p>Revision rounds are included as per the selected plan:</p>
+      <ul>
+        <li><strong>Starter Plan</strong> — No free revision rounds included; revisions available at an additional charge.</li>
+        <li><strong>Pro Plan</strong> — Includes a defined number of free revision rounds (refer to pricing page).</li>
+        <li><strong>Premium Plan</strong> — Includes multiple revision rounds with broader customisation scope.</li>
+      </ul>
+      <p>A "revision" refers to minor text changes, colour adjustments, or layout tweaks — not a complete redesign or scope change. If your revision request falls outside the original project scope, an additional fee may apply.</p>
+      <div class="info-box">
+        <strong>Delivery guarantee:</strong> If we fail to deliver your project within the agreed timeframe (excluding client-side delays), you are entitled to a full refund.
+      </div>
+    </section>
+
+    <section class="terms-section" id="s8">
+      <span class="section-num">Section 08</span>
+      <h2>Limitation of Liability</h2>
+      <p>Portfolio Forge provides its services on an "as-is" and "as-available" basis. While we strive for high quality and timely delivery, we do not guarantee that our services will be error-free or uninterrupted.</p>
+      <p>To the maximum extent permitted by applicable Indian law, Portfolio Forge shall not be held liable for:</p>
+      <ul>
+        <li>Any indirect, incidental, special, or consequential damages arising from the use of our services.</li>
+        <li>Loss of data, revenue, business opportunities, or reputation resulting from our work or delays.</li>
+        <li>Issues arising from third-party hosting providers, domain registrars, or external platforms.</li>
+        <li>Any damages exceeding the total amount paid by the client for the specific service in question.</li>
+      </ul>
+      <p>This limitation applies even if Portfolio Forge was advised of the possibility of such damages.</p>
+    </section>
+
+    <section class="terms-section" id="s9">
+      <span class="section-num">Section 09</span>
+      <h2>Termination of Service</h2>
+      <p>Portfolio Forge reserves the right to terminate or suspend service to any client at any time, with or without notice, for the following reasons:</p>
+      <ul>
+        <li>Violation of any part of these Terms and Conditions.</li>
+        <li>Abusive, threatening, or inappropriate communication with our team.</li>
+        <li>Fraudulent payment activity or chargebacks without valid cause.</li>
+        <li>Requests to create content that is illegal, harmful, or unethical.</li>
+      </ul>
+      <p>In the event of termination initiated by Portfolio Forge for any of the above reasons, no refund will be issued for work already completed or in progress.</p>
+      <p>Clients may cancel their order before work begins by contacting us via email or WhatsApp. Cancellations after work has started are subject to the refund policy described in Section 5.</p>
+    </section>
+
+    <section class="terms-section" id="s10">
+      <span class="section-num">Section 10</span>
+      <h2>Third-Party Links and Tools</h2>
+      <p>Our website and delivered projects may include links to or integrations with third-party services, platforms, and tools, including but not limited to:</p>
+      <ul>
+        <li>GitHub, Netlify, Vercel (for hosting and deployment)</li>
+        <li>Google Fonts, Font Awesome, and other open-source asset libraries</li>
+        <li>WhatsApp (for communication and order tracking)</li>
+        <li>UPI payment platforms (Google Pay, PhonePe, Paytm)</li>
+      </ul>
+      <p>Portfolio Forge is not responsible for the content, privacy practices, or terms of service of any third-party platforms. We encourage you to review the privacy policies of any third-party services you use in connection with our work.</p>
+      <p>The inclusion of third-party tools or links does not imply endorsement or any partnership between Portfolio Forge and those platforms.</p>
+    </section>
+
+    <section class="terms-section" id="s11">
+      <span class="section-num">Section 11</span>
+      <h2>Privacy Reference</h2>
+      <p>Your privacy matters to us. Portfolio Forge collects only the minimum personal information necessary to process and deliver your order. This may include your name, email address, phone number, and project-related details shared during the order process.</p>
+      <p>We do not sell, rent, or share your personal data with third parties for marketing purposes. Data shared with us is used solely for service delivery, communication, and internal record-keeping.</p>
+      <p>By using our services, you consent to the collection and use of your information as described above. For a more detailed breakdown of our data practices, please refer to our full Privacy Policy (available on request).</p>
+      <div class="info-box">
+        <strong>GDPR / Indian Data Laws:</strong> Portfolio Forge operates in compliance with applicable Indian data protection laws and follows reasonable practices to safeguard your information.
+      </div>
+    </section>
+
+    <section class="terms-section" id="s12">
+      <span class="section-num">Section 12</span>
+      <h2>Changes to Terms</h2>
+      <p>Portfolio Forge reserves the right to revise, update, or replace any part of these Terms and Conditions at any time. Changes become effective immediately upon posting to this page.</p>
+      <p>It is your responsibility to review these terms periodically. Continued use of our services after any modifications constitutes your acceptance of the updated terms.</p>
+      <p>We will make reasonable efforts to notify active clients of significant changes via email or a notice on our website. However, we are not obligated to provide individual notifications for every update.</p>
+      <p><strong>Current version:</strong> March 2026 — v1.0</p>
+    </section>
+
+    <section class="terms-section" id="s13">
+      <span class="section-num">Section 13</span>
+      <h2>Contact Information</h2>
+      <p>If you have any questions, concerns, or requests regarding these Terms and Conditions, or wish to raise a dispute, please reach out to us through any of the following channels. We aim to respond within 24 hours on business days.</p>
+      <div class="contact-card">
+        <div class="contact-row">
+          <div class="contact-icon">✉️</div>
+          <div class="contact-info">
+            <div class="contact-label">Email</div>
+            <div class="contact-val">support@portfolioforge.in</div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">💬</div>
+          <div class="contact-info">
+            <div class="contact-label">WhatsApp</div>
+            <div class="contact-val">+91 XXXXX XXXXX</div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">📍</div>
+          <div class="contact-info">
+            <div class="contact-label">Location</div>
+            <div class="contact-val">India — Governed by Indian Law</div>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:1rem">These Terms and Conditions constitute the entire agreement between you and Portfolio Forge with respect to our services and supersede all prior communications or agreements, whether written or oral.</p>
+    </section>
+
+  </main>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="terms-footer">
+  <div class="tf-logo">Portfolio<span>Forge</span></div>
+  <span class="tf-copy">© 2026 Portfolio Forge. All rights reserved. India.</span>
+  <div class="tf-links">
+    <a href="index.html">Home</a>
+    <a href="terms.html">Terms</a>
+    <a href="about.html">About</a>
+    <a href="submit-order.html">Order</a>
+  </div>
+</footer>
+
+<script>
+// ── Custom cursor ──
+const dot = document.getElementById('dot');
+const ring = document.getElementById('ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
+(function loopRing() { rx += (mx - rx) * .14; ry += (my - ry) * .14; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(loopRing); })();
+
+// ── Theme toggle ──
+function toggleTheme() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
+  localStorage.setItem('pf_theme', isLight ? 'dark' : 'light');
+}
+(function() {
+  const t = localStorage.getItem('pf_theme');
+  if (t) { document.documentElement.setAttribute('data-theme', t); document.getElementById('themeBtn').textContent = t === 'light' ? '☀️' : '🌙'; }
+})();
+
+// ── First-visit modal logic ──
+const ACCEPTED_KEY = 'pf_tnc_accepted_v1';
+const overlay = document.getElementById('tnc-overlay');
+const modalBody = document.getElementById('modalBody');
+const progressBar = document.getElementById('modalProgress');
+const acceptBtn = document.getElementById('acceptBtn');
+const readHint = document.getElementById('readHint');
+let hasScrolled = false;
+
+// Check if already accepted
+if (localStorage.getItem(ACCEPTED_KEY) === 'yes') {
+  overlay.style.display = 'none';
+}
+
+// Track scroll progress in modal
+modalBody.addEventListener('scroll', () => {
+  const scrolled = modalBody.scrollTop;
+  const total = modalBody.scrollHeight - modalBody.clientHeight;
+  const pct = Math.min(100, Math.round((scrolled / total) * 100));
+  progressBar.style.width = pct + '%';
+  if (pct >= 85 && !hasScrolled) {
+    hasScrolled = true;
+    readHint.style.opacity = '0';
+    readHint.textContent = '✓ You have read the terms';
+    setTimeout(() => { readHint.style.opacity = '1'; }, 100);
+  }
+});
+
+function onCheckChange(cb) {
+  if (cb.checked) {
+    acceptBtn.classList.add('active');
+  } else {
+    acceptBtn.classList.remove('active');
+  }
+}
+
+function acceptTerms() {
+  localStorage.setItem(ACCEPTED_KEY, 'yes');
+  overlay.classList.add('gone');
+  setTimeout(() => { overlay.style.display = 'none'; }, 380);
+}
+
+function declineTerms() {
+  // redirect to a neutral page or back
+  window.location.href = 'index.html';
+}
+
+// ── Sticky TOC active state ──
+const sections = document.querySelectorAll('.terms-section');
+const tocLinks = document.querySelectorAll('.toc-list a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      tocLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
