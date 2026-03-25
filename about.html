@@ -64,41 +64,150 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:cen
 .rv.in{opacity:1;transform:none}
 .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.32s}.d4{transition-delay:.44s}
 
-/* ───── HERO ───── */
-.hero{position:relative;z-index:1;min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 5vw 4rem;overflow:hidden}
-.hg1{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(0,245,200,.09) 0%,transparent 65%);top:-150px;left:-150px;animation:fa 9s ease-in-out infinite;pointer-events:none}
-.hg2{position:absolute;width:550px;height:550px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.07) 0%,transparent 65%);bottom:-80px;right:-100px;animation:fb 11s ease-in-out infinite;pointer-events:none}
-.hg3{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.05) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);animation:fc 7s ease-in-out infinite;pointer-events:none}
-@keyframes fa{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(60px,40px) scale(1.12)}}
-@keyframes fb{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-45px,-55px) scale(1.1)}}
-@keyframes fc{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.15)}}
+/* ───── HERO — exact match to index.html ───── */
+.hero{
+  min-height:100svh;padding:80px 5vw 3rem;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.hero-mesh{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 70% at 65% 40%,rgba(0,245,200,.05) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 50% at 10% 80%,rgba(139,92,246,.04) 0%,transparent 60%);
+}
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,245,200,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,245,200,.022) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 100% 90% at 50% 40%,black 30%,transparent 100%);
+}
+.hero-inner{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;
+  max-width:1200px;
+}
+@media(max-width:860px){.hero-inner{grid-template-columns:1fr;gap:2rem}}
+@media(max-width:480px){.hero-inner{gap:1.5rem}}
 
-.eyebrow{display:inline-flex;align-items:center;gap:.6rem;background:rgba(0,245,200,.07);border:1px solid rgba(0,245,200,.2);padding:.32rem 1rem;border-radius:100px;font-family:var(--fm);font-size:.67rem;color:var(--teal);letter-spacing:.07em;margin-bottom:1.75rem}
-.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal);animation:blink 1.6s ease infinite}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.6rem;
+  background:rgba(0,245,200,.08);border:1px solid rgba(0,245,200,.18);
+  padding:.32rem 1rem;border-radius:100px;
+  font-family:var(--fm);font-size:.68rem;color:var(--teal);
+  letter-spacing:.06em;margin-bottom:1.5rem;
+}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal);animation:blink 1.5s ease infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
 
-.h1{font-family:var(--fd);font-size:clamp(3rem,8.5vw,6.8rem);font-weight:800;line-height:.9;letter-spacing:-.04em;margin-bottom:1.5rem}
-.h1 .l1{display:block;color:var(--text);animation:slideUp .8s cubic-bezier(.16,1,.3,1) .2s both}
-.h1 .l2{display:block;color:var(--teal);position:relative;animation:slideUp .8s cubic-bezier(.16,1,.3,1) .35s both}
-.h1 .l2 .glow{position:absolute;inset:0;color:transparent;-webkit-text-stroke:1px rgba(0,245,200,.2);filter:blur(10px);opacity:.7;animation:glowPulse 3s ease-in-out infinite alternate;pointer-events:none;user-select:none}
-.h1 .l3{display:block;-webkit-text-stroke:1.5px rgba(240,242,250,.2);color:transparent;animation:slideUp .8s cubic-bezier(.16,1,.3,1) .5s both}
-@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
-@keyframes glowPulse{0%{filter:blur(8px);opacity:.4}100%{filter:blur(16px);opacity:.85}}
+h1.hero-headline{
+  font-family:var(--fd);
+  font-size:clamp(1.85rem,6vw,4.8rem);
+  line-height:.95;letter-spacing:-.03em;
+  color:var(--text);font-weight:800;
+}
+h1.hero-headline .accent{color:var(--teal);display:inline-block}
+h1.hero-headline .outline{-webkit-text-stroke:1.5px rgba(240,242,250,.45);color:transparent}
 
-.lead{font-size:clamp(.9rem,2.2vw,1.1rem);color:var(--text2);line-height:1.85;max-width:580px;margin:0 auto 2.5rem;font-weight:300}
+.hero-sub{
+  margin-top:1.5rem;max-width:480px;
+  font-size:.95rem;font-weight:300;color:var(--text2);line-height:1.8;
+}
+.hero-sub strong{color:var(--text);font-weight:600}
+
+.hero-ctas{display:flex;align-items:center;gap:1.1rem;margin-top:2rem;flex-wrap:wrap}
+
+.btn-primary{
+  background:var(--teal);color:#000;
+  padding:.95rem 2.5rem;border-radius:var(--r);
+  font-size:.9rem;font-weight:700;letter-spacing:.01em;
+  display:inline-flex;align-items:center;gap:.5rem;
+  transition:box-shadow .25s,transform .25s;border:none;cursor:pointer;
+  position:relative;overflow:hidden;
+}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2) 0%,transparent 50%)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(0,245,200,.4);transform:translateY(-2px)}
+
+.btn-ghost{
+  background:transparent;border:1px solid var(--border);color:var(--text2);
+  padding:.95rem 2rem;border-radius:var(--r);
+  font-size:.9rem;font-weight:500;
+  transition:border-color .2s,color .2s;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.5rem;
+}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal)}
+
+.trust-row{display:flex;align-items:center;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap}
+.trust-badge{display:flex;align-items:center;gap:.4rem;font-size:.74rem;font-weight:500;color:var(--text3)}
+.trust-badge .icon{font-size:.9rem}
+
+/* RIGHT: benefit cards */
+.hero-right{display:flex;flex-direction:column;gap:1rem}
+@media(max-width:860px){.hero-right{display:none}}
+
+.hero-benefit-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--rl);padding:1.4rem 1.6rem;
+  display:flex;align-items:center;gap:1.25rem;
+  cursor:pointer;
+  transition:border-color .25s,transform .25s,box-shadow .25s,background .25s;
+  position:relative;overflow:hidden;
+  text-decoration:none;
+}
+.hero-benefit-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  border-radius:3px 0 0 3px;transition:opacity .25s;opacity:0;
+}
+.hero-benefit-card:nth-child(1)::before{background:var(--teal)}
+.hero-benefit-card:nth-child(2)::before{background:var(--amber)}
+.hero-benefit-card:nth-child(3)::before{background:#a78bfa}
+.hero-benefit-card:hover::before{opacity:1}
+.hero-benefit-card:hover{transform:translateX(6px);background:rgba(20,24,44,.85)}
+.hero-benefit-card:nth-child(1):hover{border-color:rgba(0,245,200,.35);box-shadow:0 8px 32px rgba(0,245,200,.08)}
+.hero-benefit-card:nth-child(2):hover{border-color:rgba(245,158,11,.35);box-shadow:0 8px 32px rgba(245,158,11,.08)}
+.hero-benefit-card:nth-child(3):hover{border-color:rgba(167,139,250,.35);box-shadow:0 8px 32px rgba(167,139,250,.08)}
+
+.hb-icon{
+  width:46px;height:46px;border-radius:var(--r);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+}
+.hero-benefit-card:nth-child(1) .hb-icon{background:rgba(0,245,200,.1)}
+.hero-benefit-card:nth-child(2) .hb-icon{background:rgba(245,158,11,.1)}
+.hero-benefit-card:nth-child(3) .hb-icon{background:rgba(167,139,250,.1)}
+
+.hb-title{font-family:var(--fd);font-size:1.1rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.2rem}
+.hero-benefit-card:nth-child(1) .hb-title{color:var(--teal)}
+.hero-benefit-card:nth-child(2) .hb-title{color:var(--amber)}
+.hero-benefit-card:nth-child(3) .hb-title{color:#a78bfa}
+.hb-desc{font-size:.8rem;color:var(--text3);font-weight:400;line-height:1.5}
+
+.hb-arrow{margin-left:auto;font-size:.9rem;color:var(--text3);transition:transform .25s,color .25s;flex-shrink:0}
+.hero-benefit-card:hover .hb-arrow{transform:translateX(4px)}
+.hero-benefit-card:nth-child(1):hover .hb-arrow{color:var(--teal)}
+.hero-benefit-card:nth-child(2):hover .hb-arrow{color:var(--amber)}
+.hero-benefit-card:nth-child(3):hover .hb-arrow{color:#a78bfa}
+
+/* scroll hint */
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:.3;animation:sbounce 2.2s ease-in-out infinite;z-index:2}
+.scroll-hint span{font-family:var(--fm);font-size:.56rem;letter-spacing:.1em;color:var(--text3)}
+.sarrow{width:13px;height:13px;border-right:1.5px solid var(--text3);border-bottom:1.5px solid var(--text3);transform:rotate(45deg)}
+@keyframes sbounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+/* keep old .lead for compat */
+.lead{
+  font-size:clamp(.88rem,2vw,1rem);color:var(--text2);
+  line-height:1.85;max-width:480px;margin:0 0 2.5rem;font-weight:300;
+}
 .lead strong{color:var(--text);font-weight:600}
-.hbtns{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap}
 
-.btn-p{background:var(--teal);color:#000;padding:1rem 2.5rem;border-radius:var(--r);font-size:.9rem;font-weight:700;letter-spacing:.01em;display:inline-flex;align-items:center;gap:.5rem;transition:box-shadow .25s,transform .2s;position:relative;overflow:hidden}
+/* btn-p and btn-g kept for CTA section compatibility */
+.btn-p{background:var(--teal);color:#000;padding:.95rem 2.2rem;border-radius:var(--r);font-size:.88rem;font-weight:700;letter-spacing:.01em;display:inline-flex;align-items:center;gap:.5rem;transition:box-shadow .25s,transform .2s;position:relative;overflow:hidden}
 .btn-p::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2) 0%,transparent 55%)}
 .btn-p:hover{box-shadow:0 0 50px var(--teal-glow);transform:translateY(-2px)}
-.btn-g{background:transparent;border:1.5px solid rgba(30,36,64,.9);color:var(--text2);padding:.95rem 2rem;border-radius:var(--r);font-size:.88rem;font-weight:600;display:inline-flex;align-items:center;gap:.5rem;transition:border-color .2s,color .2s,transform .2s}
+.btn-g{background:transparent;border:1.5px solid var(--border);color:var(--text2);padding:.9rem 1.8rem;border-radius:var(--r);font-size:.86rem;font-weight:600;display:inline-flex;align-items:center;gap:.5rem;transition:border-color .2s,color .2s,transform .2s}
 .btn-g:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
-
-.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:.35;animation:sbounce 2.2s ease-in-out infinite}
-.scroll-hint span{font-family:var(--fm);font-size:.56rem;letter-spacing:.1em;color:var(--text3)}
-.sarrow{width:14px;height:14px;border-right:1.5px solid var(--text3);border-bottom:1.5px solid var(--text3);transform:rotate(45deg)}
-@keyframes sbounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
 
 /* ───── SECTIONS ───── */
 .sec{position:relative;z-index:1;padding:6rem 5vw}
@@ -112,22 +221,110 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:cen
 
 /* ───── STORY ───── */
 .story-sec{background:linear-gradient(180deg,var(--bg) 0%,#080c1a 100%)}
-.slay{display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center;margin-top:4rem}
-@media(max-width:860px){.slay{grid-template-columns:1fr;gap:3rem}}
+.slay{display:flex;flex-direction:column;gap:3.5rem;margin-top:4rem}
 .stext p{font-size:.95rem;color:var(--text2);line-height:1.95;font-weight:300;margin-bottom:1.3rem}
 .stext p strong{color:var(--text);font-weight:600}
 .stext p:last-child{margin-bottom:0}
 
-/* 3D stat cards */
-.sg{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;perspective:900px}
-.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.75rem 1.5rem;text-align:center;position:relative;overflow:hidden;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s,border-color .45s;cursor:default;backdrop-filter:blur(12px)}
-.sc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 60%);border-radius:inherit}
-.sc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cc);opacity:0;transition:opacity .4s}
-.sc:hover::after{opacity:1}
-.sc:nth-child(1){--cc:var(--teal)}.sc:nth-child(2){--cc:var(--amber)}.sc:nth-child(3){--cc:#a78bfa}.sc:nth-child(4){--cc:var(--teal)}
-.sc:hover{border-color:var(--cc);box-shadow:0 24px 70px rgba(0,0,0,.5),0 0 0 1px var(--cc),inset 0 1px 0 rgba(255,255,255,.06)}
-.snum{font-family:var(--fd);font-size:2.8rem;font-weight:800;color:var(--cc);letter-spacing:-.04em;line-height:1}
-.slbl{font-family:var(--fm);font-size:.57rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:.5rem}
+/* ── 4 floating cards in ONE horizontal row ── */
+.sg{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1rem;
+  width:100%;
+}
+@media(max-width:860px){
+  /* on mobile: 2×2 */
+  .sg{grid-template-columns:1fr 1fr}
+}
+
+/* Staggered float keyframes — each card unique rhythm & offset */
+@keyframes floatA{
+  0%,100%{transform:translateY(0)}
+  40%    {transform:translateY(-18px)}
+  75%    {transform:translateY(-9px)}
+}
+@keyframes floatB{
+  0%,100%{transform:translateY(0)}
+  30%    {transform:translateY(-12px)}
+  60%    {transform:translateY(-22px)}
+  85%    {transform:translateY(-7px)}
+}
+@keyframes floatC{
+  0%,100%{transform:translateY(0)}
+  20%    {transform:translateY(-20px)}
+  55%    {transform:translateY(-8px)}
+  80%    {transform:translateY(-16px)}
+}
+@keyframes floatD{
+  0%,100%{transform:translateY(0)}
+  35%    {transform:translateY(-10px)}
+  65%    {transform:translateY(-20px)}
+  90%    {transform:translateY(-5px)}
+}
+
+.sc{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--rl);
+  padding:1.75rem 1rem 1.5rem;
+  text-align:center;
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(14px);
+  cursor:default;
+  transition:border-color .35s,box-shadow .35s;
+  will-change:transform;
+}
+
+/* Glossy inner sheen */
+.sc::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.055) 0%,transparent 55%);
+  pointer-events:none;border-radius:inherit;
+}
+
+/* Top accent line — always visible */
+.sc::after{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:2.5px;
+  background:var(--cc);border-radius:2px 2px 0 0;
+  transition:box-shadow .35s;
+}
+
+/* Per-card colour + float */
+.sc:nth-child(1){--cc:var(--teal);  animation:floatA 7s  ease-in-out infinite;}
+.sc:nth-child(2){--cc:var(--amber); animation:floatB 9s  ease-in-out .8s infinite;}
+.sc:nth-child(3){--cc:#a78bfa;      animation:floatC 8s  ease-in-out 1.4s infinite;}
+.sc:nth-child(4){--cc:var(--teal);  animation:floatD 10s ease-in-out .4s infinite;}
+
+/* Hover: pause + glow */
+.sc:hover{
+  animation-play-state:paused;
+  border-color:var(--cc);
+  box-shadow:0 16px 50px rgba(0,0,0,.4),0 0 0 1px var(--cc),inset 0 1px 0 rgba(255,255,255,.07);
+}
+.sc:hover::after{box-shadow:0 0 14px var(--cc)}
+
+/* Glow orb behind number */
+.sc-orb{
+  position:absolute;bottom:-24px;right:-24px;
+  width:80px;height:80px;border-radius:50%;
+  background:var(--cc);filter:blur(30px);opacity:.1;
+  pointer-events:none;transition:opacity .35s;
+}
+.sc:hover .sc-orb{opacity:.3}
+
+.snum{
+  font-family:var(--fd);font-size:2rem;font-weight:800;
+  color:var(--cc);letter-spacing:-.04em;line-height:1;
+  position:relative;z-index:1;
+}
+.slbl{
+  font-family:var(--fm);font-size:.5rem;color:var(--text3);
+  letter-spacing:.1em;text-transform:uppercase;
+  margin-top:.5rem;line-height:1.5;
+  position:relative;z-index:1;
+}
 
 /* ───── MISSION ───── */
 .mission-sec{background:#080c1a}
@@ -331,7 +528,7 @@ footer{padding:4rem 5vw 2rem;background:#040610;border-top:1px solid rgba(30,36,
   <div class="nav-links">
     <a href="index.html#pricing">Our Services</a>
     <a href="about.html" class="active">About Us</a>
-    
+    <a href="revision.html">Revision Now</a>
     <a href="submit-order.html">Order Now</a>
   </div>
   <div class="nav-actions">
@@ -348,20 +545,62 @@ footer{padding:4rem 5vw 2rem;background:#040610;border-top:1px solid rgba(30,36,
 </nav>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hg1"></div><div class="hg2"></div><div class="hg3"></div>
-  <div style="position:relative;z-index:1">
-    <div class="eyebrow rv">Our Story — PortfolioForge</div>
-    <h1 class="h1">
-      <span class="l1">WE BUILD</span>
-      <span class="l2">PORTFOLIOS<span class="glow" aria-hidden="true">PORTFOLIOS</span></span>
-      <span class="l3">THAT MATTER</span>
-    </h1>
-    <p class="lead rv d2">Two developers from India who got tired of watching talented students lose opportunities because they had no digital presence. So we decided to fix that — <strong>starting at ₹49.</strong></p>
-    <div class="hbtns rv d3">
-      <a href="submit-order.html" class="btn-p">Get Your Portfolio →</a>
-      <a href="#story" class="btn-g">Our Story ↓</a>
+<section class="hero" id="home">
+  <div class="hero-mesh"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+
+    <!-- LEFT: Headline + CTA -->
+    <div class="hero-left">
+      <div class="hero-eyebrow rv">Our Story — PortfolioForge</div>
+      <h1 class="hero-headline rv d1">
+        WE BUILD<br/>
+        <span class="accent">PORTFOLIOS</span><br/>
+        <span class="outline">THAT MATTER</span>
+      </h1>
+      <p class="hero-sub rv d2">
+        Two developers from India who got tired of watching talented students lose opportunities because they had no digital presence. So we decided to fix that — <strong>starting at ₹49.</strong>
+      </p>
+      <div class="hero-ctas rv d2">
+        <a href="submit-order.html" class="btn-primary">Get Your Portfolio →</a>
+        <a href="#story" class="btn-ghost">Our Story ↓</a>
+      </div>
+      <div class="trust-row rv d3">
+        <div class="trust-badge"><span class="icon">✅</span> 24h Delivery</div>
+        <div class="trust-badge"><span class="icon">🔒</span> Secure Pay</div>
+        <div class="trust-badge"><span class="icon">📦</span> Source Code</div>
+        <div class="trust-badge"><span class="icon">🔄</span> Free Revision</div>
+      </div>
     </div>
+
+    <!-- RIGHT: benefit cards -->
+    <div class="hero-right rv d2">
+      <div class="hero-benefit-card">
+        <div class="hb-icon">🛠️</div>
+        <div class="hb-text">
+          <div class="hb-title">Hand-coded, every time</div>
+          <div class="hb-desc">No templates, no drag-and-drop. Every portfolio is written from scratch — unique to you</div>
+        </div>
+        <div class="hb-arrow">→</div>
+      </div>
+      <div class="hero-benefit-card">
+        <div class="hb-icon">🇮🇳</div>
+        <div class="hb-text">
+          <div class="hb-title">Built for Indian students</div>
+          <div class="hb-desc">We understand placement season, college culture, and what Indian recruiters actually look for</div>
+        </div>
+        <div class="hb-arrow">→</div>
+      </div>
+      <div class="hero-benefit-card">
+        <div class="hb-icon">💬</div>
+        <div class="hb-text">
+          <div class="hb-title">We've been there too</div>
+          <div class="hb-desc">Founded by developers who went through campus placements — we built the tool we wished existed</div>
+        </div>
+        <div class="hb-arrow">→</div>
+      </div>
+    </div>
+
   </div>
   <div class="scroll-hint"><span>SCROLL</span><div class="sarrow"></div></div>
 </section>
@@ -379,11 +618,29 @@ footer{padding:4rem 5vw 2rem;background:#040610;border-top:1px solid rgba(30,36,
         <p>Recruiters spend an average of <strong>6 seconds on a resume</strong>. A portfolio website changes that entirely. It gives them something to explore — your personality, your projects, your actual ability — not just bullet points on paper.</p>
         <p>So in early 2025, Sujay and Ashish built <strong>PortfolioForge</strong> — removing every barrier between a student and a professional digital presence. Fast delivery. Real code. Honest pricing. No templates, no builders, no shortcuts. <strong>Everything hand-coded from scratch</strong>, specifically for each client.</p>
       </div>
+
+      <!-- 4 cards in ONE horizontal row, each floating independently -->
       <div class="sg rv d1">
-        <div class="sc"><div class="snum">50+</div><div class="slbl">Portfolios Delivered</div></div>
-        <div class="sc"><div class="snum">24h</div><div class="slbl">Avg. Delivery</div></div>
-        <div class="sc"><div class="snum">₹49</div><div class="slbl">Starting Price</div></div>
-        <div class="sc"><div class="snum">100%</div><div class="slbl">Code Ownership</div></div>
+        <div class="sc">
+          <div class="sc-orb"></div>
+          <div class="snum">50+</div>
+          <div class="slbl">Portfolios<br>Delivered</div>
+        </div>
+        <div class="sc">
+          <div class="sc-orb"></div>
+          <div class="snum">24h</div>
+          <div class="slbl">Avg.<br>Delivery</div>
+        </div>
+        <div class="sc">
+          <div class="sc-orb"></div>
+          <div class="snum">₹49</div>
+          <div class="slbl">Starting<br>Price</div>
+        </div>
+        <div class="sc">
+          <div class="sc-orb"></div>
+          <div class="snum">100%</div>
+          <div class="slbl">Code<br>Ownership</div>
+        </div>
       </div>
     </div>
   </div>
@@ -448,7 +705,7 @@ footer{padding:4rem 5vw 2rem;background:#040610;border-top:1px solid rgba(30,36,
           <p class="tbio">The creative engine of PortfolioForge — responsible for the <strong>visual direction, design language, and user experience</strong> of every portfolio we deliver. His obsessive attention to detail and instinct for what looks professional drives everything aesthetic.<br><br>His philosophy: your portfolio is your first impression, and first impressions are visual. Every layout and animation must serve a purpose.</p>
           <div class="tslbl">Expertise</div>
           <div class="ttags"><span class="ttag">Creative Design</span><span class="ttag">CSS Animations</span><span class="ttag v">Visual Branding</span><span class="ttag a">UX Strategy</span><span class="ttag">Figma</span></div>
-          <div class="tlinks"><a href="https://wa.me/91139139139" target="_blank" class="tlink">💬 Contact ↗</a></div>
+          <div class="tlinks"><a href="https://wa.me/9612871060" target="_blank" class="tlink">💬 Contact ↗</a></div>
         </div>
       </div>
     </div>
@@ -511,19 +768,19 @@ footer{padding:4rem 5vw 2rem;background:#040610;border-top:1px solid rgba(30,36,
 <!-- FOOTER -->
 <footer>
   <div class="fg">
-    <div><div class="flogo">Portfolio<span>Forge</span></div><p class="fdesc">Professional digital portfolios built and delivered in 24 hours. Real code, real results.</p><div class="fsocs"><a href="#" class="fsoc">in</a><a href="#" class="fsoc">gh</a><a href="#" class="fsoc">tw</a></div></div>
-    <div><div class="fct">Quick Links</div><div class="fcl"><a href="about.html">About Us</a><a href="index.html#examples">Portfolio Examples</a><a href="index.html#pricing">Our Services</a><a href="submit-order.html">Place Order</a><a href="track-order.html">Track Order</a></div></div>
+    <div><div class="flogo">Portfolio<span>Forge</span></div><p class="fdesc">Professional digital portfolios built and delivered in 24 hours. Real code, real results.</p><div class="fsocs"></div></div>
+    <div><div class="fct">Quick Links</div><div class="fcl"><a href="about.html">About Us</a><a href="index.html#pricing">Our Services</a><a href="submit-order.html">Place Order</a><a href="track-order.html">Track Order</a></div></div>
     <div>
       <div class="fct">Plans</div>
       <div class="fcl"><a href="submit-order.html">Starter · ₹49 🔥</a><a href="submit-order.html">Pro Animated · ₹179</a><a href="submit-order.html">Premium · ₹449</a></div>
       <div class="fct" style="margin-top:2rem">Contact</div>
-      <div class="fcl"><a href="https://wa.me/91139139139" target="_blank">WhatsApp</a></div>
+      <div class="fcl"><a href="https://wa.me/9612871060" target="_blank">WhatsApp</a><a href="/cdn-cgi/l/email-protection#ee9e819c9a888182878188819c898bc09d9a9b8a8781ae89838f8782c08d8183">Email Us</a></div>
     </div>
   </div>
   <div class="fb"><div class="fc">© 2026 PortfolioForge · Made with ❤️ by <a href="https://sujay-banarjee-portfolio.vercel.app/" target="_blank">Sujay Banarjee</a></div><div class="fm2">v2.0.0 · Crafted in India 🇮🇳</div></div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── WEBGL PARTICLE BG ── */
 (function(){
   const canvas=document.getElementById('bgc');
@@ -602,7 +859,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 
   /* 3D mouse tilt on cards */
-  document.querySelectorAll('.sc,.mc,.tcard,.wc').forEach(card=>{
+  document.querySelectorAll('.mc,.tcard,.wc').forEach(card=>{
     card.addEventListener('mousemove',e=>{
       const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
       const depth=card.classList.contains('tcard')?14:10;
@@ -611,6 +868,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     card.addEventListener('mouseleave',()=>card.style.transform='');
   });
 
+  /* nav bg on scroll */
+  window.addEventListener
+  
   /* nav bg on scroll */
   window.addEventListener('scroll',()=>{
     document.getElementById('mainNav').style.background=scrollY>50?'rgba(6,8,16,.96)':'rgba(6,8,16,.8)';

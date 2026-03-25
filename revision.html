@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Portfolio Revision — PortfolioForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══ TOKENS ═══ */
+:root {
+  --bg:#060810; --bg2:#0a0d18; --bg3:#0f1220;
+  --surface:#131729; --surface2:#1a1f35;
+  --border:#1e2440; --border2:#252d4a;
+  --teal:#00f5c8; --teal-dim:rgba(0,245,200,.10); --teal-glow:rgba(0,245,200,.22); --teal2:#00d4aa;
+  --violet:#8b5cf6; --violet-dim:rgba(139,92,246,.12);
+  --amber:#f59e0b; --amber-dim:rgba(245,158,11,.12);
+  --red:#ef4444; --red-dim:rgba(239,68,68,.12);
+  --green:#22c55e; --green-dim:rgba(34,197,94,.12);
+  --text:#f0f2fa; --text2:#8892b8; --text3:#4a5278;
+  --font-display:'Syne',sans-serif; --font-body:'DM Sans',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --r:8px; --r-lg:16px; --r-xl:24px;
+  --shadow:0 8px 40px rgba(0,0,0,.6); --shadow-glow:0 0 60px rgba(0,245,200,.12);
+}
+[data-theme="light"] {
+  --bg:#f4f6fd; --bg2:#eceffe; --bg3:#ffffff;
+  --surface:#ffffff; --surface2:#f0f2fc;
+  --border:#d8ddf0; --border2:#c8cfe8;
+  --text:#0a0d1e; --text2:#4a527a; --text3:#8890b4;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden;transition:background .3s,color .3s}
+::selection{background:var(--teal);color:#000}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:2px}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+
+/* ═══ CURSOR ═══ */
+#dot{position:fixed;width:7px;height:7px;background:var(--teal);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform .08s}
+#ring{position:fixed;width:30px;height:30px;border:1.5px solid var(--teal);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);opacity:.35;transition:opacity .2s}
+@media(hover:none){#dot,#ring{display:none}}
+
+/* ═══ NOISE OVERLAY ═══ */
+body::after{content:'';position:fixed;inset:0;z-index:-1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;opacity:.6}
+
+/* ═══ NAV ═══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:400;display:flex;align-items:center;justify-content:space-between;padding:0 4vw;height:58px;background:rgba(6,8,16,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+[data-theme="light"] nav{background:rgba(244,246,253,.9)}
+.nav-logo{font-family:var(--font-display);font-size:1.5rem;font-weight:800;letter-spacing:-.03em;display:flex;align-items:center;gap:.3rem}
+.nav-logo .g{color:var(--teal)}
+.nav-links{display:flex;align-items:center;gap:2.25rem}
+.nav-links a{font-size:.82rem;font-weight:600;color:var(--text2);letter-spacing:.01em;transition:color .2s}
+.nav-links a:hover{color:var(--teal)}
+.nav-actions{display:flex;align-items:center;gap:.75rem}
+.theme-btn{width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;transition:border-color .2s}
+.theme-btn:hover{border-color:var(--teal)}
+.nav-cta{background:var(--teal);color:#000;padding:.5rem 1.4rem;border-radius:var(--r);font-size:.8rem;font-weight:700;letter-spacing:.02em;transition:box-shadow .2s,transform .2s}
+.nav-cta:hover{box-shadow:0 0 24px var(--teal-glow);transform:translateY(-1px)}
+@media(max-width:860px){.nav-links{display:none}}
+
+/* ═══ HERO BADGE ═══ */
+.hero-section{padding:120px 4vw 60px;text-align:center;position:relative;overflow:hidden}
+.hero-section::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(0,245,200,.07) 0%,transparent 70%);pointer-events:none;z-index:0}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--teal-dim);border:1px solid rgba(0,245,200,.2);border-radius:999px;padding:.35rem 1rem .35rem .65rem;font-size:.72rem;font-weight:700;letter-spacing:.06em;color:var(--teal);text-transform:uppercase;margin-bottom:1.5rem;position:relative;z-index:1}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:1.2rem;position:relative;z-index:1}
+.hero-title .hl{color:var(--teal)}
+.hero-title .hl2{color:var(--violet)}
+.hero-sub{max-width:580px;margin:0 auto 2.5rem;color:var(--text2);font-size:1.05rem;line-height:1.7;position:relative;z-index:1}
+.price-badge{display:inline-flex;align-items:center;gap:.75rem;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-xl);padding:1rem 1.75rem;margin-bottom:2rem;position:relative;z-index:1}
+.price-badge .currency{font-family:var(--font-mono);font-size:2.4rem;font-weight:700;color:var(--teal);line-height:1}
+.price-badge .price-info{text-align:left}
+.price-badge .price-label{font-size:.68rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.price-badge .price-desc{font-size:.85rem;color:var(--text2);margin-top:.2rem}
+.price-badge .one-time-chip{background:var(--green-dim);border:1px solid rgba(34,197,94,.2);color:var(--green);font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;margin-left:.5rem}
+
+/* ═══ WHAT YOU CAN UPDATE ═══ */
+.section{padding:60px 4vw}
+.section-label{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.section-label::before{content:'';width:24px;height:1px;background:var(--teal)}
+.section-title{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.5rem}
+.section-sub{color:var(--text2);font-size:.95rem;margin-bottom:3rem}
+
+/* ═══ REVISION TYPES GRID ═══ */
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;margin-bottom:3rem}
+.rev-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;transition:border-color .25s,transform .25s,box-shadow .25s;cursor:default;position:relative;overflow:hidden}
+.rev-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--teal-dim),transparent);opacity:0;transition:opacity .25s}
+.rev-card:hover{border-color:var(--teal);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,245,200,.08)}
+.rev-card:hover::before{opacity:1}
+.rev-card-icon{font-size:1.6rem;margin-bottom:.85rem;display:block;position:relative;z-index:1}
+.rev-card-title{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:.4rem;position:relative;z-index:1}
+.rev-card-desc{font-size:.82rem;color:var(--text2);line-height:1.6;position:relative;z-index:1}
+.rev-card-examples{margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.35rem;position:relative;z-index:1}
+.rev-tag{background:var(--bg2);border:1px solid var(--border);border-radius:999px;padding:.18rem .6rem;font-size:.67rem;color:var(--text3);font-family:var(--font-mono)}
+
+/* ═══ HOW IT WORKS ═══ */
+.steps-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:3rem;position:relative}
+.steps-wrap::before{content:'';position:absolute;top:28px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);pointer-events:none}
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem 1.25rem;text-align:center;position:relative}
+.step-num{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--violet));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:.95rem;color:#000;margin:0 auto 1rem;box-shadow:0 0 20px rgba(0,245,200,.25)}
+.step-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;margin-bottom:.5rem}
+.step-desc{font-size:.8rem;color:var(--text2);line-height:1.6}
+
+/* ═══ FORM ═══ */
+.form-wrap{max-width:700px;margin:0 auto}
+.form-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-xl);padding:2.5rem;box-shadow:var(--shadow)}
+.form-title{font-family:var(--font-display);font-size:1.4rem;font-weight:800;margin-bottom:.35rem}
+.form-subtitle{font-size:.85rem;color:var(--text2);margin-bottom:2rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:540px){.form-row{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem}
+.form-label{font-size:.75rem;font-weight:600;color:var(--text2);letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:.4rem}
+.form-label .required{color:var(--red);font-size:.9em}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:.75rem 1rem;font-family:var(--font-body);font-size:.88rem;color:var(--text);transition:border-color .2s,box-shadow .2s;outline:none;appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,245,200,.1)}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--text3)}
+.form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238892b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;cursor:pointer}
+.form-select option{background:var(--bg2);color:var(--text)}
+.form-textarea{resize:vertical;min-height:110px;line-height:1.6}
+/* checkbox section */
+.changes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:.6rem;margin-top:.5rem}
+.change-check{display:flex;align-items:center;gap:.65rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.6rem .85rem;cursor:pointer;transition:border-color .2s,background .2s;user-select:none}
+.change-check:hover{border-color:var(--border2)}
+.change-check input[type=checkbox]{display:none}
+.change-check .chk-box{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border2);background:transparent;flex-shrink:0;transition:.2s;display:flex;align-items:center;justify-content:center}
+.change-check input:checked ~ .chk-box{background:var(--teal);border-color:var(--teal)}
+.change-check input:checked ~ .chk-box::after{content:'✓';font-size:.7rem;color:#000;font-weight:800}
+.change-check .chk-label{font-size:.8rem;color:var(--text2);transition:color .2s;line-height:1.3}
+.change-check:has(input:checked){border-color:rgba(0,245,200,.3);background:var(--teal-dim)}
+.change-check:has(input:checked) .chk-label{color:var(--text)}
+/* urgency */
+.urgency-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+@media(max-width:540px){.urgency-row{grid-template-columns:1fr}}
+.urgency-opt{position:relative}
+.urgency-opt input{position:absolute;opacity:0}
+.urgency-card{border:1.5px solid var(--border);border-radius:var(--r);padding:1rem;cursor:pointer;transition:.2s;text-align:center;background:var(--bg2)}
+.urgency-opt input:checked + .urgency-card{border-color:var(--teal);background:var(--teal-dim)}
+.urgency-card-icon{font-size:1.3rem;margin-bottom:.4rem}
+.urgency-card-title{font-size:.82rem;font-weight:700;color:var(--text)}
+.urgency-card-desc{font-size:.7rem;color:var(--text2);margin-top:.2rem}
+/* pricing preview */
+.pricing-preview{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r-lg);padding:1.25rem 1.5rem;margin:1.5rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.pp-line{display:flex;justify-content:space-between;gap:2rem;flex:1;min-width:220px}
+.pp-item{display:flex;flex-direction:column;gap:.15rem}
+.pp-lbl{font-size:.67rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.pp-val{font-family:var(--font-mono);font-size:.95rem;color:var(--text);font-weight:600}
+.pp-total{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--teal);display:flex;align-items:baseline;gap:.25rem}
+.pp-total span{font-size:.85rem;font-weight:500;color:var(--text2)}
+/* submit btn */
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#000;font-family:var(--font-display);font-size:1rem;font-weight:800;padding:1rem;border-radius:var(--r-lg);border:none;cursor:pointer;letter-spacing:.02em;transition:box-shadow .25s,transform .25s;display:flex;align-items:center;justify-content:center;gap:.65rem}
+.submit-btn:hover{box-shadow:0 0 40px rgba(0,245,200,.35);transform:translateY(-2px)}
+.submit-btn:active{transform:translateY(0)}
+.form-note{text-align:center;font-size:.75rem;color:var(--text3);margin-top:.85rem;line-height:1.5}
+.form-note a{color:var(--teal)}
+
+/* ═══ GUARANTEE STRIP ═══ */
+.guarantee-strip{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2rem 4vw;display:flex;align-items:center;justify-content:center;gap:3rem;flex-wrap:wrap;margin:0}
+.g-item{display:flex;align-items:center;gap:.75rem}
+.g-icon{font-size:1.4rem}
+.g-text strong{display:block;font-size:.85rem;font-weight:700;margin-bottom:.1rem}
+.g-text span{font-size:.75rem;color:var(--text2)}
+
+/* ═══ FAQ ═══ */
+.faq-wrap{max-width:700px;margin:0 auto}
+.faq-item{border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:.75rem;overflow:hidden;transition:border-color .2s}
+.faq-item.open{border-color:var(--border2)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.4rem;cursor:pointer;font-weight:600;font-size:.9rem;gap:1rem}
+.faq-arr{font-size:1rem;color:var(--text3);transition:transform .25s}
+.faq-item.open .faq-arr{transform:rotate(90deg)}
+.faq-a{padding:0 1.4rem 1.1rem;font-size:.85rem;color:var(--text2);line-height:1.7;display:none}
+.faq-item.open .faq-a{display:block}
+
+/* ═══ SAMPLE CHANGES ═══ */
+.samples-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem}
+.sample-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.4rem;position:relative;overflow:hidden}
+.sample-card::after{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--teal),var(--violet))}
+.sample-before-after{display:flex;align-items:center;gap:.5rem;font-size:.7rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:.85rem;text-transform:uppercase;letter-spacing:.06em}
+.ba-tag{padding:.2rem .5rem;border-radius:4px;font-weight:700}
+.ba-before{background:var(--red-dim);color:var(--red)}
+.ba-after{background:var(--green-dim);color:var(--green)}
+.sample-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+.sample-desc{font-size:.8rem;color:var(--text2);line-height:1.6}
+
+/* ═══ SUCCESS OVERLAY ═══ */
+#success-overlay{position:fixed;inset:0;background:rgba(6,8,16,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:8000;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:2rem}
+#success-overlay.show{display:flex}
+.success-icon{font-size:4rem;margin-bottom:1.5rem;animation:popIn .5s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes popIn{0%{transform:scale(0)}100%{transform:scale(1)}}
+.success-title{font-family:var(--font-display);font-size:2rem;font-weight:800;margin-bottom:.75rem;color:var(--teal)}
+.success-desc{color:var(--text2);font-size:1rem;max-width:440px;line-height:1.7;margin-bottom:2rem}
+.success-wa-btn{display:inline-flex;align-items:center;gap:.65rem;background:#25d366;color:#fff;padding:.85rem 2rem;border-radius:var(--r-lg);font-weight:700;font-size:.95rem;transition:box-shadow .2s}
+.success-wa-btn:hover{box-shadow:0 0 30px rgba(37,211,102,.4)}
+.success-close{margin-top:1rem;color:var(--text3);font-size:.8rem;cursor:pointer;transition:color .2s}
+.success-close:hover{color:var(--text)}
+
+/* ═══ LOADER ═══ */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;transition:opacity .5s,visibility .5s}
+#loader.gone{opacity:0;visibility:hidden}
+.loader-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--teal),#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 0 32px rgba(0,245,200,.3);animation:loaderPulse 2s ease-in-out infinite}
+@keyframes loaderPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.loader-logo{font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--text);letter-spacing:-.02em}
+.loader-logo span{color:var(--teal)}
+.loader-bar-wrap{width:140px;height:2px;background:var(--border);border-radius:1px;overflow:hidden}
+.loader-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),#8b5cf6);animation:loadBar 1.6s ease forwards}
+@keyframes loadBar{0%{width:0}60%{width:72%}100%{width:100%}}
+.loader-pct{font-family:var(--font-mono);font-size:.65rem;color:var(--text3)}
+
+/* ═══ FOOTER ═══ */
+footer{padding:2.5rem 4vw;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:var(--font-display);font-weight:800;font-size:1.1rem;letter-spacing:-.02em}
+.footer-logo .g{color:var(--teal)}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap}
+.footer-links a{font-size:.78rem;color:var(--text2);transition:color .2s}
+.footer-links a:hover{color:var(--teal)}
+.footer-copy{font-size:.75rem;color:var(--text3)}
+
+/* ═══ TOAST ═══ */
+#toast{position:fixed;bottom:2rem;right:2rem;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);padding:1rem 1.4rem;font-size:.85rem;display:flex;align-items:center;gap:.75rem;box-shadow:var(--shadow);z-index:7000;transform:translateY(120%);transition:transform .35s cubic-bezier(.34,1.56,.64,1);max-width:340px}
+#toast.show{transform:translateY(0)}
+#toast .t-icon{font-size:1.1rem;flex-shrink:0}
+
+@media(max-width:600px){
+  .form-card{padding:1.5rem}
+  .guarantee-strip{gap:1.5rem}
+  .price-badge{flex-direction:column;gap:.5rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-icon">✦</div>
+  <div class="loader-logo">Portfolio<span>Forge</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-pct" id="lpct">0%</div>
+</div>
+
+<!-- CURSOR -->
+<div id="dot"></div><div id="ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Portfolio<span class="g">Forge</span></a>
+  <div class="nav-links">
+    
+    <a href="index.html#pricing">Our Service</a>
+    <a href="revision.html" style="color:var(--teal)">Revisions</a>
+    <a href="track-order.html">Track Order</a>
+  </div>
+  <div class="nav-actions">
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    <a href="https://wa.me/911234567890?text=Hi!%20I%20want%20to%20request%20a%20portfolio%20revision" target="_blank" class="nav-cta">💬 WhatsApp</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-section" id="top">
+  <div class="hero-badge"><span class="hero-badge-dot"></span>Portfolio Revision Service</div>
+  <h1 class="hero-title">Update Your Portfolio<br><span class="hl">Instantly</span> for Just <span class="hl2">₹15</span></h1>
+  <p class="hero-sub">Need to add a new certificate, internship, skill, or project? We'll update your live portfolio professionally — one-time, flat rate, no subscriptions.</p>
+  <div class="price-badge">
+    <div class="currency">₹15</div>
+    <div class="price-info">
+      <div class="price-label">Per Revision Request</div>
+      <div class="price-desc">Any single update to your existing portfolio<span class="one-time-chip">One-Time</span></div>
+    </div>
+  </div>
+  <br>
+  <a href="#request-form" class="nav-cta" style="display:inline-block;padding:.85rem 2.5rem;font-size:.95rem">Request a Revision ↓</a>
+</section>
+
+<!-- WHAT CAN BE UPDATED -->
+<section class="section" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-label">What We Can Update</div>
+    <h2 class="section-title">Everything That Keeps Your Portfolio <span style="color:var(--teal)">Fresh</span></h2>
+    <p class="section-sub">One revision = one category of update. Multiple updates? Just submit multiple requests.</p>
+    <div class="rev-grid">
+
+      <div class="rev-card">
+        <span class="rev-card-icon">🏆</span>
+        <div class="rev-card-title">Certificates & Courses</div>
+        <div class="rev-card-desc">Add new certifications, online course completions, or professional credentials to your portfolio.</div>
+        <div class="rev-card-examples">
+          <span class="rev-tag">AWS Certified</span>
+          <span class="rev-tag">Google Analytics</span>
+          <span class="rev-tag">Coursera</span>
+          <span class="rev-tag">NPTEL</span>
+        </div>
+      </div>
+
+      <div class="rev-card">
+        <span class="rev-card-icon">💼</span>
+        <div class="rev-card-title">Internships & Work Exp</div>
+        <div class="rev-card-desc">Add a new internship, part-time role, freelance project, or update existing job descriptions.</div>
+        <div class="rev-card-examples">
+          <span class="rev-tag">Company Name</span>
+          <span class="rev-tag">Role & Duration</span>
+          <span class="rev-tag">Responsibilities</span>
+        </div>
+      </div>
+
+      <div class="rev-card">
+        <span class="rev-card-icon">⚡</span>
+        <div class="rev-card-title">Skills & Technologies</div>
+        <div class="rev-card-desc">Update your skills section — add new programming languages, tools, frameworks, or soft skills.</div>
+        <div class="rev-card-examples">
+          <span class="rev-tag">React</span>
+          <span class="rev-tag">Python</span>
+          <span class="rev-tag">Figma</span>
+          <span class="rev-tag">Docker</span>
+        </div>
+      </div>
+
+      <div class="rev-card">
+        <span class="rev-card-icon">🚀</span>
+        <div class="rev-card-title">Projects</div>
+        <div class="rev-card-desc">Add a new project with description, tech stack, GitHub link, live demo URL, or update an existing one.</div>
+        <div class="rev-card-examples">
+          <span class="rev-tag">Project Title</span>
+          <span class="rev-tag">Tech Stack</span>
+          <span class="rev-tag">GitHub Link</span>
+        </div>
+      </div>
+
+      <div class="rev-card">
+        <span class="rev-card-icon">🎓</span>
+        <div class="rev-card-title">Education</div>
+        <div class="rev-card-desc">Update your education section — new degree, college, CGPA/GPA, graduation year, or relevant coursework.</div>
+        <div class="rev-card-examples">
+          <span class="rev-tag">College Name</span>
+          <span class="rev-tag">Degree / Branch</span>
+          <span class="rev-tag">CGPA</span>
+        </div>
+      </div>
+
+      <div class="rev-card">
+        <span class="rev-card-icon">🔗</span>
+        <div class="rev-card-title">Links & Contact Info</div>
+        <div class="rev-card-desc">Update your email, phone, LinkedIn, GitHub, Twitter, Dribbble, or any social/portfolio links.</div>
+        <div class="rev-card-examples">
+          <span class="rev-tag">LinkedIn</span>
+          <span class="rev-tag">GitHub</span>
+          <span class="rev-tag">New Email</span>
+        </div>
+      </div>
+
+      <div class="rev-card">
+        <span class="rev-card-icon">👤</span>
+        <div class="rev-card-title">About / Bio Section</div>
+        <div class="rev-card-desc">Rewrite your personal introduction, career objective, headline, or profile photo.</div>
+        <div class="rev-card-examples">
+          <span class="rev-tag">New Bio</span>
+          <span class="rev-tag">New Photo</span>
+          <span class="rev-tag">Objective</span>
+        </div>
+      </div>
+
+      <div class="rev-card">
+        <span class="rev-card-icon">🎨</span>
+        <div class="rev-card-title">Design / Color Tweak</div>
+        <div class="rev-card-desc">Minor visual adjustments — change accent color, font style, layout tweak, or section reorder.</div>
+        <div class="rev-card-examples">
+          <span class="rev-tag">Color Change</span>
+          <span class="rev-tag">Font Tweak</span>
+          <span class="rev-tag">Section Reorder</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">4 Simple Steps to a <span style="color:var(--teal)">Fresh Portfolio</span></h2>
+    <p class="section-sub">Quick, smooth, and professional — your portfolio updated in under 24 hours.</p>
+    <div class="steps-wrap">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-title">Fill the Form</div>
+        <div class="step-desc">Select the type of revision and provide us all the new information below.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-title">Pay ₹15 via UPI</div>
+        <div class="step-desc">Scan the QR code or pay via GPay / PhonePe / Paytm. Share screenshot to confirm.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-title">We Update It</div>
+        <div class="step-desc">Our team updates your portfolio professionally, usually within 6–12 hours.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-title">Receive & Review</div>
+        <div class="step-desc">Get the updated files on WhatsApp. Review and request any minor correction for free.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAMPLE CHANGES -->
+<section class="section" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-label">Real Examples</div>
+    <h2 class="section-title">What Customers <span style="color:var(--teal)">Typically Update</span></h2>
+    <p class="section-sub">Common revision requests we handle every week.</p>
+    <div class="samples-grid">
+      <div class="sample-card">
+        <div class="sample-before-after"><span class="ba-tag ba-before">Before</span> → <span class="ba-tag ba-after">After</span></div>
+        <div class="sample-title">Added AWS Cloud Practitioner Certificate</div>
+        <div class="sample-desc">Certificate section updated with badge, issue date, credential ID, and a verify link.</div>
+      </div>
+      <div class="sample-card">
+        <div class="sample-before-after"><span class="ba-tag ba-before">Before</span> → <span class="ba-tag ba-after">After</span></div>
+        <div class="sample-title">New Internship at Infosys</div>
+        <div class="sample-desc">Added internship card with company logo placeholder, role, duration (May–Jul 2024), and 3 bullet responsibilities.</div>
+      </div>
+      <div class="sample-card">
+        <div class="sample-before-after"><span class="ba-tag ba-before">Before</span> → <span class="ba-tag ba-after">After</span></div>
+        <div class="sample-title">Skills: Added React, Node.js & MongoDB</div>
+        <div class="sample-desc">Skills section updated with 3 new tech badges, properly categorized under "Frontend" and "Backend".</div>
+      </div>
+      <div class="sample-card">
+        <div class="sample-before-after"><span class="ba-tag ba-before">Before</span> → <span class="ba-tag ba-after">After</span></div>
+        <div class="sample-title">New E-Commerce Project Added</div>
+        <div class="sample-desc">Full project card added — title, description, tech stack pills, GitHub link, live preview button.</div>
+      </div>
+      <div class="sample-card">
+        <div class="sample-before-after"><span class="ba-tag ba-before">Before</span> → <span class="ba-tag ba-after">After</span></div>
+        <div class="sample-title">Updated LinkedIn & GitHub Links</div>
+        <div class="sample-desc">All social links in header and footer replaced, old email updated with new one. QA tested.</div>
+      </div>
+      <div class="sample-card">
+        <div class="sample-before-after"><span class="ba-tag ba-before">Before</span> → <span class="ba-tag ba-after">After</span></div>
+        <div class="sample-title">Bio Rewritten for Job Applications</div>
+        <div class="sample-desc">Professional "About Me" rewritten for fresher applying to software roles — concise, impactful, ATS-friendly tone.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEE STRIP -->
+<div class="guarantee-strip">
+  <div class="g-item"><div class="g-icon">⚡</div><div class="g-text"><strong>Same-Day Delivery</strong><span>Updates usually done in 6–12 hrs</span></div></div>
+  <div class="g-item"><div class="g-icon">🔒</div><div class="g-text"><strong>Your Data is Safe</strong><span>We never share your portfolio info</span></div></div>
+  <div class="g-item"><div class="g-icon">✅</div><div class="g-text"><strong>Free Minor Re-Check</strong><span>Spotted an error? We fix it free</span></div></div>
+  <div class="g-item"><div class="g-icon">💳</div><div class="g-text"><strong>Secure UPI Payment</strong><span>GPay, PhonePe, Paytm accepted</span></div></div>
+</div>
+
+<!-- REVISION REQUEST FORM -->
+<section class="section" id="request-form">
+  <div class="form-wrap">
+    <div class="section-label" style="justify-content:center">Submit Your Request</div>
+    <h2 class="section-title" style="text-align:center">Request a <span style="color:var(--teal)">Portfolio Revision</span></h2>
+    <p class="section-sub" style="text-align:center">Fill in the details below. We'll update your portfolio and deliver the updated files within 24 hours.</p>
+
+    <div class="form-card">
+      <div class="form-title">Revision Request Form</div>
+      <div class="form-subtitle">All fields marked with <span style="color:var(--red)">*</span> are required.</div>
+
+      <div id="rev-form">
+
+        <!-- Personal Info -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Name <span class="required">*</span></label>
+            <input type="text" class="form-input" id="f-name" placeholder="e.g. Rahul Sharma" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">WhatsApp Number <span class="required">*</span></label>
+            <input type="tel" class="form-input" id="f-phone" placeholder="+91 98765 43210" required/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address <span class="required">*</span></label>
+          <input type="email" class="form-input" id="f-email" placeholder="you@example.com" required/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Order ID / Portfolio Link <span class="required">*</span></label>
+          <input type="text" class="form-input" id="f-orderid" placeholder="e.g. PF-2024-0452 or https://yourportfolio.com" required/>
+        </div>
+
+        <!-- What to update -->
+        <div class="form-group">
+          <label class="form-label">What do you want to update? <span class="required">*</span> <span style="font-size:.65rem;color:var(--text3);text-transform:none;letter-spacing:0">(select all that apply)</span></label>
+          <div class="changes-grid">
+            <label class="change-check"><input type="checkbox" value="certificate"><div class="chk-box"></div><span class="chk-label">🏆 Certificate / Course</span></label>
+            <label class="change-check"><input type="checkbox" value="internship"><div class="chk-box"></div><span class="chk-label">💼 Internship / Work Exp</span></label>
+            <label class="change-check"><input type="checkbox" value="skills"><div class="chk-box"></div><span class="chk-label">⚡ Skills / Technologies</span></label>
+            <label class="change-check"><input type="checkbox" value="project"><div class="chk-box"></div><span class="chk-label">🚀 New Project</span></label>
+            <label class="change-check"><input type="checkbox" value="education"><div class="chk-box"></div><span class="chk-label">🎓 Education Details</span></label>
+            <label class="change-check"><input type="checkbox" value="links"><div class="chk-box"></div><span class="chk-label">🔗 Links / Contact Info</span></label>
+            <label class="change-check"><input type="checkbox" value="bio"><div class="chk-box"></div><span class="chk-label">👤 Bio / About Section</span></label>
+            <label class="change-check"><input type="checkbox" value="design"><div class="chk-box"></div><span class="chk-label">🎨 Design / Color Tweak</span></label>
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="form-group">
+          <label class="form-label">Provide All Details for the Update <span class="required">*</span></label>
+          <textarea class="form-textarea" id="f-details" rows="5" placeholder="Be as specific as possible. For example:&#10;• Certificate: 'Google Data Analytics — Coursera, Nov 2024, Credential ID: ABCD1234'&#10;• Internship: 'Frontend Intern at Wipro, May–Aug 2024. Worked on React dashboard, optimized API calls.'&#10;• Skills: 'Add: React, Node.js, MongoDB, REST APIs'&#10;• Project: 'Title: ShopEasy | Stack: React, Firebase | GitHub: github.com/you/shopeasy | Live: shopeasy.vercel.app'" required></textarea>
+        </div>
+
+        <!-- File note -->
+        <div class="form-group">
+          <label class="form-label">Any Files to Share? (Certificate images, logos, etc.)</label>
+          <div style="background:var(--bg2);border:1.5px dashed var(--border2);border-radius:var(--r);padding:1.1rem;text-align:center;color:var(--text3);font-size:.82rem">
+            📎 Send files directly on <strong style="color:var(--text2)">WhatsApp</strong> after submitting this form. We'll follow up with you there.
+          </div>
+        </div>
+
+        <!-- Urgency -->
+        <div class="form-group">
+          <label class="form-label">Delivery Preference</label>
+          <div class="urgency-row">
+            <label class="urgency-opt">
+              <input type="radio" name="urgency" value="standard" checked>
+              <div class="urgency-card">
+                <div class="urgency-card-icon">🕐</div>
+                <div class="urgency-card-title">Standard</div>
+                <div class="urgency-card-desc">Within 24 hours · Included in ₹15</div>
+              </div>
+            </label>
+            <label class="urgency-opt">
+              <input type="radio" name="urgency" value="express">
+              <div class="urgency-card">
+                <div class="urgency-card-icon">⚡</div>
+                <div class="urgency-card-title">Express</div>
+                <div class="urgency-card-desc">Within 4–6 hours · +₹10 extra</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- How did you hear -->
+        <div class="form-group">
+          <label class="form-label">How did you hear about us?</label>
+          <select class="form-select" id="f-source">
+            <option value="">Select an option</option>
+            <option>Friend / Classmate</option>
+            <option>Instagram</option>
+            <option>WhatsApp</option>
+            <option>Google Search</option>
+            <option>College Group / Forum</option>
+            <option>LinkedIn</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <!-- Additional notes -->
+        <div class="form-group">
+          <label class="form-label">Any Additional Notes or Requests?</label>
+          <textarea class="form-textarea" id="f-notes" rows="3" placeholder="Optional — any special formatting preferences, section placement notes, or anything else we should know..."></textarea>
+        </div>
+
+        <!-- Pricing Preview -->
+        <div class="pricing-preview">
+          <div class="pp-line">
+            <div class="pp-item">
+              <span class="pp-lbl">Revision Fee</span>
+              <span class="pp-val">₹15.00</span>
+            </div>
+            <div class="pp-item" id="pp-express-item" style="display:none">
+              <span class="pp-lbl">Express Add-on</span>
+              <span class="pp-val">+₹10.00</span>
+            </div>
+          </div>
+          <div class="pp-total" id="pp-total">₹15 <span>total</span></div>
+        </div>
+
+        <button class="submit-btn" onclick="handleSubmit()">
+          <span>🚀</span> Submit Revision Request
+        </button>
+        <p class="form-note">By submitting, you agree to our <a href="terms.html">Terms & Conditions</a>. Payment details will be shared via WhatsApp after submission. Your data is safe with us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Frequently Asked <span style="color:var(--teal)">Questions</span></h2>
+    <p class="section-sub">Got questions about revisions? We've got answers.</p>
+    <div class="faq-wrap">
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What counts as "one revision"? <span class="faq-arr">›</span></div>
+        <div class="faq-a">One revision = one category of update (e.g., adding one certificate OR adding one internship). If you need to add 3 different things across different sections, you'd submit 3 requests. Bundled items in the same category (e.g., adding 3 certificates at once) count as one revision.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I pay the ₹15? <span class="faq-arr">›</span></div>
+        <div class="faq-a">After you submit the form, we'll send you payment details on WhatsApp. You can pay via GPay, PhonePe, Paytm, or any UPI app. Just send a screenshot of the payment and we'll start immediately.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How long does a revision take? <span class="faq-arr">›</span></div>
+        <div class="faq-a">Standard revisions are completed within 24 hours (usually 6–12 hours). Express delivery (within 4–6 hours) is available for an additional ₹10.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I need to have bought my portfolio from you? <span class="faq-arr">›</span></div>
+        <div class="faq-a">Yes, the revision service is currently available only for portfolios built by PortfolioForge. We need access to your original source files, which we retain from the initial build.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can you rewrite my bio from scratch? <span class="faq-arr">›</span></div>
+        <div class="faq-a">Absolutely! Share your target role, key skills, and a couple of lines about yourself, and we'll craft a professional, impactful About section that stands out to recruiters.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What if I'm not happy with the update? <span class="faq-arr">›</span></div>
+        <div class="faq-a">We offer one free minor correction round if something doesn't look right. We aim to get it perfect the first time, but if you want a small tweak (wording, spacing, position), just let us know within 48 hours.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I request multiple changes for ₹15? <span class="faq-arr">›</span></div>
+        <div class="faq-a">₹15 covers one category of update. If you have many updates across multiple sections, we recommend our bundled revision pack (3 revisions for ₹40) — just mention it on WhatsApp and we'll set it up for you.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Portfolio<span class="g">Forge</span></div>
+  <div class="footer-links">
+    <a href="#pricing">Our Service</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="submit-order.html">Order</a>
+    <a href="track-order.html">Track</a>
+    <a href="about.html">About</a>
+    <a href="terms.html">Terms</a>
+  </div>
+  <div class="footer-copy">© 2024 PortfolioForge · All rights reserved</div>
+</footer>
+
+<!-- SUCCESS OVERLAY -->
+<div id="success-overlay">
+  <div class="success-icon">🎉</div>
+  <div class="success-title">Request Submitted!</div>
+  <div class="success-desc">We've received your revision request. We'll reach out on WhatsApp within 30 minutes to confirm payment and start the update.</div>
+  <a href="https://wa.me/911234567890?text=Hi!%20I%20just%20submitted%20a%20revision%20request.%20Here%20are%20my%20details." target="_blank" class="success-wa-btn">
+    💬 Open WhatsApp to Confirm
+  </a>
+  <div class="success-close" onclick="document.getElementById('success-overlay').classList.remove('show')">← Back to page</div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><span class="t-icon">⚠️</span><span id="toast-msg">Please fill in all required fields.</span></div>
+
+<script>
+// ─── CURSOR ───
+const dot = document.getElementById('dot');
+const ring = document.getElementById('ring');
+let rx = 0, ry = 0, tx = 0, ty = 0;
+document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; dot.style.left = tx+'px'; dot.style.top = ty+'px'; });
+(function lerp() {
+  rx += (tx - rx) * 0.15; ry += (ty - ry) * 0.15;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(lerp);
+})();
+
+// ─── LOADER ───
+let pct = 0;
+const lpct = document.getElementById('lpct');
+const ldr = document.getElementById('loader');
+const iv = setInterval(() => {
+  pct = Math.min(pct + Math.floor(Math.random() * 18 + 4), 100);
+  lpct.textContent = pct + '%';
+  if (pct >= 100) { clearInterval(iv); setTimeout(() => ldr.classList.add('gone'), 200); }
+}, 120);
+
+// ─── THEME ───
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
+  localStorage.setItem('theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = saved === 'dark' ? '🌙' : '☀️';
+})();
+
+// ─── EXPRESS PRICING ───
+document.querySelectorAll('input[name="urgency"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const express = document.querySelector('input[name="urgency"]:checked').value === 'express';
+    document.getElementById('pp-express-item').style.display = express ? 'flex' : 'none';
+    document.getElementById('pp-total').innerHTML = express ? '₹25 <span>total</span>' : '₹15 <span>total</span>';
+  });
+});
+
+// ─── TOAST ───
+function showToast(msg, icon = '⚠️') {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.querySelector('.t-icon').textContent = icon;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ─── FORM SUBMIT ───
+function handleSubmit() {
+  const name = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const orderid = document.getElementById('f-orderid').value.trim();
+  const details = document.getElementById('f-details').value.trim();
+  const checked = [...document.querySelectorAll('.changes-grid input:checked')];
+
+  if (!name) { showToast('Please enter your name.'); return; }
+  if (!phone || phone.length < 10) { showToast('Please enter a valid WhatsApp number.'); return; }
+  if (!email || !email.includes('@')) { showToast('Please enter a valid email address.'); return; }
+  if (!orderid) { showToast('Please provide your Order ID or portfolio link.'); return; }
+  if (checked.length === 0) { showToast('Please select at least one update type.'); return; }
+  if (!details || details.length < 20) { showToast('Please provide more detail about the update needed.'); return; }
+
+  // Build WhatsApp message
+  const urgency = document.querySelector('input[name="urgency"]:checked').value;
+  const types = checked.map(c => c.value).join(', ');
+  const waMsg = encodeURIComponent(
+    `🔄 *Portfolio Revision Request*\n\n` +
+    `👤 Name: ${name}\n📱 Phone: ${phone}\n✉️ Email: ${email}\n` +
+    `🔑 Order/Link: ${orderid}\n\n` +
+    `📝 Update Types: ${types}\n\n` +
+    `📋 Details:\n${details}\n\n` +
+    `⚡ Delivery: ${urgency === 'express' ? 'Express (4–6 hrs) +₹10' : 'Standard (24 hrs)'}\n\n` +
+    `💳 Total: ${urgency === 'express' ? '₹25' : '₹15'}`
+  );
+
+  // Show success
+  document.getElementById('success-overlay').classList.add('show');
+
+  // Update WA link
+  document.querySelector('.success-wa-btn').href = `https://wa.me/911234567890?text=${waMsg}`;
+}
+
+// ─── SCROLL REVEAL ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; } });
+}, { threshold: 0.07 });
+document.querySelectorAll('.rev-card, .step-card, .sample-card, .faq-item').forEach(el => {
+  el.style.opacity = '0'; el.style.transform = 'translateY(22px)'; el.style.transition = 'opacity .5s ease, transform .5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
