@@ -707,6 +707,26 @@ nav {
   nav { height:54px }
   .hero-inner { padding-top:1.5rem }
 }
+
+/* ═══ RESPONSIVE POLISH ═══ */
+@media (max-width: 480px) {
+  .page-hero { padding-top: 80px; }
+  .form-card,
+  .order-form { padding: 1.25rem 1rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .step-nav { flex-direction: column; gap: .75rem; }
+  .step-nav .btn { width: 100%; justify-content: center; }
+}
+@media (max-width: 768px) {
+  .order-layout { grid-template-columns: 1fr !important; }
+  .order-sidebar { position: static !important; }
+  .plan-grid { grid-template-columns: 1fr; }
+  .addon-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 360px) {
+  .page-hero h1 { font-size: 1.6rem; }
+}
+
 </style>
 </head>
 <body>
@@ -737,7 +757,7 @@ nav {
     <div class="trust-row">
       <div class="trust-chip"><span class="ic">⚡</span> 24h Delivery</div>
       <div class="trust-chip"><span class="ic">🔒</span> Secure Pay</div>
-      <div class="trust-chip"><span class="ic">🔄</span> Free Revision</div>
+      <div class="trust-chip"><span class="ic">🔄</span> Additional Revisions (₹15 each)</div>
       <div class="trust-chip"><span class="ic">📦</span> Source Code</div>
     </div>
   </div>
@@ -1147,7 +1167,7 @@ nav {
       <div class="s-card-head"><span class="s-card-ico">🛡️</span><div class="s-card-title">Guarantees</div></div>
       <div class="s-card-body">
         <div class="g-item"><div class="g-ico">⚡</div><div class="g-text"><strong>24h Delivery</strong><span>Delivered in 24h or full refund</span></div></div>
-        <div class="g-item"><div class="g-ico">🔄</div><div class="g-text"><strong>Free Revision</strong><span>One full revision round included</span></div></div>
+        <div class="g-item"><div class="g-ico">🔄</div><div class="g-text"><strong>Additional Revisions (₹15 each)</strong><span>One full revision round included</span></div></div>
         <div class="g-item"><div class="g-ico">📦</div><div class="g-text"><strong>Source Code</strong><span>Full code + deployment guide</span></div></div>
         <div class="g-item"><div class="g-ico">💬</div><div class="g-text"><strong>WhatsApp Support</strong><span>Direct chat throughout</span></div></div>
       </div>
@@ -1560,7 +1580,7 @@ var CF_VERIFY  = 'https://portfolioforge-backend.onrender.com/verify-payment';
 function initiateCashfreePayment(orderId, total, orderData) {
   var btn=document.getElementById('submitBtn'), txt=document.getElementById('submitBtnText');
   if(btn) btn.disabled=true;
-  if(txt) txt.textContent='Redirecting to payment…';
+  if(txt) txt.textContent='Redirecting to payment gateway…';
   fetch(CF_CREATE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:total,order_id:orderId})})
     .then(function(r){return r.json();})
     .then(function(data){
@@ -1572,7 +1592,7 @@ function initiateCashfreePayment(orderId, total, orderData) {
       cf.checkout({paymentSessionId:data.payment_session_id,redirectTarget:'_self'});
     }).catch(function(err){
       if(btn){btn.disabled=false;}
-      if(txt) txt.textContent='Place Order & Pay via Cashfree →';
+      if(txt) txt.textContent='Place Your Order →';
       alert('Payment error: '+err.message+'\nPlease try Demo payment to test.');
     });
 }

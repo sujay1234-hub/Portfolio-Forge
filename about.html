@@ -513,6 +513,29 @@ footer{padding:4rem 5vw 2rem;background:#040610;border-top:1px solid rgba(30,36,
 @media(max-width:400px){
   .h1{font-size:2.6rem}
 }
+
+/* ═══ RESPONSIVE POLISH ═══ */
+@media (max-width: 480px) {
+  .hero { padding: 80px 1rem 2.5rem; }
+  h1.hero-headline { font-size: clamp(1.7rem, 8vw, 3rem); }
+  .hero-sub { font-size: .88rem; }
+  .hero-ctas { flex-direction: column; }
+  .hero-ctas .btn-primary,
+  .hero-ctas .btn-ghost { width: 100%; justify-content: center; }
+  .si { padding: 3rem 1rem; }
+}
+@media (max-width: 860px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .mc { padding: 1.5rem; }
+  .team-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 600px) {
+  .fg { grid-template-columns: 1fr !important; gap: 2rem; }
+  .cta-sec .ctabtns { flex-direction: column; }
+  .cta-sec .btn-p,
+  .cta-sec .btn-g { width: 100%; text-align: center; justify-content: center; }
+}
+
 </style>
 </head>
 <body>
@@ -569,7 +592,7 @@ footer{padding:4rem 5vw 2rem;background:#040610;border-top:1px solid rgba(30,36,
         <div class="trust-badge"><span class="icon">✅</span> 24h Delivery</div>
         <div class="trust-badge"><span class="icon">🔒</span> Secure Pay</div>
         <div class="trust-badge"><span class="icon">📦</span> Source Code</div>
-        <div class="trust-badge"><span class="icon">🔄</span> Free Revision</div>
+        <div class="trust-badge"><span class="icon">🔄</span>  s Included</div>
       </div>
     </div>
 
@@ -744,7 +767,7 @@ footer{padding:4rem 5vw 2rem;background:#040610;border-top:1px solid rgba(30,36,
       <div class="ti rv"><div class="tdot"></div><div class="tdate">Early 2025</div><div class="ttitle">The Frustration</div><p class="tbody">Sujay and Ashish, both helping friends with placement prep, kept seeing the same pattern — talented students losing out with no portfolio. The idea was born over a late-night conversation.</p></div>
       <div class="ti rv d1"><div class="tdot"></div><div class="tdate">Mid 2025</div><div class="ttitle">First Build</div><p class="tbody">Built a first portfolio for a friend — free of charge, just to prove the concept. He landed an internship interview within a week of it going live. The results spoke for themselves.</p></div>
       <div class="ti rv d1"><div class="tdot"></div><div class="tdate">Late 2025</div><div class="ttitle">Going Live</div><p class="tbody">After refining our process, we officially launched PortfolioForge. Within the first month we delivered portfolios to 20+ students across India — from engineering to design to MBA.</p></div>
-      <div class="ti rv d2"><div class="tdot"></div><div class="tdate">2026</div><div class="ttitle">50+ and Growing</div><p class="tbody">Over 50 professional portfolios delivered. Expanding with premium plans, certificate showcases, domain assistance, and add-ons starting at just ₹15.</p></div>
+      <div class="ti rv d2"><div class="tdot"></div><div class="tdate">2026</div><div class="ttitle">50+ and Growing</div><p class="tbody">Over 50 professional portfolios delivered to students across India. We continue to expand with premium plans, certificate showcases, domain assistance, and add-ons.</p></div>
       <div class="ti rv d2"><div class="tdot"></div><div class="tdate">Coming Soon</div><div class="ttitle">What's Next</div><p class="tbody">Certificate documents, achievement showcases, custom domain setup. Building the most complete portfolio service for Indian students, one feature at a time.</p></div>
     </div>
   </div>
@@ -756,7 +779,7 @@ footer{padding:4rem 5vw 2rem;background:#040610;border-top:1px solid rgba(30,36,
     <div class="ctaw rv">
       <div class="ctag"></div>
       <div class="ctat">Ready to <span class="g">Stand Out?</span></div>
-      <p class="ctas">Join 50+ students who already have a professional portfolio working for them. Place your order in 5 minutes. Receive it in 24 hours.</p>
+      <p class="ctas">Join 50+ students who now have a professional portfolio that works for them. Place your order in 5 minutes — receive your portfolio in 24 hours.</p>
       <div class="ctabtns">
         <a href="submit-order.html" class="btn-p">Get Your Portfolio →</a>
         <a href="index.html#pricing" class="btn-g">View Pricing ↗</a>
@@ -869,8 +892,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 
   /* nav bg on scroll */
-  window.addEventListener
-  
   /* nav bg on scroll */
   window.addEventListener('scroll',()=>{
     document.getElementById('mainNav').style.background=scrollY>50?'rgba(6,8,16,.96)':'rgba(6,8,16,.8)';

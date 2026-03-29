@@ -229,6 +229,24 @@ footer{padding:2.5rem 4vw;border-top:1px solid var(--border);display:flex;align-
   .guarantee-strip{gap:1.5rem}
   .price-badge{flex-direction:column;gap:.5rem;text-align:center}
 }
+
+/* ═══ RESPONSIVE POLISH ═══ */
+@media (max-width: 480px) {
+  .hero-section { padding: 90px 1rem 40px; }
+  .hero-title { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+  .form-wrap { padding: 0; }
+  .form-card { padding: 1.5rem 1rem; border-radius: var(--r-lg); }
+  .form-row { grid-template-columns: 1fr; }
+  .section { padding: 40px 1rem; }
+  .rev-grid { grid-template-columns: 1fr; }
+  .steps-wrap { grid-template-columns: 1fr; }
+  .steps-wrap::before { display: none; }
+}
+@media (max-width: 360px) {
+  .price-badge { padding: .75rem 1rem; }
+  .price-badge .currency { font-size: 1.8rem; }
+}
+
 </style>
 </head>
 <body>
@@ -255,7 +273,7 @@ footer{padding:2.5rem 4vw;border-top:1px solid var(--border);display:flex;align-
   </div>
   <div class="nav-actions">
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
-    <a href="https://wa.me/911234567890?text=Hi!%20I%20want%20to%20request%20a%20portfolio%20revision" target="_blank" class="nav-cta">💬 WhatsApp</a>
+    <a href="https://wa.me/9612871060?text=Hi!%20I%20want%20to%20request%20a%20portfolio%20revision" target="_blank" class="nav-cta">💬 WhatsApp</a>
   </div>
 </nav>
 
@@ -639,7 +657,7 @@ footer{padding:2.5rem 4vw;border-top:1px solid var(--border);display:flex;align-
     <a href="about.html">About</a>
     <a href="terms.html">Terms</a>
   </div>
-  <div class="footer-copy">© 2024 PortfolioForge · All rights reserved</div>
+  <div class="footer-copy">© 2026 PortfolioForge · All rights reserved</div>
 </footer>
 
 <!-- SUCCESS OVERLAY -->
@@ -647,7 +665,7 @@ footer{padding:2.5rem 4vw;border-top:1px solid var(--border);display:flex;align-
   <div class="success-icon">🎉</div>
   <div class="success-title">Request Submitted!</div>
   <div class="success-desc">We've received your revision request. We'll reach out on WhatsApp within 30 minutes to confirm payment and start the update.</div>
-  <a href="https://wa.me/911234567890?text=Hi!%20I%20just%20submitted%20a%20revision%20request.%20Here%20are%20my%20details." target="_blank" class="success-wa-btn">
+  <a href="https://wa.me/9612871060?text=Hi!%20I%20just%20submitted%20a%20revision%20request.%20Here%20are%20my%20details." target="_blank" class="success-wa-btn">
     💬 Open WhatsApp to Confirm
   </a>
   <div class="success-close" onclick="document.getElementById('success-overlay').classList.remove('show')">← Back to page</div>
@@ -736,7 +754,7 @@ function handleSubmit() {
     `🔑 Order/Link: ${orderid}\n\n` +
     `📝 Update Types: ${types}\n\n` +
     `📋 Details:\n${details}\n\n` +
-    `⚡ Delivery: ${urgency === 'express' ? 'Express (4–6 hrs) +₹10' : 'Standard (24 hrs)'}\n\n` +
+    `⚡ Delivery: ${urgency === 'express' ? 'Express (4–6 hours) +₹10' : 'Standard (24 hours)'}\n\n` +
     `💳 Total: ${urgency === 'express' ? '₹25' : '₹15'}`
   );
 
@@ -744,7 +762,7 @@ function handleSubmit() {
   document.getElementById('success-overlay').classList.add('show');
 
   // Update WA link
-  document.querySelector('.success-wa-btn').href = `https://wa.me/911234567890?text=${waMsg}`;
+  document.querySelector('.success-wa-btn').href = `https://wa.me/9612871060?text=${waMsg}`;
 }
 
 // ─── SCROLL REVEAL ───

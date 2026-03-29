@@ -598,6 +598,23 @@ nav {
   .actions-grid { grid-template-columns: 1fr; gap: .65rem; }
   #toast { font-size: .76rem; padding: .55rem 1.2rem; white-space: normal; text-align: center; max-width: 88vw; }
 }
+
+/* ═══ RESPONSIVE POLISH ═══ */
+@media (max-width: 480px) {
+  .page-wrap { padding: 1.5rem 1rem 4rem; }
+  .oh-body { padding: 1.1rem 1rem; }
+  .oh-top { flex-direction: column; gap: .5rem; }
+  .steps-row { gap: 0; }
+  .step-label { font-size: .55rem; }
+  .step-circle { width: 22px; height: 22px; font-size: .52rem; }
+  .chat-btn-row { flex-direction: column; }
+  .chat-btn-row a, .chat-btn-row button { width: 100%; justify-content: center; }
+}
+@media (max-width: 360px) {
+  .empty-title { font-size: 1.3rem; }
+  .nav-wa { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -1284,7 +1301,7 @@ function renderHistory() {
   if (!list) return;
 
   if (!history.length) {
-    list.innerHTML = '<div class="history-empty">No past orders found. Completed orders appear here after collection.</div>';
+    list.innerHTML = '<div class="history-empty">No past orders found. Completed portfolios will appear here once delivered.</div>';
     return;
   }
 
@@ -1410,7 +1427,7 @@ function toggleRevision(e) {
 }
 function submitRevision() {
   if ((order?.revisionsLeft ?? 1) <= 0) {
-    toast('⛔ No Additional Revisions (₹15 each)s remaining. Contact us for paid revisions.');
+    toast('⛔ No  s remaining. Contact us to request a paid revision (₹15 each).');
     return;
   }
   const text = document.getElementById('revText').value.trim();

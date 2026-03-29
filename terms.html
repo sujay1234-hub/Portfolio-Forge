@@ -333,6 +333,20 @@ nav {
 .tf-links { display: flex; gap: 1.5rem; }
 .tf-links a { font-size: .75rem; color: var(--text3); transition: color .2s; }
 .tf-links a:hover { color: var(--teal); }
+
+/* ═══ RESPONSIVE POLISH ═══ */
+@media (max-width: 480px) {
+  .terms-hero { padding: 85px 1rem 2rem; }
+  .terms-hero h1 { font-size: clamp(1.7rem, 7vw, 2.5rem); }
+  .terms-layout { padding: 2rem 1rem 4rem; }
+  .terms-section { padding: 2rem 0; }
+  .contact-card { padding: 1rem; }
+  .terms-meta { gap: .85rem; }
+}
+@media (max-width: 768px) {
+  @media (max-width: 768px) { .nav-links { display: none; } }
+}
+
 </style>
 </head>
 <body>
@@ -436,6 +450,7 @@ nav {
   <div class="nav-links">
     <a href="index.html#pricing">Our Services</a>
     <a href="about.html">About Us</a>
+    <a href="revision.html">Revision Now</a>
     <a href="terms.html" class="active">Terms &amp; Conditions</a>
     <a href="submit-order.html">Order Now</a>
   </div>
@@ -572,8 +587,8 @@ nav {
       <p>Portfolio Forge aims to deliver all completed projects within <strong>24 hours</strong> of confirmed payment and receipt of all required content from the client. Delays caused by incomplete or late content submission from the client are not the responsibility of Portfolio Forge.</p>
       <p>Revision rounds are included as per the selected plan:</p>
       <ul>
-        <li><strong>Starter Plan</strong> — No free revision rounds included; revisions available at an additional charge.</li>
-        <li><strong>Pro Plan</strong> — Includes a defined number of free revision rounds (refer to pricing page).</li>
+        <li><strong>Starter Plan</strong> — No Additional Revisions (₹15 each) rounds included; revisions available at an additional charge.</li>
+        <li><strong>Pro Plan</strong> — Includes a defined number of Additional Revisions (₹15 each) rounds (refer to pricing page).</li>
         <li><strong>Premium Plan</strong> — Includes multiple revision rounds with broader customisation scope.</li>
       </ul>
       <p>A "revision" refers to minor text changes, colour adjustments, or layout tweaks — not a complete redesign or scope change. If your revision request falls outside the original project scope, an additional fee may apply.</p>
@@ -641,7 +656,7 @@ nav {
       <p>Portfolio Forge reserves the right to revise, update, or replace any part of these Terms and Conditions at any time. Changes become effective immediately upon posting to this page.</p>
       <p>It is your responsibility to review these terms periodically. Continued use of our services after any modifications constitutes your acceptance of the updated terms.</p>
       <p>We will make reasonable efforts to notify active clients of significant changes via email or a notice on our website. However, we are not obligated to provide individual notifications for every update.</p>
-      <p><strong>Current version:</strong> March 2026 — v1.0</p>
+      <p><strong>Current version:</strong> March 2026 — v2.0</p>
     </section>
 
     <section class="terms-section" id="s13">
@@ -660,7 +675,7 @@ nav {
           <div class="contact-icon">💬</div>
           <div class="contact-info">
             <div class="contact-label">WhatsApp</div>
-            <div class="contact-val">+91 XXXXX XXXXX</div>
+            <div class="contact-val">+91 96128 71060</div>
           </div>
         </div>
         <div class="contact-row">
@@ -680,7 +695,7 @@ nav {
 <!-- ═══ FOOTER ═══ -->
 <footer class="terms-footer">
   <div class="tf-logo">Portfolio<span>Forge</span></div>
-  <span class="tf-copy">© 2026 Portfolio Forge. All rights reserved. India.</span>
+  <span class="tf-copy">© 2026 PortfolioForge. All rights reserved. India.</span>
   <div class="tf-links">
     <a href="index.html">Home</a>
     <a href="terms.html">Terms</a>
