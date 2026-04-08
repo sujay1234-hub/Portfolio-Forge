@@ -1,0 +1,31 @@
+[build]
+  publish = "."
+
+# Pretty URLs: serve /page instead of /page.html
+[build.processing]
+  skip_processing = false
+
+[build.processing.html]
+  pretty_urls = true
+
+# Security & performance headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options         = "DENY"
+    X-Content-Type-Options  = "nosniff"
+    Referrer-Policy         = "strict-origin-when-cross-origin"
+    Permissions-Policy      = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    # No-cache on HTML so visitors always get fresh content
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Redirect bare /index.html → clean root URL
+[[redirects]]
+  from   = "/index.html"
+  to     = "/"
+  status = 301
+  force  = true

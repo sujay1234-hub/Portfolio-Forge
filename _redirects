@@ -1,0 +1,5 @@
+# Strip .html extension — redirect to clean URL
+/index.html   /   301
+
+# Catch-all: serve index.html for any unmatched route (SPA-style)
+/*            /index.html   200
