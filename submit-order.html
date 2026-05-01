@@ -1121,13 +1121,13 @@ nav {
               </ul>
             </div>
           </label>
-          <label class="plan-card plan-card-v plan-card-pro" id="plan-pro" onclick="selectPlan(this,'Pro',139,'pro')">
+          <label class="plan-card plan-card-v plan-card-pro" id="plan-pro" onclick="selectPlan(this,'Pro',239,'pro')">
             <input type="radio" name="plan" value="pro"/>
             <div class="plan-badge best">BEST VALUE</div>
             <div class="plan-radio"></div>
             <div class="plan-body">
               <div class="plan-name">Pro</div>
-              <div class="plan-price-inline">₹139</div>
+              <div class="plan-price-inline">₹239</div>
               <div class="plan-clients-choose">👉 Most clients choose this</div>
               <ul class="plan-feats">
                 <li>Multi-section portfolio</li>
@@ -1829,8 +1829,8 @@ function selectAltPayment(el, val) {
 function selectPayment(el, val) { selectAltPayment(el, val); }
 /* ════════════════════════════════════════════════════════
    COUPON SYSTEM
-   Coupon: NEW5%OFF → only for ₹139 Pro plan
-   Discount: ₹139 → ₹109
+   Coupon: NEW5%OFF → only for ₹239 Pro plan
+   Discount: ₹239 → ₹209
 ════════════════════════════════════════════════════════ */
 var COUPONS = {
   'NEW5%OFF': { planId: 'pro', discount: 30, finalPrice: 109, label: 'FORGE21OFF' }
@@ -1854,7 +1854,7 @@ function applyCoupon() {
     sav.style.display = 'none';
     appliedCoupon     = null;
     // Restore original price
-    if (selectedPlan.id === 'pro') { selectedPlan.price = 139; }
+    if (selectedPlan.id === 'pro') { selectedPlan.price = 239; }
     updateSummary();
     return;
   }
@@ -1863,10 +1863,10 @@ function applyCoupon() {
   if (selectedPlan.id !== coupon.planId) {
     msg.style.display = 'block';
     msg.style.color   = 'var(--red)';
-    msg.textContent   = '❌ This coupon only works on the ₹139 Pro plan';
+    msg.textContent   = '❌ This coupon only works on the ₹239 Pro plan';
     sav.style.display = 'none';
     appliedCoupon     = null;
-    if (selectedPlan.id === 'pro') { selectedPlan.price = 139; }
+    if (selectedPlan.id === 'pro') { selectedPlan.price = 239; }
     updateSummary();
     return;
   }
@@ -2176,7 +2176,7 @@ window.launchConfetti      = launchConfetti;
 (function(){
   var PLAN_MAP = {
     starter: { el:'plan-starter', name:'Starter',  price:49,  id:'starter'  },
-    pro:     { el:'plan-pro',     name:'Pro',       price:139, id:'pro'      },
+    pro:     { el:'plan-pro',     name:'Pro',       price:239, id:'pro'      },
     premium: { el:'plan-premium', name:'Premium',   price:499, id:'premium'  }
   };
   /* 1. URL param takes priority */
