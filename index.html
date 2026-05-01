@@ -3108,7 +3108,7 @@ section, footer, nav { overflow-x: hidden; }
       return 'standard';
     }
     function tierBadgeLabel(t) {
-       return { basic: '₹49 · Basic · 24h', standard: '₹179 · Standard · 24h', pro: '₹499 · Pro · 5-7 Days' }[t];
+       return { basic: '₹49 · Basic · 24h', standard: '₹239 · Standard · 24h', pro: '₹499 · Pro · 5-7 Days' }[t];
     }
 
     grid.innerHTML = PORTFOLIOS.map((p, i) => {
@@ -4560,7 +4560,7 @@ function savePlan(planId) {
     <div class="pg-tabs" id="pg-tabs">
       <button class="pg-tab active" data-plan="all"      onclick="filterByPlan('all', this)">All</button>
       <button class="pg-tab"        data-plan="basic"    onclick="filterByPlan('basic', this)">⚡ Basic · ₹49</button>
-      <button class="pg-tab amber"  data-plan="standard" onclick="filterByPlan('standard', this)">🚀 Standard · ₹179</button>
+      <button class="pg-tab amber"  data-plan="standard" onclick="filterByPlan('standard', this)">🚀 Standard · ₹239</button>
       <button class="pg-tab violet" data-plan="pro"      onclick="filterByPlan('pro', this)">💎 Pro · ₹499</button>
     </div>
 
@@ -4593,17 +4593,17 @@ function savePlan(planId) {
 ══════════════════════════════════════════ */
 /* ─── PORTFOLIO DATA (from live catalogue) ─── */
 const PORTFOLIOS = [
-  // ── ₹179 STANDARD ────────────────────────
-  { id:  1, program: 'Biotechnology',   price: 179, icon: '💊', link: 'https://ashish-narayan.vercel.app/' },
-  { id:  2, program: 'BSC Agriculture', price: 179, icon: '🌾', link: 'https://arjun-bestvalue0.netlify.app/' },
-  { id:  3, program: 'BBA',             price: 179, icon: '📊', link: 'hhttps://aarav-sharma-bestvalue.netlify.app/' },
-  { id:  4, program: 'BCA',             price: 179, icon: '🖥️', link: 'https://aryan-bestvalue-portfolio.netlify.app/' },
-  { id:  5, program: 'LAW',             price: 179, icon: '⚖️', link: 'https://ranjan-bestvalue.netlify.app/' },
-  { id:  6, program: 'MBA',             price: 179, icon: '🎯', link: 'https://arav-bestvalue-portfolio.netlify.app/' },
-  { id:  7, program: 'CSE',             price: 179, icon: '💻', link: '' },
-  { id:  8, program: 'PPT',             price: 179, icon: '📑', link: 'https://sujay-basicvalue.netlify.app/' },
-  { id:  9, program: 'Psychology',      price: 179, icon: '🧠', link: '' },
-  { id:  10, program: 'Pharma',          price: 179, icon: '💊', link: 'https://alex-basic.netlify.app/' },
+  // ── ₹239 STANDARD ────────────────────────
+  { id:  1, program: 'Biotechnology',   price: 239, icon: '💊', link: 'https://ashish-narayan.vercel.app/' },
+  { id:  2, program: 'BSC Agriculture', price: 239, icon: '🌾', link: 'https://arjun-bestvalue0.netlify.app/' },
+  { id:  3, program: 'BBA',             price: 239, icon: '📊', link: 'hhttps://aarav-sharma-bestvalue.netlify.app/' },
+  { id:  4, program: 'BCA',             price: 239, icon: '🖥️', link: 'https://aryan-bestvalue-portfolio.netlify.app/' },
+  { id:  5, program: 'LAW',             price: 239, icon: '⚖️', link: 'https://ranjan-bestvalue.netlify.app/' },
+  { id:  6, program: 'MBA',             price: 239, icon: '🎯', link: 'https://arav-bestvalue-portfolio.netlify.app/' },
+  { id:  7, program: 'CSE',             price: 239, icon: '💻', link: '' },
+  { id:  8, program: 'PPT',             price: 239, icon: '📑', link: 'https://sujay-basicvalue.netlify.app/' },
+  { id:  9, program: 'Psychology',      price: 239, icon: '🧠', link: '' },
+  { id:  10, program: 'Pharma',          price: 239, icon: '💊', link: 'https://alex-basic.netlify.app/' },
   
 
   // ── ₹499 PRO ─────────────────────────────
@@ -4625,7 +4625,7 @@ function priceTier(p) {
   return 'standard';
 }
 function tierLabel(t) {
-  return { basic: '₹49 Basic · 24h', standard: '₹179 Standard · 24h', pro: '₹499 Pro · 5-7 Days' }[t] || t;
+  return { basic: '₹49 Basic · 24h', standard: '₹239 Standard · 24h', pro: '₹499 Pro · 5-7 Days' }[t] || t;
 }
 function tierCls(t) {
   return { basic: 'pg-plan-starter', standard: 'pg-plan-pro', pro: 'pg-plan-premium' }[t] || 'pg-plan-starter';
