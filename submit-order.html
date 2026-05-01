@@ -1137,12 +1137,12 @@ nav {
               </ul>
             </div>
           </label>
-          <label class="plan-card plan-card-v" id="plan-premium" onclick="selectPlan(this,'Premium',299,'premium')">
+          <label class="plan-card plan-card-v" id="plan-premium" onclick="selectPlan(this,'Premium',499,'premium')">
             <input type="radio" name="plan" value="premium"/>
             <div class="plan-radio"></div>
             <div class="plan-body">
               <div class="plan-name">Premium</div>
-              <div class="plan-price-inline">₹299</div>
+              <div class="plan-price-inline">₹499</div>
               <ul class="plan-feats">
                 <li>Fully custom portfolio</li>
                 <li>Advanced animations</li>
@@ -1334,37 +1334,20 @@ nav {
           </div>
         </div>
 
-        <!-- ── OR divider ── -->
-        <div class="pay-or-divider"><span class="pay-or-text">or pay another way</span></div>
-
-        <!-- ── Alt payment options ── -->
-        <div class="pay-alt-grid">
-          <label class="pay-alt-card" id="altUpi" onclick="selectAltPayment(this,'upi')">
-            <input type="radio" name="payment" value="upi"/>
-            <div class="pay-alt-radio"></div>
-            <div class="pay-alt-info">
-              <div class="pay-alt-name"><span class="alt-icon">📱</span> UPI Direct</div>
-              <div class="pay-alt-sub">GPay · PhonePe · Paytm</div>
-            </div>
-          </label>
-          <label class="pay-alt-card" id="altBank" onclick="selectAltPayment(this,'bank')">
-            <input type="radio" name="payment" value="bank"/>
-            <div class="pay-alt-radio"></div>
-            <div class="pay-alt-info">
-              <div class="pay-alt-name"><span class="alt-icon">🏦</span> Bank Transfer</div>
-              <div class="pay-alt-sub">NEFT · IMPS · RTGS</div>
-            </div>
-          </label>
+        
+        <!-- ══ COUPON SECTION ══ -->
+        <div id="couponSection" style="margin-top:1rem;background:rgba(0,245,200,.04);border:1px solid rgba(0,245,200,.18);border-radius:var(--r);padding:1rem 1.25rem;">
+          <div style="font-family:var(--fm);font-size:.6rem;color:var(--teal);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.65rem;">🎟️ Have a Coupon Code?</div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+            <input id="couponInput" type="text" placeholder="e.g. NEW5%OFF" style="flex:1;min-width:140px;padding:.7rem 1rem;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--fb);font-size:.88rem;outline:none;transition:border-color .2s;" oninput="this.value=this.value.toUpperCase()"/>
+            <button onclick="applyCoupon()" style="padding:.7rem 1.25rem;background:var(--teal);color:#000;border:none;border-radius:var(--r);font-size:.84rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:box-shadow .2s;">Apply</button>
+          </div>
+          <div id="couponMsg" style="margin-top:.5rem;font-size:.78rem;display:none;font-weight:600;"></div>
+          <div id="couponSavings" style="display:none;margin-top:.4rem;font-family:var(--fm);font-size:.72rem;color:var(--teal);"></div>
         </div>
 
-        <div class="pay-err" id="e-payment" style="display:none;font-size:.75rem;color:var(--red);margin-bottom:.65rem"></div>
+<div class="pay-err" id="e-payment" style="display:none;font-size:.75rem;color:var(--red);margin-bottom:.65rem"></div>
 
-        <div id="pay-info-upi" class="pay-info">
-          <strong>📱 UPI Payment</strong> — We'll send our UPI ID to your WhatsApp/Email within <strong>30 minutes</strong>. Send the payment and share a screenshot to confirm.
-        </div>
-        <div id="pay-info-bank" class="pay-info">
-          <strong>🏦 Bank Transfer</strong> — Account details shared after order is placed. Transfer the exact amount and share your UTR number with us.
-        </div>
         <div class="terms-wrap" id="termsBox" onclick="toggleTerms()">
           <div class="terms-box" id="termsCheckbox">✓</div>
           <div class="terms-text">I agree to the <a href="#">Terms of Service</a> and understand that work begins after payment confirmation. Delivery within 24 hours of payment.</div>
@@ -1463,7 +1446,7 @@ nav {
     <div class="s-card">
       <div class="s-card-head"><span class="s-card-ico">🛡️</span><div class="s-card-title">Guarantees</div></div>
       <div class="s-card-body">
-        <div class="g-item"><div class="g-ico">⚡</div><div class="g-text"><strong>24h Delivery</strong><span>Delivered in 24h or full refund</span></div></div>
+        <div class="g-item"><div class="g-ico">⚡</div><div class="g-text"><strong>Fast Delivery</strong><span id="deliveryGuaranteeText">Delivered in 24h or full refund</span></div></div>
         <div class="g-item"><div class="g-ico">🔄</div><div class="g-text"><strong>Additional Revisions (₹15 each)</strong><span>One full revision round included</span></div></div>
         <div class="g-item"><div class="g-ico">📦</div><div class="g-text"><strong>Source Code</strong><span>Full code + deployment guide</span></div></div>
         <div class="g-item"><div class="g-ico">💬</div><div class="g-text"><strong>WhatsApp Support</strong><span>Direct chat throughout</span></div></div>
@@ -1844,6 +1827,89 @@ function selectAltPayment(el, val) {
 
 /* Legacy selectPayment — kept for compat */
 function selectPayment(el, val) { selectAltPayment(el, val); }
+/* ════════════════════════════════════════════════════════
+   COUPON SYSTEM
+   Coupon: NEW5%OFF → only for ₹139 Pro plan
+   Discount: ₹139 → ₹109
+════════════════════════════════════════════════════════ */
+var COUPONS = {
+  'NEW5%OFF': { planId: 'pro', discount: 30, finalPrice: 109, label: 'FORGE21OFF' }
+};
+var appliedCoupon = null;
+
+function applyCoupon() {
+  var code = (document.getElementById('couponInput').value || '').trim().toUpperCase();
+  var msg  = document.getElementById('couponMsg');
+  var sav  = document.getElementById('couponSavings');
+  var inp  = document.getElementById('couponInput');
+
+  if (!msg || !sav) return;
+
+  var coupon = COUPONS[code];
+
+  if (!coupon) {
+    msg.style.display = 'block';
+    msg.style.color   = 'var(--red)';
+    msg.textContent   = '❌ Invalid or not applicable';
+    sav.style.display = 'none';
+    appliedCoupon     = null;
+    // Restore original price
+    if (selectedPlan.id === 'pro') { selectedPlan.price = 139; }
+    updateSummary();
+    return;
+  }
+
+  // Check plan eligibility
+  if (selectedPlan.id !== coupon.planId) {
+    msg.style.display = 'block';
+    msg.style.color   = 'var(--red)';
+    msg.textContent   = '❌ This coupon only works on the ₹139 Pro plan';
+    sav.style.display = 'none';
+    appliedCoupon     = null;
+    if (selectedPlan.id === 'pro') { selectedPlan.price = 139; }
+    updateSummary();
+    return;
+  }
+
+  // Valid coupon
+  appliedCoupon = coupon;
+  // Temporarily override plan price
+  selectedPlan.price = coupon.finalPrice;
+
+  msg.style.display = 'block';
+  msg.style.color   = 'var(--teal)';
+  msg.textContent   = '✅ Coupon Applied! You save ₹' + coupon.discount;
+  sav.style.display = 'block';
+  sav.textContent   = 'Discount: –₹' + coupon.discount + ' applied to your order';
+  inp.style.borderColor = 'var(--teal)';
+  inp.disabled = true;
+
+  updateSummary();
+}
+
+/* Reset coupon when plan changes */
+var _origSelectPlan = selectPlan;
+selectPlan = function(el, name, price, id) {
+  // Reset coupon if plan changed
+  if (appliedCoupon) {
+    appliedCoupon = null;
+    var msg = document.getElementById('couponMsg');
+    var sav = document.getElementById('couponSavings');
+    var inp = document.getElementById('couponInput');
+    if (msg) { msg.style.display='none'; msg.textContent=''; }
+    if (sav) { sav.style.display='none'; }
+    if (inp) { inp.disabled=false; inp.style.borderColor=''; inp.value=''; }
+  }
+  _origSelectPlan(el, name, price, id);
+};
+
+/* Delivery message based on plan */
+function getDeliveryMsg(planId) {
+  if (planId === 'premium') return '🚀 Delivery in 5–7 Days';
+  return '⚡ Delivered in 24 Hours (as per your requirements)';
+}
+
+
 
 function toggleTerms() {
   termsAccepted = !termsAccepted;
@@ -1877,6 +1943,14 @@ function updateSummary() {
   if(rzpName) rzpName.textContent = selectedPlan.name;
   if(rzpPrice) rzpPrice.textContent = total;
   if(rzpBtn) rzpBtn.textContent = 'Pay ₹' + total + ' Securely with Razorpay';
+
+  /* Update delivery message based on plan */
+  var delText = document.getElementById('deliveryGuaranteeText');
+  if(delText) {
+    delText.textContent = selectedPlan.id === 'premium'
+      ? 'Delivery in 5–7 Days'
+      : 'Delivered in 24 Hours (as per your requirements)';
+  }
 }
 
 /* ════════════════════════════════════════════════════════
@@ -2103,7 +2177,7 @@ window.launchConfetti      = launchConfetti;
   var PLAN_MAP = {
     starter: { el:'plan-starter', name:'Starter',  price:49,  id:'starter'  },
     pro:     { el:'plan-pro',     name:'Pro',       price:139, id:'pro'      },
-    premium: { el:'plan-premium', name:'Premium',   price:299, id:'premium'  }
+    premium: { el:'plan-premium', name:'Premium',   price:499, id:'premium'  }
   };
   /* 1. URL param takes priority */
   var urlParam = new URLSearchParams(window.location.search).get('plan');

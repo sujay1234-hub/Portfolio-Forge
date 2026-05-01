@@ -1406,7 +1406,7 @@ h1.hero-headline .outline { -webkit-text-stroke: 1.5px var(--text2); color: tran
 }
 .pc-value:hover { box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 0 0 1px rgba(0,245,200,.2); border-color: rgba(0,245,200,.3); }
 
-/* ── ₹299 — Premium card ── */
+/* ── ₹499 — Premium card ── */
 .pc-premium {
   background: linear-gradient(145deg, #160f2a 0%, #100c20 100%);
   border: 1px solid rgba(139,92,246,.3);
@@ -2867,7 +2867,7 @@ section, footer, nav { overflow-x: hidden; }
       </div>
     </div>
 
-    <!-- ₹299 — Premium -->
+    <!-- ₹499 — Premium -->
     <div class="pc pc-premium rv d2">
       <div class="pc-badge-row">💎 Premium</div>
       <div class="pc-body">
@@ -2876,11 +2876,11 @@ section, footer, nav { overflow-x: hidden; }
         <div class="pc-tagline">// Maximum impact</div>
         <div class="pc-price-row">
           <div class="pc-currency" style="color:#c4b5fd">₹</div>
-          <div class="pc-amount" style="color:#c4b5fd">299</div>
+          <div class="pc-amount" style="color:#c4b5fd">499</div>
           <div class="pc-note">one-time</div>
         </div>
         <div class="pc-old-price" style="text-decoration:line-through;color:var(--text3);opacity:1">Was ₹599</div>
-        <div class="pc-delivery">⚡ Delivered in 24h</div>
+        <div class="pc-delivery">🚀 Delivery in 5–7 Days</div>
         <div class="pc-divider"></div>
         <div class="pc-features">
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>Advanced portfolio with 3D animations</div>
@@ -3104,11 +3104,11 @@ section, footer, nav { overflow-x: hidden; }
 
     function tier(price) {
       if (price <= 49)  return 'basic';
-      if (price >= 449) return 'pro';
+      if (price >= 499) return 'pro';;
       return 'standard';
     }
     function tierBadgeLabel(t) {
-      return { basic: '₹49 · Basic', standard: '₹179 · Standard', pro: '₹449 · Pro' }[t];
+       return { basic: '₹49 · Basic · 24h', standard: '₹179 · Standard · 24h', pro: '₹499 · Pro · 5-7 Days' }[t];
     }
 
     grid.innerHTML = PORTFOLIOS.map((p, i) => {
@@ -3784,7 +3784,7 @@ section, footer, nav { overflow-x: hidden; }
       <div class="fc-links">
         <a href="submit-order.html?plan=starter">Starter · ₹49 🔥</a>
         <a href="submit-order.html?plan=pro">Pro Animated · ₹139</a>
-        <a href="submit-order.html?plan=premium">Premium · ₹299</a>
+        <a href="submit-order.html?plan=premium">Premium · ₹499</a>
       </div>
       <div class="fc-title" style="margin-top:2rem">Contact</div>
       <div class="fc-links">
@@ -4561,7 +4561,7 @@ function savePlan(planId) {
       <button class="pg-tab active" data-plan="all"      onclick="filterByPlan('all', this)">All</button>
       <button class="pg-tab"        data-plan="basic"    onclick="filterByPlan('basic', this)">⚡ Basic · ₹49</button>
       <button class="pg-tab amber"  data-plan="standard" onclick="filterByPlan('standard', this)">🚀 Standard · ₹179</button>
-      <button class="pg-tab violet" data-plan="pro"      onclick="filterByPlan('pro', this)">💎 Pro · ₹449</button>
+      <button class="pg-tab violet" data-plan="pro"      onclick="filterByPlan('pro', this)">💎 Pro · ₹499</button>
     </div>
 
     <!-- Search -->
@@ -4594,35 +4594,35 @@ function savePlan(planId) {
 /* ─── PORTFOLIO DATA (from live catalogue) ─── */
 const PORTFOLIOS = [
   // ── ₹179 STANDARD ────────────────────────
-  { id:  1, program: 'BSC Agriculture', price: 179, icon: '🌾', link: 'https://sujaybanarjee744-hash.github.io/Arjun-Sharma/' },
-  { id:  2, program: 'BBA',             price: 179, icon: '📊', link: 'https://sujaybanarjee744-hash.github.io/Aarav-Sharma/' },
-  { id:  3, program: 'BCA',             price: 179, icon: '🖥️', link: 'https://sujaybanarjee744-hash.github.io/Aryan-Kuamar-Sharma/' },
-  { id:  4, program: 'LAW',             price: 179, icon: '⚖️', link: 'https://sujaybanarjee744-hash.github.io/Ranjan-Kumar/' },
-  { id:  5, program: 'MBA',             price: 179, icon: '🎯', link: 'https://sujaybanarjee744-hash.github.io/Aarav-banarjee/' },
+  { id:  1, program: 'BSC Agriculture', price: 179, icon: '🌾', link: 'https://arjun-bestvalue0.netlify.app/' },
+  { id:  2, program: 'BBA',             price: 179, icon: '📊', link: 'hhttps://aarav-sharma-bestvalue.netlify.app/' },
+  { id:  3, program: 'BCA',             price: 179, icon: '🖥️', link: 'https://aryan-bestvalue-portfolio.netlify.app/' },
+  { id:  4, program: 'LAW',             price: 179, icon: '⚖️', link: 'https://ranjan-bestvalue.netlify.app/' },
+  { id:  5, program: 'MBA',             price: 179, icon: '🎯', link: 'https://arav-bestvalue-portfolio.netlify.app/' },
   { id:  6, program: 'CSE',             price: 179, icon: '💻', link: '' },
-  { id:  7, program: 'PPT',             price: 179, icon: '📑', link: 'https://sujaybanarjee744-hash.github.io/Sujay-Banarjee/' },
+  { id:  7, program: 'PPT',             price: 179, icon: '📑', link: 'https://sujay-basicvalue.netlify.app/' },
   { id:  8, program: 'Psychology',      price: 179, icon: '🧠', link: '' },
-  { id:  9, program: 'Pharma',          price: 179, icon: '💊', link: 'https://sujaybanarjee744-hash.github.io/Alex-Rivera-/' },
+  { id:  9, program: 'Pharma',          price: 179, icon: '💊', link: 'https://alex-basic.netlify.app/' },
 
-  // ── ₹449 PRO ─────────────────────────────
-  { id: 10, program: 'CSE (Pro)',        price: 449, icon: '💻', link: 'https://sujaybanarjee.pages.dev/' },
-  { id: 11, program: 'Psychology (Pro)', price: 449, icon: '🧠', link: 'https://sujaybanarjee744-hash.github.io/abiaportfolio_pro/' },
+  // ── ₹499 PRO ─────────────────────────────
+  { id: 10, program: 'CSE (Pro)',        price: 499, icon: '💻', link: 'https://sujaybanarjee.pages.dev/' },
+  { id: 11, program: 'Psychology (Pro)', price: 499, icon: '🧠', link: 'https://psychology-primium.netlify.app/' },
 
   // ── ₹49 BASIC ────────────────────────────
-  { id: 12, program: 'BBA (Basic)',      price: 49,  icon: '📊', link: 'https://sujaybanarjee744-hash.github.io/bba-basic-portfolio/' },
-  { id: 13, program: 'BCA (Basic)',      price: 49,  icon: '🖥️', link: 'https://sujaybanarjee744-hash.github.io/bca-basic-portfolio/' },
-  { id: 14, program: 'CSE (Basic)',      price: 49,  icon: '💻', link: 'https://sujaybanarjee744-hash.github.io/cse-basic-portfolio/' },
-  { id: 15, program: 'MBA (Basic)',      price: 49,  icon: '🎯', link: 'https://sujaybanarjee744-hash.github.io/mba-basic-portfolio/' },
+  { id: 12, program: 'BBA (Basic)',      price: 49,  icon: '📊', link: 'https://bba-basic-portfolio.netlify.app/' },
+  { id: 13, program: 'BCA (Basic)',      price: 49,  icon: '🖥️', link: 'https://bca-basic.netlify.app/' },
+  { id: 14, program: 'CSE (Basic)',      price: 49,  icon: '💻', link: 'https://cse-basic-portfolio.netlify.app/' },
+  { id: 15, program: 'MBA (Basic)',      price: 49,  icon: '🎯', link: 'https://mba-basic-portfolio.netlify.app/' },
 ];
 
 /* price tier helpers */
 function priceTier(p) {
   if (p.price <= 49)  return 'basic';
-  if (p.price >= 449) return 'pro';
+  if (p.price >= 499) return 'pro';;
   return 'standard';
 }
 function tierLabel(t) {
-  return { basic: '₹49 Basic', standard: '₹179 Standard', pro: '₹449 Pro' }[t] || t;
+  return { basic: '₹49 Basic · 24h', standard: '₹179 Standard · 24h', pro: '₹499 Pro · 5-7 Days' }[t] || t;
 }
 function tierCls(t) {
   return { basic: 'pg-plan-starter', standard: 'pg-plan-pro', pro: 'pg-plan-premium' }[t] || 'pg-plan-starter';
