@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>About Us — PortfolioForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#060810;--bg2:#080b14;
+  --surface:rgba(15,18,32,.75);--surface2:rgba(20,24,44,.85);
+  --border:rgba(30,36,64,.9);
+  --teal:#00f5c8;--teal-glow:rgba(0,245,200,.25);
+  --violet:#8b5cf6;--amber:#f59e0b;
+  --text:#f0f2fa;--text2:#8892b8;--text3:#4a5278;
+  --fd:'Syne',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+  --r:10px;--rl:18px;--rx:26px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);overflow-x:hidden}
+::selection{background:var(--teal);color:#000}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:2px}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+
+/* CANVAS */
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
+#lines{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.3}
+
+/* CURSOR */
+#dot{position:fixed;width:8px;height:8px;background:var(--teal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen}
+#ring{position:fixed;width:32px;height:32px;border:1.5px solid var(--teal);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.38}
+@media(hover:none){#dot,#ring{display:none}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:60px;background:rgba(6,8,16,.8);backdrop-filter:blur(28px) saturate(180%);border-bottom:1px solid rgba(30,36,64,.8);transition:background .3s}
+.nav-logo{font-family:var(--fd);font-size:1.45rem;font-weight:800;letter-spacing:-.03em}
+.nav-logo .g{color:var(--teal)}
+.nav-links{display:flex;align-items:center;gap:2.5rem}
+.nav-links a{font-size:.8rem;font-weight:600;color:var(--text2);letter-spacing:.01em;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1.5px;background:var(--teal);transform:scaleX(0);transition:transform .25s}
+.nav-links a:hover,.nav-links a.active{color:var(--teal)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-actions{display:flex;align-items:center;gap:.7rem}
+.ncta{background:var(--teal);color:#000;padding:.48rem 1.35rem;border-radius:var(--r);font-size:.78rem;font-weight:700;letter-spacing:.02em;transition:box-shadow .2s,transform .15s;white-space:nowrap}
+.ncta:hover{box-shadow:0 0 28px var(--teal-glow);transform:translateY(-1px)}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.ham span{display:block;width:22px;height:1.5px;background:var(--text);border-radius:1px;transition:.3s}
+@media(max-width:860px){.nav-links{display:none}.ham{display:flex}}
+.mob{position:fixed;inset:0;top:60px;background:rgba(6,8,16,.97);backdrop-filter:blur(24px);z-index:400;display:none;flex-direction:column;padding:1.5rem 5vw;border-top:1px solid rgba(30,36,64,.8)}
+.mob.show{display:flex}
+.mob a{padding:1.1rem 0;font-size:1.05rem;font-weight:600;color:var(--text);border-bottom:1px solid rgba(30,36,64,.8);transition:color .2s}
+.mob a:hover{color:var(--teal)}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(34px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.32s}.d4{transition-delay:.44s}
+
+/* ───── HERO — exact match to index.html ───── */
+.hero{
+  min-height:100svh;padding:80px 5vw 3rem;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.hero-mesh{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 70% at 65% 40%,rgba(0,245,200,.05) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 50% at 10% 80%,rgba(139,92,246,.04) 0%,transparent 60%);
+}
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,245,200,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,245,200,.022) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 100% 90% at 50% 40%,black 30%,transparent 100%);
+}
+.hero-inner{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;
+  max-width:1200px;
+}
+@media(max-width:860px){.hero-inner{grid-template-columns:1fr;gap:2rem}}
+@media(max-width:480px){.hero-inner{gap:1.5rem}}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.6rem;
+  background:rgba(0,245,200,.08);border:1px solid rgba(0,245,200,.18);
+  padding:.32rem 1rem;border-radius:100px;
+  font-family:var(--fm);font-size:.68rem;color:var(--teal);
+  letter-spacing:.06em;margin-bottom:1.5rem;
+}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal);animation:blink 1.5s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+
+h1.hero-headline{
+  font-family:var(--fd);
+  font-size:clamp(1.85rem,6vw,4.8rem);
+  line-height:.95;letter-spacing:-.03em;
+  color:var(--text);font-weight:800;
+}
+h1.hero-headline .accent{color:var(--teal);display:inline-block}
+h1.hero-headline .outline{-webkit-text-stroke:1.5px rgba(240,242,250,.45);color:transparent}
+
+.hero-sub{
+  margin-top:1.5rem;max-width:480px;
+  font-size:.95rem;font-weight:300;color:var(--text2);line-height:1.8;
+}
+.hero-sub strong{color:var(--text);font-weight:600}
+
+.hero-ctas{display:flex;align-items:center;gap:1.1rem;margin-top:2rem;flex-wrap:wrap}
+
+.btn-primary{
+  background:var(--teal);color:#000;
+  padding:.95rem 2.5rem;border-radius:var(--r);
+  font-size:.9rem;font-weight:700;letter-spacing:.01em;
+  display:inline-flex;align-items:center;gap:.5rem;
+  transition:box-shadow .25s,transform .25s;border:none;cursor:pointer;
+  position:relative;overflow:hidden;
+}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2) 0%,transparent 50%)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(0,245,200,.4);transform:translateY(-2px)}
+
+.btn-ghost{
+  background:transparent;border:1px solid var(--border);color:var(--text2);
+  padding:.95rem 2rem;border-radius:var(--r);
+  font-size:.9rem;font-weight:500;
+  transition:border-color .2s,color .2s;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.5rem;
+}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal)}
+
+.trust-row{display:flex;align-items:center;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap}
+.trust-badge{display:flex;align-items:center;gap:.4rem;font-size:.74rem;font-weight:500;color:var(--text3)}
+.trust-badge .icon{font-size:.9rem}
+
+/* RIGHT: benefit cards */
+.hero-right{display:flex;flex-direction:column;gap:1rem}
+@media(max-width:860px){.hero-right{display:none}}
+
+.hero-benefit-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--rl);padding:1.4rem 1.6rem;
+  display:flex;align-items:center;gap:1.25rem;
+  cursor:pointer;
+  transition:border-color .25s,transform .25s,box-shadow .25s,background .25s;
+  position:relative;overflow:hidden;
+  text-decoration:none;
+}
+.hero-benefit-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  border-radius:3px 0 0 3px;transition:opacity .25s;opacity:0;
+}
+.hero-benefit-card:nth-child(1)::before{background:var(--teal)}
+.hero-benefit-card:nth-child(2)::before{background:var(--amber)}
+.hero-benefit-card:nth-child(3)::before{background:#a78bfa}
+.hero-benefit-card:hover::before{opacity:1}
+.hero-benefit-card:hover{transform:translateX(6px);background:rgba(20,24,44,.85)}
+.hero-benefit-card:nth-child(1):hover{border-color:rgba(0,245,200,.35);box-shadow:0 8px 32px rgba(0,245,200,.08)}
+.hero-benefit-card:nth-child(2):hover{border-color:rgba(245,158,11,.35);box-shadow:0 8px 32px rgba(245,158,11,.08)}
+.hero-benefit-card:nth-child(3):hover{border-color:rgba(167,139,250,.35);box-shadow:0 8px 32px rgba(167,139,250,.08)}
+
+.hb-icon{
+  width:46px;height:46px;border-radius:var(--r);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+}
+.hero-benefit-card:nth-child(1) .hb-icon{background:rgba(0,245,200,.1)}
+.hero-benefit-card:nth-child(2) .hb-icon{background:rgba(245,158,11,.1)}
+.hero-benefit-card:nth-child(3) .hb-icon{background:rgba(167,139,250,.1)}
+
+.hb-title{font-family:var(--fd);font-size:1.1rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.2rem}
+.hero-benefit-card:nth-child(1) .hb-title{color:var(--teal)}
+.hero-benefit-card:nth-child(2) .hb-title{color:var(--amber)}
+.hero-benefit-card:nth-child(3) .hb-title{color:#a78bfa}
+.hb-desc{font-size:.8rem;color:var(--text3);font-weight:400;line-height:1.5}
+
+.hb-arrow{margin-left:auto;font-size:.9rem;color:var(--text3);transition:transform .25s,color .25s;flex-shrink:0}
+.hero-benefit-card:hover .hb-arrow{transform:translateX(4px)}
+.hero-benefit-card:nth-child(1):hover .hb-arrow{color:var(--teal)}
+.hero-benefit-card:nth-child(2):hover .hb-arrow{color:var(--amber)}
+.hero-benefit-card:nth-child(3):hover .hb-arrow{color:#a78bfa}
+
+/* scroll hint */
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:.3;animation:sbounce 2.2s ease-in-out infinite;z-index:2}
+.scroll-hint span{font-family:var(--fm);font-size:.56rem;letter-spacing:.1em;color:var(--text3)}
+.sarrow{width:13px;height:13px;border-right:1.5px solid var(--text3);border-bottom:1.5px solid var(--text3);transform:rotate(45deg)}
+@keyframes sbounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+/* keep old .lead for compat */
+.lead{
+  font-size:clamp(.88rem,2vw,1rem);color:var(--text2);
+  line-height:1.85;max-width:480px;margin:0 0 2.5rem;font-weight:300;
+}
+.lead strong{color:var(--text);font-weight:600}
+
+/* btn-p and btn-g kept for CTA section compatibility */
+.btn-p{background:var(--teal);color:#000;padding:.95rem 2.2rem;border-radius:var(--r);font-size:.88rem;font-weight:700;letter-spacing:.01em;display:inline-flex;align-items:center;gap:.5rem;transition:box-shadow .25s,transform .2s;position:relative;overflow:hidden}
+.btn-p::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2) 0%,transparent 55%)}
+.btn-p:hover{box-shadow:0 0 50px var(--teal-glow);transform:translateY(-2px)}
+.btn-g{background:transparent;border:1.5px solid var(--border);color:var(--text2);padding:.9rem 1.8rem;border-radius:var(--r);font-size:.86rem;font-weight:600;display:inline-flex;align-items:center;gap:.5rem;transition:border-color .2s,color .2s,transform .2s}
+.btn-g:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
+
+/* ───── SECTIONS ───── */
+.sec{position:relative;z-index:1;padding:6rem 5vw}
+.si{max-width:1160px;margin:0 auto}
+.stag{font-family:var(--fm);font-size:.64rem;color:var(--teal);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem}
+.stag::before{content:'';width:22px;height:1px;background:var(--teal)}
+.sh{font-family:var(--fd);font-size:clamp(1.9rem,4.5vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.05;color:var(--text)}
+.sh .g{color:var(--teal)}.sh .v{color:#a78bfa}
+.ss{font-size:.95rem;color:var(--text2);line-height:1.8;font-weight:300;margin-top:.7rem;max-width:540px}
+.gdiv{height:1px;background:linear-gradient(90deg,transparent,rgba(0,245,200,.2),transparent);position:relative;z-index:1}
+
+/* ───── STORY ───── */
+.story-sec{background:linear-gradient(180deg,var(--bg) 0%,#080c1a 100%)}
+.slay{display:flex;flex-direction:column;gap:3.5rem;margin-top:4rem}
+.stext p{font-size:.95rem;color:var(--text2);line-height:1.95;font-weight:300;margin-bottom:1.3rem}
+.stext p strong{color:var(--text);font-weight:600}
+.stext p:last-child{margin-bottom:0}
+
+/* ── 4 floating cards in ONE horizontal row ── */
+.sg{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1rem;
+  width:100%;
+}
+@media(max-width:860px){
+  /* on mobile: 2×2 */
+  .sg{grid-template-columns:1fr 1fr}
+}
+
+/* Staggered float keyframes — each card unique rhythm & offset */
+@keyframes floatA{
+  0%,100%{transform:translateY(0)}
+  40%    {transform:translateY(-18px)}
+  75%    {transform:translateY(-9px)}
+}
+@keyframes floatB{
+  0%,100%{transform:translateY(0)}
+  30%    {transform:translateY(-12px)}
+  60%    {transform:translateY(-22px)}
+  85%    {transform:translateY(-7px)}
+}
+@keyframes floatC{
+  0%,100%{transform:translateY(0)}
+  20%    {transform:translateY(-20px)}
+  55%    {transform:translateY(-8px)}
+  80%    {transform:translateY(-16px)}
+}
+@keyframes floatD{
+  0%,100%{transform:translateY(0)}
+  35%    {transform:translateY(-10px)}
+  65%    {transform:translateY(-20px)}
+  90%    {transform:translateY(-5px)}
+}
+
+.sc{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--rl);
+  padding:1.75rem 1rem 1.5rem;
+  text-align:center;
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(14px);
+  cursor:default;
+  transition:border-color .35s,box-shadow .35s;
+  will-change:transform;
+}
+
+/* Glossy inner sheen */
+.sc::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.055) 0%,transparent 55%);
+  pointer-events:none;border-radius:inherit;
+}
+
+/* Top accent line — always visible */
+.sc::after{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:2.5px;
+  background:var(--cc);border-radius:2px 2px 0 0;
+  transition:box-shadow .35s;
+}
+
+/* Per-card colour + float */
+.sc:nth-child(1){--cc:var(--teal);  animation:floatA 7s  ease-in-out infinite;}
+.sc:nth-child(2){--cc:var(--amber); animation:floatB 9s  ease-in-out .8s infinite;}
+.sc:nth-child(3){--cc:#a78bfa;      animation:floatC 8s  ease-in-out 1.4s infinite;}
+.sc:nth-child(4){--cc:var(--teal);  animation:floatD 10s ease-in-out .4s infinite;}
+
+/* Hover: pause + glow */
+.sc:hover{
+  animation-play-state:paused;
+  border-color:var(--cc);
+  box-shadow:0 16px 50px rgba(0,0,0,.4),0 0 0 1px var(--cc),inset 0 1px 0 rgba(255,255,255,.07);
+}
+.sc:hover::after{box-shadow:0 0 14px var(--cc)}
+
+/* Glow orb behind number */
+.sc-orb{
+  position:absolute;bottom:-24px;right:-24px;
+  width:80px;height:80px;border-radius:50%;
+  background:var(--cc);filter:blur(30px);opacity:.1;
+  pointer-events:none;transition:opacity .35s;
+}
+.sc:hover .sc-orb{opacity:.3}
+
+.snum{
+  font-family:var(--fd);font-size:2rem;font-weight:800;
+  color:var(--cc);letter-spacing:-.04em;line-height:1;
+  position:relative;z-index:1;
+}
+.slbl{
+  font-family:var(--fm);font-size:.5rem;color:var(--text3);
+  letter-spacing:.1em;text-transform:uppercase;
+  margin-top:.5rem;line-height:1.5;
+  position:relative;z-index:1;
+}
+
+/* ───── MISSION ───── */
+.mission-sec{background:#080c1a}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem}
+@media(max-width:900px){.mg{grid-template-columns:1fr;gap:1.25rem;max-width:480px;margin-left:auto;margin-right:auto}}
+
+.mc{position:relative;border-radius:var(--rx);overflow:hidden;background:var(--surface);border:1px solid var(--border);padding:2.25rem 2rem;transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s;transform-style:preserve-3d;backdrop-filter:blur(12px)}
+.mc:hover{transform:translateY(-12px) rotateX(5deg)}
+.mc:nth-child(1):hover{box-shadow:0 32px 90px rgba(0,245,200,.12),0 0 0 1px rgba(0,245,200,.3)}
+.mc:nth-child(2):hover{box-shadow:0 32px 90px rgba(139,92,246,.12),0 0 0 1px rgba(139,92,246,.3)}
+.mc:nth-child(3):hover{box-shadow:0 32px 90px rgba(245,158,11,.1),0 0 0 1px rgba(245,158,11,.25)}
+
+/* sweep border */
+.mc::before{content:'';position:absolute;top:0;left:-120%;right:120%;height:2px;transition:left .55s ease,right .55s ease}
+.mc:nth-child(1)::before{background:linear-gradient(90deg,transparent,var(--teal),transparent)}
+.mc:nth-child(2)::before{background:linear-gradient(90deg,transparent,var(--violet),transparent)}
+.mc:nth-child(3)::before{background:linear-gradient(90deg,transparent,var(--amber),transparent)}
+.mc:hover::before{left:0;right:0}
+
+/* glow orb */
+.morb{position:absolute;top:-50px;right:-50px;width:130px;height:130px;border-radius:50%;filter:blur(45px);opacity:0;transition:opacity .4s}
+.mc:nth-child(1) .morb{background:rgba(0,245,200,.6)}.mc:nth-child(2) .morb{background:rgba(139,92,246,.6)}.mc:nth-child(3) .morb{background:rgba(245,158,11,.6)}
+.mc:hover .morb{opacity:.2}
+
+.mnum{font-family:var(--fm);font-size:.61rem;color:var(--text3);letter-spacing:.12em;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
+.mnum::before{content:'';display:inline-block;width:22px;height:1px;background:currentColor}
+.memi{font-size:2.5rem;margin-bottom:1.2rem}
+.mt{font-family:var(--fd);font-size:1.25rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.85rem}
+.mc:nth-child(1) .mt{color:var(--teal)}.mc:nth-child(2) .mt{color:#a78bfa}.mc:nth-child(3) .mt{color:var(--amber)}
+.mb{font-size:.88rem;color:var(--text2);line-height:1.85;font-weight:300}
+
+/* ───── TEAM ───── */
+.team-sec{background:linear-gradient(180deg,#080c1a 0%,#060810 100%)}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:4rem}
+@media(max-width:820px){.tg{grid-template-columns:1fr;max-width:520px;margin-left:auto;margin-right:auto}}
+
+/* 3D tilt team card */
+.tcard{
+  position:relative;border-radius:var(--rx);overflow:hidden;
+  background:var(--surface);border:1px solid var(--border);
+  transition:box-shadow .5s,transform .5s cubic-bezier(.16,1,.3,1);
+  transform-style:preserve-3d;backdrop-filter:blur(12px);
+  display:flex;flex-direction:column;
+}
+.tcard:hover{
+  box-shadow:0 40px 100px rgba(0,0,0,.55),0 0 0 1px rgba(0,245,200,.2),0 0 70px rgba(0,245,200,.07);
+}
+
+/* Photo area — taller, full portrait, NO dark gradient overlay at top */
+.tphoto{
+  width:100%;height:420px;overflow:hidden;position:relative;
+  background:linear-gradient(135deg,#0d1525,#0a1020);
+  flex-shrink:0;
+}
+.tphoto img{
+  width:100%;height:100%;
+  object-fit:cover;
+  object-position:center top;
+  display:block;
+  transition:transform .6s ease;
+  filter:brightness(1.02) contrast(1.04);
+}
+.tcard:hover .tphoto img{transform:scale(1.04)}
+
+/* Sujay — white bg portrait: cover and zoom to face area */
+.tcard:first-child .tphoto img{
+  object-fit:cover;
+  object-position:center 8%;
+}
+.tcard:first-child .tphoto{
+  background:#c8cdd8;
+}
+
+/* Subtle bottom fade only — no top darkness */
+.tov{
+  position:absolute;bottom:0;left:0;right:0;height:80px;
+  background:linear-gradient(to top,rgba(13,18,37,1) 0%,transparent 100%);
+  pointer-events:none;
+}
+
+/* Floating badge */
+.tbadge{
+  position:absolute;top:1rem;left:1rem;
+  background:rgba(6,8,16,.72);backdrop-filter:blur(14px);
+  border:1px solid rgba(0,245,200,.25);border-radius:100px;
+  padding:.3rem .9rem;
+  font-family:var(--fm);font-size:.6rem;color:var(--teal);letter-spacing:.08em;
+  display:flex;align-items:center;gap:.38rem;
+  box-shadow:0 4px 16px rgba(0,0,0,.3);
+}
+.tbadge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--teal);animation:blink 1.6s ease infinite}
+
+/* Info block */
+.tinfo{padding:1.6rem 1.85rem 2rem;flex:1;display:flex;flex-direction:column}
+.tname{font-family:var(--fd);font-size:1.55rem;font-weight:800;color:var(--text);letter-spacing:-.03em;margin-bottom:.18rem}
+.trole{
+  font-family:var(--fm);font-size:.63rem;color:var(--teal);letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:1.1rem;display:flex;align-items:center;gap:.4rem
+}
+.trole::before{content:'//';color:var(--text3)}
+.tbio{font-size:.87rem;color:var(--text2);line-height:1.85;font-weight:300;margin-bottom:1.4rem;flex:1}
+.tbio strong{color:var(--text);font-weight:600}
+.tslbl{font-family:var(--fm);font-size:.57rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.52rem}
+.ttags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.4rem}
+.ttag{font-family:var(--fm);font-size:.6rem;letter-spacing:.06em;padding:.2rem .68rem;border-radius:100px;background:rgba(0,245,200,.07);border:1px solid rgba(0,245,200,.16);color:var(--teal);transition:background .2s}
+.ttag:hover{background:rgba(0,245,200,.14)}
+.ttag.v{background:rgba(139,92,246,.07);border-color:rgba(139,92,246,.18);color:#a78bfa}
+.ttag.a{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.18);color:var(--amber)}
+.tlinks{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:auto}
+.tlink{display:inline-flex;align-items:center;gap:.4rem;padding:.48rem 1.1rem;border-radius:var(--r);font-size:.78rem;font-weight:600;letter-spacing:.01em;border:1px solid var(--border);color:var(--text2);transition:border-color .2s,color .2s,background .2s,transform .15s}
+.tlink:hover{border-color:var(--teal);color:var(--teal);background:rgba(0,245,200,.06);transform:translateY(-2px)}
+
+/* ───── WHY ───── */
+.why-sec{background:var(--bg)}
+.wg{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:4rem}
+@media(max-width:760px){.wg{grid-template-columns:1fr}}
+.wc{display:flex;align-items:flex-start;gap:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.75rem;backdrop-filter:blur(10px);transition:transform .3s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .3s;position:relative;overflow:hidden}
+.wc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;background:var(--teal);transform:scaleY(0);transition:transform .35s;transform-origin:bottom}
+.wc:hover::before{transform:scaleY(1)}
+.wc:hover{transform:translateX(8px);border-color:rgba(0,245,200,.28);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.wc:nth-child(2)::before,.wc:nth-child(4)::before{background:var(--violet)}
+.wc:nth-child(2):hover,.wc:nth-child(4):hover{border-color:rgba(139,92,246,.28)}
+.wico{width:50px;height:50px;border-radius:var(--r);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.4rem;background:rgba(0,245,200,.08);border:1px solid rgba(0,245,200,.14);transition:background .2s}
+.wc:hover .wico{background:rgba(0,245,200,.15)}
+.wico.v{background:rgba(139,92,246,.08);border-color:rgba(139,92,246,.14)}
+.wc:nth-child(2):hover .wico,.wc:nth-child(4):hover .wico{background:rgba(139,92,246,.15)}
+.wt{font-family:var(--fd);font-size:1.05rem;font-weight:700;color:var(--text);letter-spacing:-.01em;margin-bottom:.4rem}
+.wb{font-size:.86rem;color:var(--text2);line-height:1.78;font-weight:300}
+
+/* ───── TIMELINE ───── */
+.j-sec{background:#080c1a}
+.tl{position:relative;max-width:740px;margin:4rem auto 0;padding-left:3rem}
+.tl::before{content:'';position:absolute;left:13px;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,transparent,var(--teal) 15%,var(--violet) 50%,var(--teal) 85%,transparent);opacity:.3}
+.ti{position:relative;padding-bottom:3rem}
+.ti:last-child{padding-bottom:0}
+.tdot{position:absolute;left:-3rem;top:6px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--teal);box-shadow:0 0 16px rgba(0,245,200,.35);transition:transform .3s,box-shadow .3s}
+.ti:hover .tdot{transform:scale(1.45);box-shadow:0 0 28px rgba(0,245,200,.7)}
+.ti:nth-child(even) .tdot{border-color:var(--violet);box-shadow:0 0 16px rgba(139,92,246,.35)}
+.ti:nth-child(even):hover .tdot{box-shadow:0 0 28px rgba(139,92,246,.7)}
+.tdate{font-family:var(--fm);font-size:.61rem;color:var(--teal);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem}
+.ti:nth-child(even) .tdate{color:#a78bfa}
+.ttitle{font-family:var(--fd);font-size:1.12rem;font-weight:700;color:var(--text);letter-spacing:-.015em;margin-bottom:.4rem}
+.tbody{font-size:.87rem;color:var(--text2);line-height:1.85;font-weight:300;max-width:560px}
+
+/* ───── CTA ───── */
+.cta-sec{background:linear-gradient(180deg,#060810 0%,#040610 100%);text-align:center}
+.ctaw{max-width:640px;margin:0 auto;position:relative;background:linear-gradient(145deg,rgba(0,38,32,.75) 0%,rgba(10,13,24,.85) 60%,rgba(14,10,28,.75) 100%);border:1.5px solid rgba(0,245,200,.25);border-radius:var(--rx);padding:4rem 3rem;box-shadow:0 0 0 1px rgba(0,245,200,.08),0 36px 90px rgba(0,0,0,.45),0 0 70px rgba(0,245,200,.07);backdrop-filter:blur(16px);overflow:hidden}
+.ctaw::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 5%,var(--teal) 40%,var(--violet) 70%,transparent 95%)}
+.ctag{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(0,245,200,.12) 0%,transparent 65%);animation:cpulse 4s ease-in-out infinite;pointer-events:none}
+@keyframes cpulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.7}50%{transform:translateX(-50%) scale(1.25);opacity:1}}
+.ctat{font-family:var(--fd);font-size:clamp(1.7rem,4.5vw,2.8rem);font-weight:800;color:var(--text);letter-spacing:-.03em;line-height:1.1;margin-bottom:1rem;position:relative}
+.ctat .g{color:var(--teal)}
+.ctas{font-size:.95rem;color:var(--text2);line-height:1.8;margin-bottom:2.25rem;position:relative}
+.ctabtns{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;position:relative}
+
+/* ───── FOOTER ───── */
+footer{padding:4rem 5vw 2rem;background:#040610;border-top:1px solid rgba(30,36,64,.8);position:relative;z-index:1}
+.fg{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:3rem;max-width:1160px;margin:0 auto 3rem}
+@media(max-width:720px){.fg{grid-template-columns:1fr;gap:2rem}}
+.flogo{font-family:var(--fd);font-size:1.35rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.75rem}
+.flogo span{color:var(--teal)}
+.fdesc{font-size:.83rem;color:var(--text3);line-height:1.7;max-width:220px;margin-bottom:1.2rem}
+.fsocs{display:flex;gap:.55rem}
+.fsoc{width:32px;height:32px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-family:var(--fm);color:var(--text3);transition:border-color .2s,color .2s}
+.fsoc:hover{border-color:var(--teal);color:var(--teal)}
+.fct{font-family:var(--fm);font-size:.6rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.9rem}
+.fcl{display:flex;flex-direction:column;gap:.5rem}
+.fcl a{font-size:.83rem;color:var(--text2);transition:color .2s}
+.fcl a:hover{color:var(--teal)}
+.fb{max-width:1160px;margin:0 auto;padding-top:1.5rem;border-top:1px solid rgba(30,36,64,.8);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.fc{font-size:.78rem;color:var(--text3)}
+.fc a{color:var(--teal)}
+.fm2{font-family:var(--fm);font-size:.63rem;color:var(--text3)}
+
+/* ───── MOBILE ───── */
+@media(max-width:640px){
+  .sec{padding:4rem 5vw}
+  .hero{padding:78px 5vw 3rem}
+  .ctaw{padding:2.75rem 1.5rem}
+  .tphoto{height:340px}
+  .tcard:first-child .tphoto{height:340px}
+  .sg{grid-template-columns:1fr 1fr}
+  .snum{font-size:2.2rem}
+  footer{padding:3rem 5vw 2rem}
+}
+@media(max-width:400px){
+  .h1{font-size:2.6rem}
+}
+
+/* ═══ RESPONSIVE POLISH ═══ */
+@media (max-width: 480px) {
+  .hero { padding: 80px 1rem 2.5rem; }
+  h1.hero-headline { font-size: clamp(1.7rem, 8vw, 3rem); }
+  .hero-sub { font-size: .88rem; }
+  .hero-ctas { flex-direction: column; }
+  .hero-ctas .btn-primary,
+  .hero-ctas .btn-ghost { width: 100%; justify-content: center; }
+  .si { padding: 3rem 1rem; }
+}
+@media (max-width: 860px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .mc { padding: 1.5rem; }
+  .team-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 600px) {
+  .fg { grid-template-columns: 1fr !important; gap: 2rem; }
+  .cta-sec .ctabtns { flex-direction: column; }
+  .cta-sec .btn-p,
+  .cta-sec .btn-g { width: 100%; text-align: center; justify-content: center; }
+}
+
+</style>
+</head>
+<body>
+
+<canvas id="bgc"></canvas>
+<canvas id="lines"></canvas>
+<div id="dot"></div>
+<div id="ring"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo">Portfolio<span class="g">Forge</span></a>
+  <div class="nav-links">
+    <a href="index.html#pricing">Our Services</a>
+    <a href="about.html" class="active">About Us</a>
+    <a href="revision.html">Revision Now</a>
+    <a href="submit-order.html">Order Now</a>
+  </div>
+  <div class="nav-actions">
+    <a href="submit-order.html" class="ncta">Get Started →</a>
+    <button class="ham" id="hamBtn"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<nav class="mob" id="mobMenu">
+  <a href="index.html#pricing">Our Services</a>
+  <a href="about.html" style="color:var(--teal)">About Us</a>
+ 
+  <a href="submit-order.html" style="color:var(--teal);font-weight:700">Get Started →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-mesh"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+
+    <!-- LEFT: Headline + CTA -->
+    <div class="hero-left">
+      <div class="hero-eyebrow rv">Our Story — PortfolioForge</div>
+      <h1 class="hero-headline rv d1">
+        WE BUILD<br/>
+        <span class="accent">PORTFOLIOS</span><br/>
+        <span class="outline">THAT MATTER</span>
+      </h1>
+      <p class="hero-sub rv d2">
+        Two developers from India who got tired of watching talented students lose opportunities because they had no digital presence. So we decided to fix that — <strong>starting at ₹49.</strong>
+      </p>
+      <div class="hero-ctas rv d2">
+        <a href="submit-order.html" class="btn-primary">Get Your Portfolio →</a>
+        <a href="#story" class="btn-ghost">Our Story ↓</a>
+      </div>
+      <div class="trust-row rv d3">
+        <div class="trust-badge"><span class="icon">✅</span> 24h Delivery</div>
+        <div class="trust-badge"><span class="icon">🔒</span> Secure Pay</div>
+        <div class="trust-badge"><span class="icon">📦</span> Source Code</div>
+        <div class="trust-badge"><span class="icon">🔄</span>  s Included</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: benefit cards -->
+    <div class="hero-right rv d2">
+      <div class="hero-benefit-card">
+        <div class="hb-icon">🛠️</div>
+        <div class="hb-text">
+          <div class="hb-title">Hand-coded, every time</div>
+          <div class="hb-desc">No templates, no drag-and-drop. Every portfolio is written from scratch — unique to you</div>
+        </div>
+        <div class="hb-arrow">→</div>
+      </div>
+      <div class="hero-benefit-card">
+        <div class="hb-icon">🇮🇳</div>
+        <div class="hb-text">
+          <div class="hb-title">Built for Indian students</div>
+          <div class="hb-desc">We understand placement season, college culture, and what Indian recruiters actually look for</div>
+        </div>
+        <div class="hb-arrow">→</div>
+      </div>
+      <div class="hero-benefit-card">
+        <div class="hb-icon">💬</div>
+        <div class="hb-text">
+          <div class="hb-title">We've been there too</div>
+          <div class="hb-desc">Founded by developers who went through campus placements — we built the tool we wished existed</div>
+        </div>
+        <div class="hb-arrow">→</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="scroll-hint"><span>SCROLL</span><div class="sarrow"></div></div>
+</section>
+
+<div class="gdiv"></div>
+
+<!-- STORY -->
+<section class="story-sec sec" id="story">
+  <div class="si">
+    <div class="slay">
+      <div class="stext rv">
+        <div class="stag">The Beginning</div>
+        <h2 class="sh" style="margin-bottom:1.75rem">Why We <span class="g">Built This</span></h2>
+        <p>It started with a frustration we both shared. As developers who had been through campus placements and internship applications ourselves, we kept seeing the same thing — <strong>incredibly talented students getting overlooked</strong> because they had no portfolio, or a badly thrown-together template.</p>
+        <p>Recruiters spend an average of <strong>6 seconds on a resume</strong>. A portfolio website changes that entirely. It gives them something to explore — your personality, your projects, your actual ability — not just bullet points on paper.</p>
+        <p>So in early 2025, Sujay and Ashish built <strong>PortfolioForge</strong> — removing every barrier between a student and a professional digital presence. Fast delivery. Real code. Honest pricing. No templates, no builders, no shortcuts. <strong>Everything hand-coded from scratch</strong>, specifically for each client.</p>
+      </div>
+
+      <!-- 4 cards in ONE horizontal row, each floating independently -->
+      <div class="sg rv d1">
+        <div class="sc">
+          <div class="sc-orb"></div>
+          <div class="snum">50+</div>
+          <div class="slbl">Portfolios<br>Delivered</div>
+        </div>
+        <div class="sc">
+          <div class="sc-orb"></div>
+          <div class="snum">24h</div>
+          <div class="slbl">Avg.<br>Delivery</div>
+        </div>
+        <div class="sc">
+          <div class="sc-orb"></div>
+          <div class="snum">₹49</div>
+          <div class="slbl">Starting<br>Price</div>
+        </div>
+        <div class="sc">
+          <div class="sc-orb"></div>
+          <div class="snum">100%</div>
+          <div class="slbl">Code<br>Ownership</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gdiv"></div>
+
+<!-- MISSION -->
+<section class="mission-sec sec" id="mission">
+  <div class="si">
+    <div class="rv" style="text-align:center;max-width:540px;margin:0 auto">
+      <div class="stag" style="justify-content:center">Our Mission</div>
+      <h2 class="sh" style="text-align:center">What Drives <span class="g">Everything We Do</span></h2>
+      <p class="ss" style="text-align:center;max-width:100%">Three beliefs that shape every portfolio we build.</p>
+    </div>
+    <div class="mg">
+      <div class="mc rv"><div class="morb"></div><div class="mnum">01</div><div class="memi">🎯</div><div class="mt">Democratise Opportunity</div><p class="mb">A great portfolio shouldn't be a luxury. Every student deserves a professional digital presence — regardless of background, branch, or budget. We're on a mission to make that real across India.</p></div>
+      <div class="mc rv d1"><div class="morb"></div><div class="mnum">02</div><div class="memi">⚡</div><div class="mt">Speed Without Compromise</div><p class="mb">Placement season waits for no one. We deliver complete, production-ready portfolios in under 24 hours — not because we rush, but because we've refined our process to be genuinely fast without cutting corners.</p></div>
+      <div class="mc rv d2"><div class="morb"></div><div class="mnum">03</div><div class="memi">🤝</div><div class="mt">Honest Always</div><p class="mb">No hidden fees. No upsells. No vague deliverables. You know exactly what you're getting, what it costs, and when it arrives — before you pay a single rupee. Transparency is non-negotiable.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="gdiv"></div>
+
+<!-- TEAM -->
+<section class="team-sec sec" id="team">
+  <div class="si">
+    <div class="rv" style="text-align:center;max-width:500px;margin:0 auto">
+      <div class="stag" style="justify-content:center">The Team</div>
+      <h2 class="sh" style="text-align:center">The People <span class="g">Behind Every Build</span></h2>
+      <p class="ss" style="text-align:center;max-width:100%">Two developers. One shared obsession — helping students get noticed.</p>
+    </div>
+    <div class="tg">
+      <div class="tcard rv">
+        <div class="tphoto">
+          <img src="sujay.jpg" alt="Sujay Banarjee" loading="lazy"/>
+          <div class="tov"></div>
+          <div class="tbadge">Co-Founder</div>
+        </div>
+        <div class="tinfo">
+          <div class="tname">Sujay Banarjee</div>
+          <div class="trole">Lead Developer</div>
+          <p class="tbio">Full-stack developer with a passion for building <strong>clean, high-performance web experiences</strong>. Sujay leads development on every PortfolioForge project — architecting code, implementing animations, and ensuring each portfolio is genuinely impressive and deploy-ready.<br><br>Having been through campus placements himself, he understands exactly what a portfolio needs to communicate and what recruiters actually look for.</p>
+          <div class="tslbl">Tech Stack</div>
+          <div class="ttags"><span class="ttag">React</span><span class="ttag">Next.js</span><span class="ttag">Node.js</span><span class="ttag v">UI Engineering</span><span class="ttag a">Portfolio Strategy</span></div>
+          <div class="tlinks">
+            <a href="https://sujay-banarjee-portfolio.vercel.app/" target="_blank" class="tlink">🌐 Portfolio ↗</a>
+            <a href="https://github.com/sujay1234-hub" target="_blank" class="tlink">GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="tcard rv d1">
+        <div class="tphoto">
+          <img src="ashish.jpg" alt="Ashish Narayan" loading="lazy" style="object-fit:cover;object-position:center 18%"/>
+          <div class="tov"></div>
+          <div class="tbadge">Co-Founder</div>
+        </div>
+        <div class="tinfo">
+          <div class="tname">Ashish Narayan</div>
+          <div class="trole">Creative Director</div>
+          <p class="tbio">The creative engine of PortfolioForge — responsible for the <strong>visual direction, design language, and user experience</strong> of every portfolio we deliver. His obsessive attention to detail and instinct for what looks professional drives everything aesthetic.<br><br>His philosophy: your portfolio is your first impression, and first impressions are visual. Every layout and animation must serve a purpose.</p>
+          <div class="tslbl">Expertise</div>
+          <div class="ttags"><span class="ttag">Creative Design</span><span class="ttag">CSS Animations</span><span class="ttag v">Visual Branding</span><span class="ttag a">UX Strategy</span><span class="ttag">Figma</span></div>
+          <div class="tlinks"><a href="https://wa.me/9612871060" target="_blank" class="tlink">💬 Contact ↗</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gdiv"></div>
+
+<!-- WHY -->
+<section class="why-sec sec" id="why">
+  <div class="si">
+    <div class="rv">
+      <div class="stag">Why PortfolioForge</div>
+      <h2 class="sh">What Makes Us <span class="g">Different</span></h2>
+      <p class="ss">Not a platform. Not a template service. Two developers who genuinely care about your outcome.</p>
+    </div>
+    <div class="wg">
+      <div class="wc rv"><div class="wico">✍️</div><div><div class="wt">Hand-Coded, Every Time</div><p class="wb">Zero page builders. Zero templates. Every line of code written specifically for you — faster loads, cleaner output, a portfolio that actually feels unique and yours.</p></div></div>
+      <div class="wc rv d1"><div class="wico v">🧠</div><div><div class="wt">Recruiter-Informed Design</div><p class="wb">We've studied what hiring managers actually respond to. Our layouts guide attention to your strongest work first. Structure and clarity come before aesthetics.</p></div></div>
+      <div class="wc rv d1"><div class="wico">📦</div><div><div class="wt">Full Ownership, Always</div><p class="wb">You get the complete source code — no lock-in, no monthly fees. Host it on GitHub Pages, Vercel, or Netlify. Your portfolio lives wherever you want it.</p></div></div>
+      <div class="wc rv d2"><div class="wico v">🇮🇳</div><div><div class="wt">Built for Indian Students</div><p class="wb">We understand the Indian placement cycle — campus drives, internship seasons, LinkedIn profiles. Our portfolios complement how Indian hiring actually works.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="gdiv"></div>
+
+<!-- JOURNEY -->
+<section class="j-sec sec" id="journey">
+  <div class="si">
+    <div class="rv" style="text-align:center;max-width:480px;margin:0 auto">
+      <div class="stag" style="justify-content:center">Our Journey</div>
+      <h2 class="sh" style="text-align:center">From Idea to <span class="g">50+ Portfolios</span></h2>
+    </div>
+    <div class="tl">
+      <div class="ti rv"><div class="tdot"></div><div class="tdate">Early 2025</div><div class="ttitle">The Frustration</div><p class="tbody">Sujay and Ashish, both helping friends with placement prep, kept seeing the same pattern — talented students losing out with no portfolio. The idea was born over a late-night conversation.</p></div>
+      <div class="ti rv d1"><div class="tdot"></div><div class="tdate">Mid 2025</div><div class="ttitle">First Build</div><p class="tbody">Built a first portfolio for a friend — free of charge, just to prove the concept. He landed an internship interview within a week of it going live. The results spoke for themselves.</p></div>
+      <div class="ti rv d1"><div class="tdot"></div><div class="tdate">Late 2025</div><div class="ttitle">Going Live</div><p class="tbody">After refining our process, we officially launched PortfolioForge. Within the first month we delivered portfolios to 20+ students across India — from engineering to design to MBA.</p></div>
+      <div class="ti rv d2"><div class="tdot"></div><div class="tdate">2026</div><div class="ttitle">50+ and Growing</div><p class="tbody">Over 50 professional portfolios delivered to students across India. We continue to expand with premium plans, certificate showcases, domain assistance, and add-ons.</p></div>
+      <div class="ti rv d2"><div class="tdot"></div><div class="tdate">Coming Soon</div><div class="ttitle">What's Next</div><p class="tbody">Certificate documents, achievement showcases, custom domain setup. Building the most complete portfolio service for Indian students, one feature at a time.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec sec">
+  <div class="si">
+    <div class="ctaw rv">
+      <div class="ctag"></div>
+      <div class="ctat">Ready to <span class="g">Stand Out?</span></div>
+      <p class="ctas">Join 50+ students who now have a professional portfolio that works for them. Place your order in 5 minutes — receive your portfolio in 24 hours.</p>
+      <div class="ctabtns">
+        <a href="submit-order.html" class="btn-p">Get Your Portfolio →</a>
+        <a href="index.html#pricing" class="btn-g">View Pricing ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fg">
+    <div><div class="flogo">Portfolio<span>Forge</span></div><p class="fdesc">Professional digital portfolios built and delivered in 24 hours. Real code, real results.</p><div class="fsocs"></div></div>
+    <div><div class="fct">Quick Links</div><div class="fcl"><a href="about.html">About Us</a><a href="index.html#pricing">Our Services</a><a href="submit-order.html">Place Order</a><a href="track-order.html">Track Order</a></div></div>
+    <div>
+      <div class="fct">Plans</div>
+      <div class="fcl"><a href="submit-order.html">Starter · ₹49 🔥</a><a href="submit-order.html">Pro Animated · ₹179</a><a href="submit-order.html">Premium · ₹449</a></div>
+      <div class="fct" style="margin-top:2rem">Contact</div>
+      <div class="fcl"><a href="https://wa.me/9612871060" target="_blank">WhatsApp</a><a href="/cdn-cgi/l/email-protection#ee9e819c9a888182878188819c898bc09d9a9b8a8781ae89838f8782c08d8183">Email Us</a></div>
+    </div>
+  </div>
+  <div class="fb"><div class="fc">© 2026 PortfolioForge · Made with ❤️ by <a href="https://sujay-banarjee-portfolio.vercel.app/" target="_blank">Sujay Banarjee</a></div><div class="fm2">v2.0.0 · Crafted in India 🇮🇳</div></div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ── WEBGL PARTICLE BG ── */
+(function(){
+  const canvas=document.getElementById('bgc');
+  const gl=canvas.getContext('webgl')||canvas.getContext('experimental-webgl');
+  if(!gl){canvas.style.display='none';return}
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;gl.viewport(0,0,canvas.width,canvas.height)}
+  resize();window.addEventListener('resize',resize);
+  const vs=`attribute vec3 p;attribute float s;uniform mat4 m;void main(){gl_Position=m*vec4(p,1.);gl_PointSize=s;}`;
+  const fs=`precision mediump float;uniform vec3 c;void main(){float d=length(gl_PointCoord-.5)*2.;if(d>1.)discard;float a=smoothstep(1.,.1,d)*.55;gl_FragColor=vec4(c,a);}`;
+  function mkS(t,src){const s=gl.createShader(t);gl.shaderSource(s,src);gl.compileShader(s);return s}
+  const prog=gl.createProgram();gl.attachShader(prog,mkS(gl.VERTEX_SHADER,vs));gl.attachShader(prog,mkS(gl.FRAGMENT_SHADER,fs));gl.linkProgram(prog);gl.useProgram(prog);
+  const N=200,pos=new Float32Array(N*3),sz=new Float32Array(N),vel=[];
+  for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*4;pos[i*3+1]=(Math.random()-.5)*4;pos[i*3+2]=(Math.random()-.5)*2;sz[i]=Math.random()*2.8+.8;vel.push({x:(Math.random()-.5)*.0005,y:(Math.random()-.5)*.0005})}
+  const pb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,pb);gl.bufferData(gl.ARRAY_BUFFER,pos,gl.DYNAMIC_DRAW);
+  const sb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,sb);gl.bufferData(gl.ARRAY_BUFFER,sz,gl.STATIC_DRAW);
+  const aP=gl.getAttribLocation(prog,'p'),aS=gl.getAttribLocation(prog,'s'),uM=gl.getUniformLocation(prog,'m'),uC=gl.getUniformLocation(prog,'c');
+  gl.enableVertexAttribArray(aP);gl.enableVertexAttribArray(aS);
+  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
+  let mx=0,my=0;
+  document.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*.12;my=-(e.clientY/innerHeight-.5)*.12});
+  function ortho(l,r,b,t){const w=r-l,h=t-b;return new Float32Array([2/w,0,0,0,0,2/h,0,0,0,0,-1,0,-(r+l)/w,-(t+b)/h,0,1])}
+  function frame(){
+    requestAnimationFrame(frame);
+    gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
+    const ar=canvas.width/canvas.height;
+    for(let i=0;i<N;i++){pos[i*3]+=vel[i].x+mx*.0018;pos[i*3+1]+=vel[i].y+my*.0018;if(pos[i*3]>2.5)pos[i*3]=-2.5;if(pos[i*3]<-2.5)pos[i*3]=2.5;if(pos[i*3+1]>2.5)pos[i*3+1]=-2.5;if(pos[i*3+1]<-2.5)pos[i*3+1]=2.5}
+    gl.bindBuffer(gl.ARRAY_BUFFER,pb);gl.bufferData(gl.ARRAY_BUFFER,pos,gl.DYNAMIC_DRAW);gl.vertexAttribPointer(aP,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,sb);gl.vertexAttribPointer(aS,1,gl.FLOAT,false,0,0);
+    gl.uniformMatrix4fv(uM,false,ortho(-ar*2,ar*2,-2,2));
+    gl.uniform3f(uC,0,.96,.78);gl.drawArrays(gl.POINTS,0,Math.floor(N*.68));
+    gl.uniform3f(uC,.54,.36,.96);gl.drawArrays(gl.POINTS,Math.floor(N*.68),Math.floor(N*.32));
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ── CANVAS LINE CONNECTIONS ── */
+(function(){
+  const c=document.getElementById('lines');
+  const ctx=c.getContext('2d');
+  function resize(){c.width=innerWidth;c.height=innerHeight}resize();window.addEventListener('resize',resize);
+  const pts=Array.from({length:55},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25}));
+  function draw(){
+    requestAnimationFrame(draw);ctx.clearRect(0,0,c.width,c.height);
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>c.width)p.vx*=-1;if(p.y<0||p.y>c.height)p.vy*=-1});
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
+      if(d<145){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(0,245,200,${(1-d/145)*.09})`;ctx.lineWidth=.65;ctx.stroke()}
+    }
+  }
+  draw();
+})();
+
+/* ── MAIN ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  /* cursor */
+  const dot=document.getElementById('dot'),ring=document.getElementById('ring');
+  let mx=0,my=0,rx=0,ry=0;
+  if(dot&&ring){
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
+    (function a(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a)})();
+  }
+
+  /* mobile menu */
+  const ham=document.getElementById('hamBtn'),mob=document.getElementById('mobMenu');
+  ham.addEventListener('click',()=>mob.classList.toggle('show'));
+
+  /* scroll reveal */
+  const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in')}),{threshold:.07});
+  document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+  /* 3D mouse tilt on cards */
+  document.querySelectorAll('.mc,.tcard,.wc').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+      const depth=card.classList.contains('tcard')?14:10;
+      card.style.transform=`perspective(900px) rotateX(${-y*depth}deg) rotateY(${x*depth}deg) translateY(-${card.classList.contains('tcard')?12:8}px)`;
+    });
+    card.addEventListener('mouseleave',()=>card.style.transform='');
+  });
+
+  /* nav bg on scroll */
+  /* nav bg on scroll */
+  window.addEventListener('scroll',()=>{
+    document.getElementById('mainNav').style.background=scrollY>50?'rgba(6,8,16,.96)':'rgba(6,8,16,.8)';
+  });
+});
+</script>
+</body>
+</html>

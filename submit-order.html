@@ -1,0 +1,2138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>Place Your Order — PortfolioForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN TOKENS — Luxury Dark
+═══════════════════════════════════════════════════════ */
+:root {
+  --bg:      #05070f;
+  --bg2:     #080b16;
+  --surface: #0c0f1d;
+  --glass:   rgba(255,255,255,.03);
+  --glass2:  rgba(255,255,255,.055);
+  --border:  rgba(255,255,255,.07);
+  --border2: rgba(255,255,255,.12);
+
+  --teal:      #00f5c8;
+  --teal-d:    rgba(0,245,200,.08);
+  --teal-m:    rgba(0,245,200,.18);
+  --teal-glow: 0 0 40px rgba(0,245,200,.28);
+
+  --violet: #7c5cfc;
+  --amber:  #f59e0b;
+  --red:    #f04444;
+
+  --text:  #eef1fb;
+  --text2: #7a85aa;
+  --text3: #3d4566;
+
+  --fd: 'Syne', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+
+  --r:   10px;
+  --rl:  16px;
+  --rxl: 22px;
+}
+
+/* Light mode */
+[data-theme="light"] {
+  --bg:      #f2f4fc;
+  --bg2:     #e8ecf8;
+  --surface: #ffffff;
+  --glass:   rgba(255,255,255,.6);
+  --glass2:  rgba(255,255,255,.8);
+  --border:  rgba(0,0,0,.07);
+  --border2: rgba(0,0,0,.13);
+  --text:    #0a0d1e;
+  --text2:   #4a5278;
+  --text3:   #8890b4;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent }
+html { scroll-behavior:smooth }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:var(--fb); font-size:16px; line-height:1.6;
+  overflow-x:hidden; min-height:100vh;
+  transition:background .3s,color .3s;
+}
+::selection { background:var(--teal); color:#000 }
+::-webkit-scrollbar { width:2px }
+::-webkit-scrollbar-thumb { background:var(--teal); border-radius:2px }
+a { color:inherit; text-decoration:none }
+
+/* ═══ NOISE OVERLAY ═══ */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.5;
+}
+
+/* ═══ CURSOR ═══ */
+#dot { position:fixed;width:6px;height:6px;background:var(--teal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .06s }
+#ring { position:fixed;width:28px;height:28px;border:1px solid rgba(0,245,200,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) }
+@media(hover:none){#dot,#ring{display:none}}
+
+/* ═══════════════════════════════════════════════════════
+   NAV — Premium glass header
+═══════════════════════════════════════════════════════ */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:500;
+  height:62px; padding:0 clamp(1rem, 5vw, 2.5rem);
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(5,7,15,.75);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+[data-theme="light"] nav {
+  background:rgba(242,244,252,.82);
+  border-bottom:1px solid rgba(0,0,0,.07);
+}
+
+/* Logo */
+.nav-logo {
+  font-family:var(--fd); font-size:1.35rem; font-weight:800;
+  letter-spacing:-.04em; display:flex; align-items:center; gap:.25rem;
+  flex-shrink:0;
+}
+.nav-logo .g { color:var(--teal) }
+
+/* Left: Back button */
+.nav-back {
+  display:flex; align-items:center; gap:6px;
+  height:34px; padding:0 14px;
+  font-size:.76rem; font-weight:600; color:var(--text2);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;
+  background:rgba(255,255,255,.04);
+  transition:all .2s;
+  white-space:nowrap;
+}
+.nav-back:hover {
+  color:var(--teal);
+  border-color:rgba(0,245,200,.3);
+  background:rgba(0,245,200,.06);
+}
+.nav-back svg { width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex-shrink:0 }
+[data-theme="light"] .nav-back { border-color:rgba(0,0,0,.1); background:rgba(0,0,0,.04); }
+
+/* Right group */
+.nav-right { display:flex; align-items:center; gap:8px }
+
+/* Track Order button */
+.nav-track {
+  display:flex; align-items:center; gap:6px;
+  height:34px; padding:0 14px;
+  font-size:.74rem; font-weight:700; color:var(--teal);
+  background:rgba(0,245,200,.08);
+  border:1px solid rgba(0,245,200,.22);
+  border-radius:8px;
+  transition:all .22s cubic-bezier(.16,1,.3,1);
+  white-space:nowrap;
+}
+.nav-track:hover {
+  background:rgba(0,245,200,.14);
+  border-color:rgba(0,245,200,.42);
+  box-shadow:0 0 18px rgba(0,245,200,.18);
+  transform:translateY(-1px);
+}
+
+/* Icon group (theme) */
+.nav-icon-group {
+  display:flex; align-items:center; gap:4px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:10px;
+  padding:4px;
+}
+[data-theme="light"] .nav-icon-group {
+  background:rgba(0,0,0,.04);
+  border-color:rgba(0,0,0,.08);
+}
+
+.theme-btn {
+  width:30px; height:30px; border-radius:7px;
+  background:transparent; border:none;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:.88rem; transition:all .18s ease;
+}
+.theme-btn:hover { background:rgba(255,255,255,.08); }
+[data-theme="light"] .theme-btn:hover { background:rgba(0,0,0,.06); }
+
+/* Mobile responsive */
+@media (max-width:540px) {
+  .nav-track span.track-label { display:none; }
+  .nav-back span { display:none; }
+  .nav-back { padding:0 10px; }
+  .nav-track { padding:0 10px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   HERO — minimal, focused
+═══════════════════════════════════════════════════════ */
+.page-hero {
+  padding-top:100px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.page-hero::after {
+  content:'';
+  position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:600px; height:300px;
+  background:radial-gradient(ellipse at 50% 0%, rgba(0,245,200,.1) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-inner { max-width:600px; margin:0 auto; padding:2rem 5vw 0; position:relative; z-index:1 }
+
+.hero-pill {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--teal-d); border:1px solid var(--teal-m);
+  padding:.3rem 1rem; border-radius:100px;
+  font-family:var(--fm); font-size:.62rem; color:var(--teal);
+  letter-spacing:.1em; text-transform:uppercase; margin-bottom:1.25rem;
+}
+.hero-pill-dot {
+  width:5px; height:5px; border-radius:50%; background:var(--teal);
+  animation:pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.8)} }
+
+.hero-h1 {
+  font-family:var(--fd); font-size:clamp(2rem,5vw,3.2rem);
+  font-weight:800; letter-spacing:-.04em; line-height:1;
+  margin-bottom:.75rem; color:var(--text);
+}
+.hero-h1 em { font-style:normal; color:var(--teal) }
+
+.hero-sub {
+  font-size:.9rem; color:var(--text2); font-weight:300;
+  line-height:1.75; max-width:420px; margin:0 auto 1.75rem;
+}
+
+.trust-row {
+  display:flex; align-items:center; justify-content:center;
+  gap:1.5rem; flex-wrap:wrap; margin-bottom:2rem;
+}
+.trust-chip {
+  display:flex; align-items:center; gap:.4rem;
+  font-size:.73rem; font-weight:500; color:var(--text3);
+}
+.trust-chip .ic { font-size:.82rem }
+
+/* ═══ STEP PROGRESS ═══ */
+.step-bar {
+  max-width:360px; margin:0 auto;
+  display:flex; align-items:center;
+  padding:0 5vw 2rem;
+}
+.step-node { display:flex; flex-direction:column; align-items:center; gap:.35rem; flex:1 }
+.step-num {
+  width:38px; height:38px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--fm); font-size:.68rem; font-weight:600;
+  transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  background:var(--glass); border:1.5px solid var(--border2); color:var(--text3);
+}
+.step-num.active {
+  background:var(--teal); border-color:var(--teal); color:#000; font-weight:800;
+  box-shadow:0 0 0 6px rgba(0,245,200,.12), var(--teal-glow);
+}
+.step-num.done {
+  background:rgba(0,245,200,.15); border-color:rgba(0,245,200,.4); color:var(--teal); font-weight:800;
+}
+.step-lbl { font-family:var(--fm); font-size:.55rem; color:var(--text3); letter-spacing:.06em; white-space:nowrap }
+.step-lbl.active { color:var(--teal) }
+.step-connector { flex:1; height:1px; background:var(--border2); margin-bottom:1.1rem; transition:background .4s }
+.step-connector.done { background:var(--teal) }
+
+/* ═══════════════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════════════ */
+.order-wrap {
+  max-width:1080px; margin:0 auto;
+  padding:1.5rem 5vw 8rem;
+  display:grid; grid-template-columns:1fr 320px; gap:1.75rem; align-items:start;
+  position:relative; z-index:1;
+}
+@media(max-width:900px) { .order-wrap { grid-template-columns:1fr } }
+
+/* ═══════════════════════════════════════════════════════
+   FORM CARD — glass morphism
+═══════════════════════════════════════════════════════ */
+.form-card {
+  background:var(--glass);
+  border:1px solid var(--border2);
+  border-radius:var(--rxl);
+  backdrop-filter:blur(24px);
+  overflow:hidden;
+  position:relative;
+}
+.form-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--teal), rgba(124,92,252,.8), transparent);
+}
+
+.card-head {
+  padding:1.75rem 2rem 1.5rem;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(0,245,200,.04) 0%, transparent 100%);
+}
+.card-tag {
+  font-family:var(--fm); font-size:.58rem; color:var(--teal);
+  letter-spacing:.18em; text-transform:uppercase; margin-bottom:.4rem;
+  display:flex; align-items:center; gap:.5rem;
+}
+.card-tag::before { content:''; width:16px; height:1px; background:var(--teal); opacity:.5 }
+.card-title {
+  font-family:var(--fd); font-size:1.55rem; font-weight:800;
+  letter-spacing:-.03em; color:var(--text); line-height:1; margin-bottom:.3rem;
+}
+.card-sub { font-size:.82rem; color:var(--text2); font-weight:300 }
+
+.form-body { padding:1.75rem 2rem }
+@media(max-width:600px) { .form-body { padding:1.25rem } .card-head { padding:1.25rem 1.25rem 1rem } }
+
+.form-step { display:none; animation:slideIn .35s cubic-bezier(.22,1,.36,1) }
+.form-step.active { display:block }
+@keyframes slideIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+
+/* ═══════════════════════════════════════════════════════
+   FIELDS — floating label style
+═══════════════════════════════════════════════════════ */
+.f-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem }
+@media(max-width:560px) { .f-row { grid-template-columns:1fr } }
+
+.f-group { margin-bottom:1rem; position:relative }
+
+.f-label {
+  display:flex; align-items:center; gap:.3rem;
+  font-size:.72rem; font-weight:600; color:var(--text2);
+  letter-spacing:.04em; text-transform:uppercase; margin-bottom:.45rem;
+}
+.f-label .req { color:var(--teal); font-size:.7rem }
+
+.f-input, .f-select, .f-textarea {
+  width:100%;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  padding:.8rem 1rem;
+  color:var(--text); font-family:var(--fb); font-size:.88rem; font-weight:400;
+  outline:none;
+  transition:border-color .2s, box-shadow .2s, background .2s;
+  appearance:none;
+}
+.f-input:focus, .f-select:focus, .f-textarea:focus {
+  border-color:var(--teal);
+  box-shadow:0 0 0 3px rgba(0,245,200,.1), inset 0 0 0 1px rgba(0,245,200,.08);
+  background:rgba(0,245,200,.04);
+}
+.f-input::placeholder, .f-textarea::placeholder { color:var(--text3) }
+.f-input.err, .f-select.err, .f-textarea.err {
+  border-color:var(--red); box-shadow:0 0 0 3px rgba(240,68,68,.1)
+}
+.f-select option { background:var(--bg2) }
+.f-select { cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a85aa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 1rem center; padding-right:2.5rem }
+.f-textarea { resize:vertical; min-height:88px; line-height:1.6 }
+
+.f-hint { font-size:.7rem; color:var(--text3); margin-top:.35rem; font-weight:300 }
+.f-err { font-size:.7rem; color:var(--red); margin-top:.35rem; display:none }
+.f-err.show { display:block }
+
+/* SECTION TITLE */
+.sec-title {
+  font-family:var(--fm); font-size:.6rem; color:var(--teal);
+  letter-spacing:.2em; text-transform:uppercase;
+  padding-bottom:.65rem; margin:1.5rem 0 1rem;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:.6rem;
+}
+.sec-title::before { content:'//'; opacity:.35 }
+
+/* ═══════════════════════════════════════════════════════
+   PLAN CARDS — premium feel
+═══════════════════════════════════════════════════════ */
+.plan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; margin-bottom:.6rem }
+@media(max-width:680px) { .plan-grid { grid-template-columns:1fr } }
+
+.plan-card {
+  position:relative; cursor:pointer;
+  background:rgba(255,255,255,.03);
+  border:1.5px solid var(--border2);
+  border-radius:var(--rl);
+  padding:1.1rem 1.2rem;
+  display:flex; align-items:center; gap:.9rem;
+  transition:all .25s ease;
+  overflow:hidden;
+}
+.plan-card::before {
+  content:''; position:absolute; inset:0; opacity:0;
+  background:linear-gradient(135deg,rgba(0,245,200,.06),transparent);
+  transition:opacity .25s;
+}
+.plan-card:hover { border-color:rgba(0,245,200,.3); transform:translateY(-1px) }
+.plan-card:hover::before { opacity:1 }
+.plan-card.selected {
+  border-color:var(--teal);
+  background:rgba(0,245,200,.06);
+  box-shadow:0 0 0 1px var(--teal) inset, 0 8px 32px rgba(0,245,200,.1);
+}
+.plan-card.selected::before { opacity:1 }
+.plan-card input { position:absolute; opacity:0; pointer-events:none }
+
+.plan-radio {
+  width:18px; height:18px; border-radius:50%; flex-shrink:0;
+  border:2px solid var(--border2);
+  display:flex; align-items:center; justify-content:center;
+  transition:all .2s;
+}
+.plan-card.selected .plan-radio {
+  border-color:var(--teal); background:var(--teal);
+}
+.plan-card.selected .plan-radio::after { content:''; width:6px; height:6px; border-radius:50%; background:#000 }
+
+.plan-body { flex:1; min-width:0 }
+.plan-name { font-size:.88rem; font-weight:700; color:var(--text); margin-bottom:.12rem }
+.plan-card.selected .plan-name { color:var(--teal) }
+.plan-desc { font-size:.72rem; color:var(--text3); font-weight:300; line-height:1.4 }
+
+.plan-price {
+  font-family:var(--fd); font-size:1.5rem; font-weight:800;
+  color:var(--teal); letter-spacing:-.02em; flex-shrink:0;
+}
+
+.plan-badge {
+  position:absolute; top:-1px; right:12px;
+  font-family:var(--fm); font-size:.48rem; font-weight:800;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:.14rem .5rem; border-radius:0 0 6px 6px;
+}
+.plan-badge.hot { background:var(--red); color:#fff }
+.plan-badge.best { background:var(--teal); color:#000 }
+
+/* ═══ ADDON GRID 3-col ═══ */
+.addon-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; margin-bottom:1.25rem }
+@media(max-width:480px) { .addon-grid { grid-template-columns:1fr 1fr } }
+
+/* ═══ PLAN VERTICAL ═══ */
+.plan-card-v {
+  flex-direction:column; align-items:flex-start; gap:.55rem;
+  padding:1.25rem 1.1rem;
+}
+.plan-card-v .plan-radio { margin-bottom:.1rem }
+.plan-card-v .plan-body { width:100% }
+.plan-price-inline {
+  font-family:var(--fd); font-size:1.8rem; font-weight:800;
+  color:var(--teal); letter-spacing:-.03em; line-height:1; margin-bottom:.5rem;
+}
+.plan-feats {
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap:.28rem;
+}
+.plan-feats li {
+  font-size:.71rem; color:var(--text3); font-weight:400;
+  display:flex; align-items:center; gap:.4rem; line-height:1.3;
+}
+.plan-feats li::before { content:'✓'; color:var(--teal); font-size:.65rem; flex-shrink:0; font-weight:800 }
+.plan-card.selected .plan-feats li { color:var(--text2) }
+
+.plan-card-pro { border-color:rgba(0,245,200,.35) !important }
+.plan-card-pro.selected { border-color:var(--teal) !important }
+
+.plan-clients-choose {
+  font-size:.64rem; color:var(--teal); font-weight:600;
+  margin-bottom:.45rem; opacity:.85;
+}
+
+/* ═══ SUBDOMAIN NOTE ═══ */
+.subdomain-note {
+  font-size:.76rem; color:var(--text2); line-height:1.6;
+  background:rgba(0,245,200,.04); border:1px solid rgba(0,245,200,.15);
+  border-radius:var(--r); padding:.7rem 1rem; margin-bottom:1.25rem;
+}
+.subdomain-eg {
+  font-family:var(--fm); color:var(--teal); font-size:.7rem;
+}
+
+/* ═══ ADDON VERTICAL ═══ */
+.addon-card-v {
+  text-align:left; flex-direction:column; align-items:flex-start;
+  gap:.25rem; padding:.9rem .85rem;
+}
+.addon-card-v .addon-tick { margin-top:.2rem; align-self:flex-end }
+.addon-card-v .addon-name { font-size:.74rem; line-height:1.3; text-align:left }
+.addon-card-v .addon-sub { text-align:left; font-size:.63rem; line-height:1.35 }
+.addon-card-v .addon-price { font-size:.7rem; font-weight:700 }
+.addon-card-v .addon-icon { font-size:1.1rem }
+
+
+.addon-card {
+  cursor:pointer; text-align:center;
+  background:rgba(255,255,255,.03);
+  border:1.5px solid var(--border);
+  border-radius:var(--rl); padding:.8rem .6rem;
+  transition:all .2s;
+  display:flex; flex-direction:column; align-items:center; gap:.3rem;
+}
+.addon-card:hover { border-color:var(--border2); background:var(--glass2) }
+.addon-card.on {
+  border-color:var(--teal); background:var(--teal-d);
+}
+.addon-icon { font-size:1.2rem }
+.addon-name { font-size:.73rem; font-weight:600; color:var(--text2); line-height:1.3 }
+.addon-card.on .addon-name { color:var(--text) }
+.addon-sub { font-size:.62rem; color:var(--text3) }
+.addon-price { font-family:var(--fm); font-size:.66rem; color:var(--text3); margin-top:.15rem }
+.addon-card.on .addon-price { color:var(--teal) }
+.addon-tick {
+  width:14px; height:14px; border-radius:3px;
+  border:1.5px solid var(--border2); font-size:.5rem;
+  display:flex; align-items:center; justify-content:center; color:transparent;
+  transition:all .15s;
+}
+.addon-card.on .addon-tick { background:var(--teal); border-color:var(--teal); color:#000 }
+.addon-card .addon-icon,
+.addon-card .addon-name,
+.addon-card .addon-sub,
+.addon-card .addon-price,
+.addon-card .addon-tick { pointer-events:none; }
+
+/* ═══════════════════════════════════════════════════════
+   PAYMENT SECTION — Professional Razorpay-first design
+═══════════════════════════════════════════════════════ */
+
+/* ── Razorpay Hero Card ── */
+.rzp-hero {
+  position:relative; overflow:hidden;
+  background:linear-gradient(135deg, rgba(18,22,42,.95) 0%, rgba(10,13,26,.98) 100%);
+  border:1.5px solid rgba(0,245,200,.2);
+  border-radius:var(--rl);
+  margin-bottom:.75rem;
+  box-shadow:0 0 40px rgba(0,245,200,.07), inset 0 1px 0 rgba(255,255,255,.06);
+  transition:border-color .3s, box-shadow .3s;
+}
+.rzp-hero:hover {
+  border-color:rgba(0,245,200,.38);
+  box-shadow:0 0 50px rgba(0,245,200,.12), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.rzp-hero::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--teal), #7c5cfc, var(--teal));
+  background-size:200% 100%;
+  animation:rzpShimmer 3s linear infinite;
+}
+@keyframes rzpShimmer { 0%{background-position:0% 0%} 100%{background-position:200% 0%} }
+
+/* decorative glow blob */
+.rzp-hero::after {
+  content:'';
+  position:absolute; top:-40px; right:-40px;
+  width:180px; height:180px;
+  background:radial-gradient(circle, rgba(0,245,200,.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.rzp-hero-inner {
+  position:relative; z-index:1;
+  padding:1.35rem 1.5rem 1.25rem;
+  cursor:pointer;
+}
+
+/* Top row: logo + recommended badge */
+.rzp-top-row {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:1rem;
+}
+.rzp-logo-wrap {
+  display:flex; align-items:center; gap:.65rem;
+}
+.rzp-logo-icon {
+  width:40px; height:40px; border-radius:10px;
+  background:linear-gradient(135deg, #072654 0%, #0a3880 100%);
+  border:1px solid rgba(255,255,255,.12);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 4px 12px rgba(0,0,0,.4);
+}
+.rzp-logo-icon svg { width:22px; height:22px; }
+.rzp-logo-text { display:flex; flex-direction:column; gap:.05rem; }
+.rzp-logo-name {
+  font-family:var(--fd); font-size:.95rem; font-weight:800;
+  color:var(--text); letter-spacing:-.02em; line-height:1;
+}
+.rzp-logo-tagline {
+  font-family:var(--fm); font-size:.54rem; color:var(--text3);
+  letter-spacing:.06em; text-transform:uppercase;
+}
+.rzp-recommended {
+  display:flex; align-items:center; gap:.3rem;
+  background:linear-gradient(135deg, rgba(0,245,200,.12), rgba(124,92,252,.1));
+  border:1px solid rgba(0,245,200,.25);
+  border-radius:100px; padding:.25rem .7rem;
+  font-family:var(--fm); font-size:.55rem; font-weight:700;
+  color:var(--teal); letter-spacing:.08em; text-transform:uppercase;
+  white-space:nowrap;
+}
+.rzp-recommended::before { content:'★'; font-size:.5rem; }
+
+/* Plan summary inside card */
+.rzp-plan-row {
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:var(--r);
+  padding:.7rem 1rem;
+  margin-bottom:1rem;
+}
+.rzp-plan-left { display:flex; flex-direction:column; gap:.1rem; }
+.rzp-plan-label {
+  font-family:var(--fm); font-size:.55rem; color:var(--text3);
+  letter-spacing:.1em; text-transform:uppercase;
+}
+.rzp-plan-name-val {
+  font-family:var(--fd); font-size:.95rem; font-weight:700;
+  color:var(--text); letter-spacing:-.01em;
+}
+.rzp-plan-price {
+  display:flex; align-items:baseline; gap:.15rem;
+}
+.rzp-price-cur {
+  font-family:var(--fd); font-size:.9rem; font-weight:700;
+  color:var(--teal); opacity:.75;
+}
+.rzp-price-val {
+  font-family:var(--fd); font-size:1.8rem; font-weight:800;
+  color:var(--teal); letter-spacing:-.04em; line-height:1;
+}
+.rzp-price-note {
+  font-size:.65rem; color:var(--text3); font-weight:400; margin-left:.1rem;
+}
+
+/* Payment methods chips */
+.rzp-methods {
+  display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:1.1rem;
+}
+.rzp-method-chip {
+  display:flex; align-items:center; gap:.3rem;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:6px; padding:.28rem .6rem;
+  font-size:.66rem; font-weight:600; color:var(--text2);
+  white-space:nowrap;
+}
+.rzp-method-chip svg { width:13px; height:13px; opacity:.7; flex-shrink:0; }
+
+/* CTA button */
+.rzp-cta-btn {
+  width:100%; border:none; cursor:pointer;
+  background:linear-gradient(135deg, var(--teal) 0%, #00d4aa 100%);
+  color:#000; font-family:var(--fd); font-size:1rem; font-weight:800;
+  letter-spacing:-.01em;
+  padding:.9rem 1.5rem; border-radius:var(--r);
+  display:flex; align-items:center; justify-content:center; gap:.6rem;
+  position:relative; overflow:hidden;
+  transition:transform .2s, box-shadow .25s;
+  box-shadow:0 4px 24px rgba(0,245,200,.3);
+}
+.rzp-cta-btn::before {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 55%);
+}
+.rzp-cta-btn:hover {
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(0,245,200,.45);
+}
+.rzp-cta-btn:active { transform:translateY(0); }
+.rzp-cta-btn svg { width:18px; height:18px; flex-shrink:0; }
+
+/* Security strip */
+.rzp-security {
+  display:flex; align-items:center; justify-content:center; gap:1rem;
+  padding:.7rem 1.5rem .9rem;
+  border-top:1px solid rgba(255,255,255,.05);
+  flex-wrap:wrap;
+}
+.rzp-sec-item {
+  display:flex; align-items:center; gap:.3rem;
+  font-family:var(--fm); font-size:.56rem; color:var(--text3);
+  letter-spacing:.04em;
+}
+.rzp-sec-item svg { width:10px; height:10px; color:var(--teal); flex-shrink:0; }
+
+/* ── Secondary methods (UPI / Bank) ── */
+.pay-alt-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:.6rem;
+  margin-bottom:.85rem;
+}
+.pay-alt-card {
+  cursor:pointer; position:relative;
+  background:rgba(255,255,255,.025);
+  border:1.5px solid rgba(255,255,255,.08);
+  border-radius:var(--r); padding:.8rem .9rem;
+  display:flex; align-items:center; gap:.75rem;
+  transition:all .22s;
+}
+.pay-alt-card:hover {
+  border-color:rgba(255,255,255,.16);
+  background:rgba(255,255,255,.045);
+}
+.pay-alt-card.selected {
+  border-color:rgba(0,245,200,.4);
+  background:rgba(0,245,200,.05);
+  box-shadow:0 0 0 1px rgba(0,245,200,.15) inset;
+}
+.pay-alt-card input { position:absolute; opacity:0; pointer-events:none; }
+.pay-alt-radio {
+  width:16px; height:16px; border-radius:50%; flex-shrink:0;
+  border:1.5px solid rgba(255,255,255,.2);
+  display:flex; align-items:center; justify-content:center;
+  transition:all .2s;
+}
+.pay-alt-card.selected .pay-alt-radio {
+  border-color:var(--teal);
+  background:rgba(0,245,200,.15);
+}
+.pay-alt-card.selected .pay-alt-radio::after {
+  content:''; width:6px; height:6px; border-radius:50%; background:var(--teal);
+}
+.pay-alt-info { flex:1; min-width:0; }
+.pay-alt-name {
+  font-size:.82rem; font-weight:700; color:var(--text2);
+  display:flex; align-items:center; gap:.4rem;
+  margin-bottom:.1rem;
+}
+.pay-alt-card.selected .pay-alt-name { color:var(--text); }
+.pay-alt-name .alt-icon { font-size:.95rem; }
+.pay-alt-sub { font-size:.64rem; color:var(--text3); line-height:1.3; }
+
+/* ── OR divider ── */
+.pay-or-divider {
+  display:flex; align-items:center; gap:.75rem;
+  margin:.85rem 0 .7rem;
+}
+.pay-or-divider::before, .pay-or-divider::after {
+  content:''; flex:1; height:1px; background:rgba(255,255,255,.07);
+}
+.pay-or-text {
+  font-family:var(--fm); font-size:.58rem; color:var(--text3);
+  letter-spacing:.1em; text-transform:uppercase; white-space:nowrap;
+}
+
+/* ── Pay-info panels for alt methods ── */
+.pay-info {
+  display:none;
+  background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--r); padding:.85rem 1.1rem; margin-bottom:.85rem;
+  font-size:.8rem; color:var(--text2); line-height:1.7;
+}
+.pay-info.show { display:block; }
+.pay-info strong { color:var(--text); }
+
+/* Light mode overrides */
+[data-theme="light"] .rzp-hero {
+  background:linear-gradient(135deg, #f0f4ff 0%, #ffffff 100%);
+  border-color:rgba(0,180,150,.25);
+  box-shadow:0 0 30px rgba(0,180,150,.06);
+}
+[data-theme="light"] .rzp-hero:hover { border-color:rgba(0,180,150,.45); }
+[data-theme="light"] .rzp-logo-name { color:#0a0d1e; }
+[data-theme="light"] .rzp-plan-row { background:rgba(0,0,0,.03); border-color:rgba(0,0,0,.07); }
+[data-theme="light"] .rzp-plan-name-val { color:#0a0d1e; }
+[data-theme="light"] .rzp-method-chip { background:rgba(0,0,0,.04); border-color:rgba(0,0,0,.09); color:#4a5278; }
+[data-theme="light"] .rzp-security { border-color:rgba(0,0,0,.06); }
+[data-theme="light"] .pay-alt-card { background:rgba(0,0,0,.025); border-color:rgba(0,0,0,.09); }
+[data-theme="light"] .pay-alt-card:hover { background:rgba(0,0,0,.045); border-color:rgba(0,0,0,.16); }
+[data-theme="light"] .pay-alt-card.selected { border-color:rgba(0,180,150,.4); background:rgba(0,180,150,.06); }
+[data-theme="light"] .pay-or-divider::before, [data-theme="light"] .pay-or-divider::after { background:rgba(0,0,0,.1); }
+
+/* ═══ TERMS ═══ */
+.terms-wrap {
+  display:flex; align-items:flex-start; gap:.75rem;
+  padding:.9rem 1rem; border:1.5px solid var(--border2);
+  border-radius:var(--r); cursor:pointer; margin-bottom:1.4rem;
+  background:rgba(255,255,255,.02); transition:border-color .2s;
+}
+.terms-wrap:hover { border-color:var(--border2) }
+.terms-wrap.checked { border-color:rgba(0,245,200,.35); background:var(--teal-d) }
+.terms-box {
+  width:18px; height:18px; border-radius:4px; border:1.5px solid var(--border2);
+  flex-shrink:0; margin-top:.1rem;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.6rem; color:transparent; transition:all .2s;
+}
+.terms-wrap.checked .terms-box { background:var(--teal); border-color:var(--teal); color:#000 }
+.terms-text { font-size:.8rem; color:var(--text2); line-height:1.6; font-weight:300 }
+.terms-text a { color:var(--teal); text-decoration:underline; text-underline-offset:2px }
+
+/* ═══ NAV BUTTONS ═══ */
+.form-nav {
+  display:flex; justify-content:space-between; align-items:center;
+  padding-top:1.1rem; border-top:1px solid var(--border);
+}
+.btn-back {
+  display:flex; align-items:center; gap:.4rem;
+  background:transparent; border:1.5px solid var(--border2);
+  color:var(--text2); padding:.7rem 1.4rem;
+  border-radius:100px; font-size:.82rem; font-weight:600;
+  cursor:pointer; transition:all .2s;
+}
+.btn-back:hover { border-color:var(--teal); color:var(--teal) }
+
+.btn-next, .btn-submit {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--teal); color:#000;
+  padding:.78rem 2rem; border-radius:100px;
+  font-size:.88rem; font-weight:800; border:none; cursor:pointer;
+  letter-spacing:.01em; position:relative; overflow:hidden;
+  transition:box-shadow .25s, transform .2s;
+}
+.btn-next::before, .btn-submit::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.22) 0%,transparent 60%);
+}
+.btn-next:hover, .btn-submit:hover {
+  box-shadow:0 0 40px rgba(0,245,200,.45); transform:translateY(-1px)
+}
+.btn-submit:disabled { opacity:.45; cursor:not-allowed; transform:none; box-shadow:none }
+
+/* ═══ ERR BADGE ═══ */
+.pay-err { font-size:.71rem; color:var(--red); margin-bottom:.65rem; display:none }
+.pay-err.show { display:block }
+
+/* ═══════════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════════ */
+.sidebar { display:flex; flex-direction:column; gap:1.1rem; position:sticky; top:78px }
+
+.s-card {
+  background:var(--glass);
+  border:1px solid var(--border2);
+  border-radius:var(--rl);
+  backdrop-filter:blur(20px);
+  overflow:hidden;
+}
+.s-card-head {
+  padding:.9rem 1.3rem;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:.55rem;
+  background:rgba(255,255,255,.02);
+}
+.s-card-ico { font-size:1rem }
+.s-card-title { font-family:var(--fd); font-size:1rem; font-weight:700; letter-spacing:-.01em; color:var(--text) }
+.s-card-body { padding:1.1rem 1.3rem }
+
+/* Summary */
+.sum-plan { font-size:.85rem; font-weight:700; color:var(--text); margin-bottom:.2rem }
+.sum-price {
+  font-family:var(--fd); font-size:2.4rem; font-weight:800;
+  color:var(--teal); letter-spacing:-.03em; line-height:1; margin-bottom:.6rem;
+}
+.sum-price small { font-size:.8rem; color:var(--text3); font-family:var(--fb); font-weight:300 }
+.sum-divider { height:1px; background:var(--border); margin:.65rem 0 }
+.sum-line { display:flex; justify-content:space-between; font-size:.8rem; padding:.2rem 0 }
+.sum-line .k { color:var(--text2) }
+.sum-line .v { font-weight:700; color:var(--text) }
+.sum-total { display:flex; justify-content:space-between; padding:.6rem 0 0; margin-top:.3rem; border-top:1px solid var(--border) }
+.sum-total .k { font-size:.82rem; font-weight:700; color:var(--text) }
+.sum-total .v { font-family:var(--fd); font-size:1.55rem; font-weight:800; color:var(--teal); letter-spacing:-.01em }
+.addon-pill {
+  display:inline-flex; align-items:center; gap:.2rem;
+  background:var(--teal-d); border:1px solid var(--teal-m);
+  padding:.15rem .5rem; border-radius:100px;
+  font-size:.65rem; color:var(--teal); font-weight:600;
+  margin:.1rem .08rem 0 0;
+}
+
+/* Guarantees */
+.g-item { display:flex; align-items:flex-start; gap:.65rem; padding:.65rem 0; border-bottom:1px solid var(--border) }
+.g-item:last-child { border:none; padding-bottom:0 }
+.g-ico {
+  width:32px; height:32px; border-radius:50%; flex-shrink:0;
+  background:var(--teal-d); border:1px solid var(--teal-m);
+  display:flex; align-items:center; justify-content:center; font-size:.85rem;
+}
+.g-text strong { display:block; font-size:.8rem; font-weight:700; color:var(--text); margin-bottom:.05rem }
+.g-text span { font-size:.71rem; color:var(--text3); font-weight:300 }
+
+/* Timeline */
+.tl-item { display:flex; gap:.7rem; padding:.55rem 0; position:relative }
+.tl-item:not(:last-child)::before {
+  content:''; position:absolute; left:9px; top:28px; bottom:-4px;
+  width:1px; background:linear-gradient(to bottom, var(--teal-m), transparent);
+}
+.tl-dot {
+  width:20px; height:20px; border-radius:50%; flex-shrink:0;
+  background:var(--teal-d); border:1.5px solid rgba(0,245,200,.3);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.52rem; font-weight:800; color:var(--teal);
+}
+.tl-title { display:block; font-size:.8rem; font-weight:700; color:var(--text); margin-bottom:.05rem }
+.tl-sub { font-size:.7rem; color:var(--text3); font-weight:300 }
+
+/* ═══════════════════════════════════════════════════════
+   SUCCESS SCREENS
+═══════════════════════════════════════════════════════ */
+.success-screen { display:none; padding:3.5rem 2rem; text-align:center; animation:fadeUp .6s ease }
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+.success-ico {
+  width:76px; height:76px; border-radius:50%; margin:0 auto 1.5rem;
+  display:flex; align-items:center; justify-content:center; font-size:2rem;
+  animation:popIn .6s cubic-bezier(.34,1.56,.64,1) .1s both;
+}
+@keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+.success-h { font-family:var(--fd); font-size:2.2rem; font-weight:800; letter-spacing:-.03em; margin-bottom:.45rem }
+.success-p { font-size:.88rem; color:var(--text2); line-height:1.75; max-width:360px; margin:0 auto 1.5rem; font-weight:300 }
+.success-id {
+  font-family:var(--fm); font-size:.7rem; color:var(--text3);
+  background:var(--glass); border:1px solid var(--border2);
+  border-radius:100px; padding:.4rem 1.1rem; display:inline-block; margin-bottom:1.5rem;
+}
+.success-info {
+  border-radius:var(--r); padding:.85rem 1.1rem; margin-bottom:1.5rem;
+  font-size:.82rem; color:var(--text2); line-height:1.7; text-align:left;
+}
+.success-btns { display:flex; flex-direction:column; gap:.55rem }
+.btn-suc-p {
+  background:var(--teal); color:#000; padding:.85rem 2rem;
+  border-radius:100px; font-size:.88rem; font-weight:800;
+  display:flex; align-items:center; justify-content:center; gap:.45rem;
+  transition:transform .2s,box-shadow .2s; border:none; cursor:pointer;
+}
+.btn-suc-p:hover { transform:translateY(-2px); box-shadow:0 0 28px rgba(0,245,200,.4) }
+.btn-suc-g {
+  background:transparent; border:1.5px solid var(--border2); color:var(--text2);
+  padding:.78rem 2rem; border-radius:100px; font-size:.83rem; font-weight:600;
+  display:flex; align-items:center; justify-content:center; gap:.4rem;
+  transition:all .2s; cursor:pointer;
+}
+.btn-suc-g:hover { border-color:var(--teal); color:var(--teal) }
+
+/* Confetti */
+.confetti-wrap { position:fixed; inset:0; pointer-events:none; z-index:500; overflow:hidden }
+.confetti-piece { position:absolute; border-radius:1px; animation:confettiFall linear forwards }
+@keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
+
+/* ═══ MOBILE ═══ */
+@media(max-width:700px) {
+  .page-hero { padding-top:80px }
+  .hero-h1 { font-size:clamp(1.8rem,8vw,2.6rem) }
+  .order-wrap { padding:1rem 4vw 6rem; gap:1.25rem }
+  .trust-row { gap:1rem }
+  .trust-chip { font-size:.7rem }
+  .plan-grid { grid-template-columns:1fr }
+  .pay-grid { grid-template-columns:1fr 1fr }
+  .sidebar { flex-direction:row; flex-wrap:wrap }
+  .s-card { flex:1; min-width:240px }
+  .form-nav { gap:.5rem }
+}
+@media(max-width:420px) {
+  .pay-grid { grid-template-columns:1fr }
+  .addon-grid { grid-template-columns:1fr 1fr }
+  nav { height:54px }
+  .hero-inner { padding-top:1.5rem }
+}
+
+/* ═══ RESPONSIVE POLISH ═══ */
+@media (max-width: 480px) {
+  .page-hero { padding-top: 80px; }
+  .form-card,
+  .order-form { padding: 1.25rem 1rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .step-nav { flex-direction: column; gap: .75rem; }
+  .step-nav .btn { width: 100%; justify-content: center; }
+}
+@media (max-width: 768px) {
+  .order-layout { grid-template-columns: 1fr !important; }
+  .order-sidebar { position: static !important; }
+  .plan-grid { grid-template-columns: 1fr; }
+  .addon-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 360px) {
+  .page-hero h1 { font-size: 1.6rem; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="dot"></div>
+<div id="ring"></div>
+<div id="confettiWrap" class="confetti-wrap"></div>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <!-- Left: Logo -->
+  <a href="index.html" class="nav-logo">Portfolio<span class="g">Forge</span></a>
+
+  <!-- Right: Back + Track Order + Theme -->
+  <div class="nav-right">
+    <a href="index.html" class="nav-back">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Back</span>
+    </a>
+    <a href="track-order.html" class="nav-track">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span class="track-label">Track Order</span>
+    </a>
+    <div class="nav-icon-group">
+      <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<div class="page-hero">
+  <div class="hero-inner">
+    <div class="hero-pill"><div class="hero-pill-dot"></div>Any Field · Any Background · 2 Min</div>
+    <h1 class="hero-h1">Get Your <em>Portfolio Built</em></h1>
+    <p class="hero-sub">CS, Design, MBA, Arts — every student and professional deserves a standout portfolio. Fill in two steps and we start building. Done in <strong style="color:var(--text);font-weight:600">24 hours.</strong></p>
+    <div class="trust-row">
+      <div class="trust-chip"><span class="ic">⚡</span> 24h Delivery</div>
+      <div class="trust-chip"><span class="ic">🔒</span> Secure Pay</div>
+      <div class="trust-chip"><span class="ic">🔄</span> Additional Revisions (₹15 each)</div>
+      <div class="trust-chip"><span class="ic">📦</span> Source Code</div>
+    </div>
+  </div>
+
+  <!-- STEP BAR -->
+  <div class="step-bar">
+    <div class="step-node">
+      <div class="step-num active" id="sc1">01</div>
+      <div class="step-lbl active" id="sl1">Info & Plan</div>
+    </div>
+    <div class="step-connector" id="sline1"></div>
+    <div class="step-node">
+      <div class="step-num" id="sc2">02</div>
+      <div class="step-lbl" id="sl2">Details & Pay</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAIN LAYOUT ═══ -->
+<div class="order-wrap">
+
+  <!-- FORM CARD -->
+  <div class="form-card" id="formCard">
+    <div class="card-head">
+      <div class="card-tag" id="stepTag">step 1 of 2</div>
+      <div class="card-title" id="stepTitle">Your Info &amp; Plan</div>
+      <div class="card-sub" id="stepSub">Tell us who you are and pick your plan — takes under a minute.</div>
+    </div>
+    <div class="form-body">
+
+      <!-- ══ STEP 1 ══ -->
+      <div class="form-step active" id="step1">
+
+        <div class="f-row">
+          <div class="f-group">
+            <div class="f-label">Full Name <span class="req">*</span></div>
+            <input class="f-input" id="f-name" type="text" placeholder="e.g. Rahul Sharma" autocomplete="name"/>
+            <div class="f-err" id="e-name">Please enter your full name</div>
+          </div>
+          <div class="f-group">
+            <div class="f-label">Email Address <span class="req">*</span></div>
+            <input class="f-input" id="f-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+            <div class="f-err" id="e-email">Please enter a valid email</div>
+          </div>
+        </div>
+
+        <div class="f-row">
+          <div class="f-group">
+            <div class="f-label">Phone / WhatsApp <span class="req">*</span></div>
+            <input class="f-input" id="f-phone" type="tel" placeholder="e.g. +91 98765 43210" autocomplete="tel"/>
+            <div class="f-err" id="e-phone">Please enter your phone number</div>
+          </div>
+          <div class="f-group">
+            <div class="f-label">Your Field / Role <span class="req">*</span></div>
+            <select class="f-select" id="f-role">
+              <option value="" disabled selected>What best describes you?</option>
+              <optgroup label="── Students">
+                <option>CS / IT Student</option>
+                <option>Engineering Student (Non-CS)</option>
+                <option>MBA / Management Student</option>
+                <option>Design / Fine Arts Student</option>
+                <option>Commerce / Finance Student</option>
+                <option>Medical / Pharmacy Student</option>
+                <option>Law Student</option>
+                <option>Arts / Humanities Student</option>
+                <option>Science Student</option>
+                <option>Architecture Student</option>
+                <option>Other Student / Fresher</option>
+              </optgroup>
+              <optgroup label="── Professionals">
+                <option>Software Developer</option>
+                <option>UI/UX Designer</option>
+                <option>Data Scientist / Analyst</option>
+                <option>Marketing / Content Professional</option>
+                <option>Photographer / Videographer</option>
+                <option>Writer / Blogger / Journalist</option>
+                <option>Freelancer / Consultant</option>
+                <option>Entrepreneur / Startup Founder</option>
+                <option>Teacher / Educator / Trainer</option>
+                <option>Other Professional</option>
+              </optgroup>
+            </select>
+            <div class="f-err" id="e-role">Please select your field</div>
+          </div>
+        </div>
+
+        <div class="f-row">
+          <div class="f-group">
+            <div class="f-label">GitHub / Behance / Drive URL</div>
+            <input class="f-input" id="f-github" type="url" placeholder="e.g. github.com/rahulsharma"/>
+            <div class="f-hint">Optional — GitHub, Behance, Google Drive, Dribbble…</div>
+          </div>
+          <div class="f-group">
+            <div class="f-label">LinkedIn URL</div>
+            <input class="f-input" id="f-linkedin" type="url" placeholder="e.g. linkedin.com/in/rahulsharma"/>
+            <div class="f-hint">Optional — helps us tailor your style</div>
+          </div>
+        </div>
+
+        <!-- PLANS -->
+        <div class="sec-title">Choose Your Plan</div>
+        <div class="plan-grid">
+          <label class="plan-card plan-card-v selected" id="plan-starter" onclick="selectPlan(this,'Starter',1,'starter')">
+            <input type="radio" name="plan" value="starter" checked/>
+            <div class="plan-radio"></div>
+            <div class="plan-body">
+              <div class="plan-name">Starter</div>
+              <div class="plan-price-inline">₹49</div>
+              <ul class="plan-feats">
+                <li>1-page portfolio</li>
+                <li>Basic responsive design</li>
+                <li>24h delivery</li>
+                <li>Subdomain included</li>
+              </ul>
+            </div>
+          </label>
+          <label class="plan-card plan-card-v plan-card-pro" id="plan-pro" onclick="selectPlan(this,'Pro',139,'pro')">
+            <input type="radio" name="plan" value="pro"/>
+            <div class="plan-badge best">BEST VALUE</div>
+            <div class="plan-radio"></div>
+            <div class="plan-body">
+              <div class="plan-name">Pro</div>
+              <div class="plan-price-inline">₹139</div>
+              <div class="plan-clients-choose">👉 Most clients choose this</div>
+              <ul class="plan-feats">
+                <li>Multi-section portfolio</li>
+                <li>Smooth GSAP animations</li>
+                <li>Mobile optimized</li>
+                <li>Contact integration</li>
+              </ul>
+            </div>
+          </label>
+          <label class="plan-card plan-card-v" id="plan-premium" onclick="selectPlan(this,'Premium',299,'premium')">
+            <input type="radio" name="plan" value="premium"/>
+            <div class="plan-radio"></div>
+            <div class="plan-body">
+              <div class="plan-name">Premium</div>
+              <div class="plan-price-inline">₹299</div>
+              <ul class="plan-feats">
+                <li>Fully custom portfolio</li>
+                <li>Advanced animations</li>
+                <li>GitHub + deployment</li>
+                <li>Performance optimized</li>
+                <li>Priority support</li>
+              </ul>
+            </div>
+          </label>
+        </div>
+        <div class="subdomain-note">🌐 <strong>Free subdomain included in all plans</strong> — e.g. <span class="subdomain-eg">yourname.netlify.app</span> · Want your own .com / .in? Add <strong>Custom Domain Setup (+₹499)</strong> below.</div>
+
+        <!-- ADD-ONS -->
+        <div class="sec-title">Optional Add-ons</div>
+        <div class="addon-grid">
+          <div class="addon-card addon-card-v" onclick="toggleAddon(this,499,'Custom Domain Setup')">
+            <div class="addon-icon">🌐</div>
+            <div class="addon-name">Custom Domain Setup</div>
+            <div class="addon-sub">Connect .com / .in professionally · DNS + deploy</div>
+            <div class="addon-price">+₹499</div>
+            <div class="addon-tick">✓</div>
+          </div>
+          <div class="addon-card addon-card-v" onclick="toggleAddon(this,99,'Contact Form + Email Backend')">
+            <div class="addon-icon">📬</div>
+            <div class="addon-name">Contact Form + Email Backend</div>
+            <div class="addon-sub">Real working contact system</div>
+            <div class="addon-price">+₹99</div>
+            <div class="addon-tick">✓</div>
+          </div>
+          <div class="addon-card addon-card-v" onclick="toggleAddon(this,49,'WhatsApp Chat Integration')">
+            <div class="addon-icon">💬</div>
+            <div class="addon-name">WhatsApp Chat Integration</div>
+            <div class="addon-sub">Direct client communication button</div>
+            <div class="addon-price">+₹49</div>
+            <div class="addon-tick">✓</div>
+          </div>
+          <div class="addon-card addon-card-v" onclick="toggleAddon(this,199,'SEO Optimization')">
+            <div class="addon-icon">🔍</div>
+            <div class="addon-name">SEO Optimization</div>
+            <div class="addon-sub">Google indexing + meta tags</div>
+            <div class="addon-price">+₹199</div>
+            <div class="addon-tick">✓</div>
+          </div>
+          <div class="addon-card addon-card-v" onclick="toggleAddon(this,149,'Analytics Setup')">
+            <div class="addon-icon">📊</div>
+            <div class="addon-name">Analytics Setup</div>
+            <div class="addon-sub">Visitor tracking via Google Analytics</div>
+            <div class="addon-price">+₹149</div>
+            <div class="addon-tick">✓</div>
+          </div>
+          <div class="addon-card addon-card-v" onclick="toggleAddon(this,99,'Speed Optimization')">
+            <div class="addon-icon">⚡</div>
+            <div class="addon-name">Speed Optimization</div>
+            <div class="addon-sub">Faster loading, better Core Web Vitals</div>
+            <div class="addon-price">+₹99</div>
+            <div class="addon-tick">✓</div>
+          </div>
+        </div>
+
+
+        <div class="form-nav">
+          <div></div>
+          <button class="btn-next" onclick="goStep(2)">Continue <span>→</span></button>
+        </div>
+      </div>
+
+      <!-- ══ STEP 2 ══ -->
+      <div class="form-step" id="step2">
+
+        <div class="f-group">
+          <div class="f-label">Your Skills / Strengths <span class="req">*</span></div>
+          <input class="f-input" id="f-skills" type="text" placeholder="e.g. Python, Excel, Photoshop, Public Speaking, Financial Analysis…"/>
+          <div class="f-hint">Separate with commas — tech skills, soft skills, tools, languages — anything you're good at</div>
+          <div class="f-err" id="e-skills">Please list at least one skill or strength</div>
+        </div>
+
+        <div class="f-group">
+          <div class="f-label">Your Top Work / Projects / Achievements <span class="req">*</span></div>
+          <textarea class="f-textarea" id="f-projects" placeholder="1. Final Year Project — Built a smart attendance system&#10;2. Marketing Campaign — Led a social media campaign reaching 10K+ people&#10;3. Design Work — Created brand identity for a local NGO&#10;(Add projects, internships, competitions, certifications, achievements)"></textarea>
+          <div class="f-err" id="e-projects">Please describe at least one project or achievement</div>
+        </div>
+
+        <div class="f-row">
+          <div class="f-group">
+            <div class="f-label">Brief Bio / About Yourself</div>
+            <textarea class="f-textarea" id="f-bio" placeholder="e.g. I'm a 3rd year B.Tech student at Delhi University, passionate about design and problem-solving…" style="min-height:74px"></textarea>
+            <div class="f-hint">Optional — 2-3 sentences about who you are and your goals</div>
+          </div>
+          <div class="f-group">
+            <div class="f-label">Preferred Color Theme</div>
+            <select class="f-select" id="f-theme">
+              <option value="" disabled selected>Choose a theme</option>
+              <option>Dark — Black &amp; Green</option>
+              <option>Dark — Black &amp; Blue</option>
+              <option>Dark — Black &amp; Purple</option>
+              <option>Light — White &amp; Black</option>
+              <option>Light — White &amp; Blue</option>
+              <option>Custom — I'll describe below</option>
+            </select>
+            <div class="f-group" style="margin-top:.75rem;margin-bottom:0">
+              <div class="f-label">Special Requests</div>
+              <textarea class="f-textarea" id="f-notes" placeholder="e.g. I want a clean minimal look, add a Certifications section, reference: awwwards.com…" style="min-height:60px"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAYMENT -->
+        <div class="sec-title">Payment</div>
+
+        <!-- ══ RAZORPAY HERO CARD ══ -->
+        <div class="rzp-hero" id="rzpHeroCard">
+          <div class="rzp-hero-inner">
+
+            <!-- Top: logo + badge -->
+            <div class="rzp-top-row">
+              <div class="rzp-logo-wrap">
+                <div class="rzp-logo-icon">
+                  <!-- Razorpay "R" wordmark SVG -->
+                  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 32L16.5 8H26C29.3 8 31.5 10.2 30.6 13.4L28.2 21.2C27.5 23.6 25.1 25.2 22.6 25.2H17.5L15 32H8Z" fill="#2E7AE9"/>
+                    <path d="M17.8 20.5L20.5 12H23.5C24.6 12 25.2 12.8 24.9 13.9L23.2 19.3C22.9 20.4 21.9 21 20.8 21H17.8V20.5Z" fill="white" opacity="0.9"/>
+                    <path d="M18.5 25.2L22 32H29.5L25.5 25.2H18.5Z" fill="#1557C0"/>
+                  </svg>
+                </div>
+                <div class="rzp-logo-text">
+                  <div class="rzp-logo-name">Razorpay</div>
+                  <div class="rzp-logo-tagline">Secure Payment Gateway</div>
+                </div>
+              </div>
+              <div class="rzp-recommended">Recommended</div>
+            </div>
+
+            <!-- Plan + Price row -->
+            <div class="rzp-plan-row">
+              <div class="rzp-plan-left">
+                <div class="rzp-plan-label">Selected Plan</div>
+                <div class="rzp-plan-name-val" id="rzp-plan-display">Starter</div>
+              </div>
+              <div class="rzp-plan-price">
+                <div class="rzp-price-cur">₹</div>
+                <div class="rzp-price-val" id="rzp-price-display">49</div>
+                <div class="rzp-price-note">one-time</div>
+              </div>
+            </div>
+
+            <!-- Payment method chips -->
+            <div class="rzp-methods">
+              <div class="rzp-method-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Credit / Debit Card
+              </div>
+              <div class="rzp-method-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3" stroke-linecap="round"/></svg>
+                UPI
+              </div>
+              <div class="rzp-method-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                NetBanking
+              </div>
+              <div class="rzp-method-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                Wallets
+              </div>
+            </div>
+
+            <!-- CTA Button -->
+            <button class="rzp-cta-btn" id="rzpPayBtn" onclick="resetToRazorpay(); handleRazorpayClick();">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span id="rzpBtnText">Pay Securely with Razorpay</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+
+          </div>
+
+          <!-- Security strip -->
+          <div class="rzp-security">
+            <div class="rzp-sec-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              256-bit SSL Encrypted
+            </div>
+            <div class="rzp-sec-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              PCI DSS Compliant
+            </div>
+            <div class="rzp-sec-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              RBI Authorised Gateway
+            </div>
+          </div>
+        </div>
+
+        <!-- ── OR divider ── -->
+        <div class="pay-or-divider"><span class="pay-or-text">or pay another way</span></div>
+
+        <!-- ── Alt payment options ── -->
+        <div class="pay-alt-grid">
+          <label class="pay-alt-card" id="altUpi" onclick="selectAltPayment(this,'upi')">
+            <input type="radio" name="payment" value="upi"/>
+            <div class="pay-alt-radio"></div>
+            <div class="pay-alt-info">
+              <div class="pay-alt-name"><span class="alt-icon">📱</span> UPI Direct</div>
+              <div class="pay-alt-sub">GPay · PhonePe · Paytm</div>
+            </div>
+          </label>
+          <label class="pay-alt-card" id="altBank" onclick="selectAltPayment(this,'bank')">
+            <input type="radio" name="payment" value="bank"/>
+            <div class="pay-alt-radio"></div>
+            <div class="pay-alt-info">
+              <div class="pay-alt-name"><span class="alt-icon">🏦</span> Bank Transfer</div>
+              <div class="pay-alt-sub">NEFT · IMPS · RTGS</div>
+            </div>
+          </label>
+        </div>
+
+        <div class="pay-err" id="e-payment" style="display:none;font-size:.75rem;color:var(--red);margin-bottom:.65rem"></div>
+
+        <div id="pay-info-upi" class="pay-info">
+          <strong>📱 UPI Payment</strong> — We'll send our UPI ID to your WhatsApp/Email within <strong>30 minutes</strong>. Send the payment and share a screenshot to confirm.
+        </div>
+        <div id="pay-info-bank" class="pay-info">
+          <strong>🏦 Bank Transfer</strong> — Account details shared after order is placed. Transfer the exact amount and share your UTR number with us.
+        </div>
+        <div class="terms-wrap" id="termsBox" onclick="toggleTerms()">
+          <div class="terms-box" id="termsCheckbox">✓</div>
+          <div class="terms-text">I agree to the <a href="#">Terms of Service</a> and understand that work begins after payment confirmation. Delivery within 24 hours of payment.</div>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-back" onclick="goStep(1)"><span>←</span> Back</button>
+          <button class="btn-submit" id="submitBtn" onclick="handleOrderSubmit()" style="display:none">
+            <span id="submitBtnText">Place Order →</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ SUCCESS STATE ══ -->
+      <div class="success-screen" id="successScreen">
+
+        <!-- PAID -->
+        <div id="ss-paid" style="display:none">
+          <div class="success-ico" style="background:rgba(0,245,200,.12);border:2px solid rgba(0,245,200,.35)">🎉</div>
+          <div class="success-h" style="color:var(--teal)">Payment Confirmed!</div>
+          <p class="success-p">Your payment went through. We've started building your portfolio — delivery in <strong style="color:var(--text)">24 hours</strong>.</p>
+          <div class="success-id" id="orderId">Order ID: PF-2026-XXXX</div>
+          <div class="success-info" style="background:var(--teal-d);border:1px solid var(--teal-m)">
+            ✅ <strong style="color:var(--text)">What happens next:</strong> Build starts now. Preview in ~12h, final delivery within 24h. Track live below.
+          </div>
+          <div class="success-btns">
+            <a href="track-order.html" class="btn-suc-p">📊 Track Your Order Live →</a>
+            <a href="https://wa.me/919999999999" target="_blank" class="btn-suc-g">💬 WhatsApp Us</a>
+          </div>
+        </div>
+
+        <!-- PENDING -->
+        <div id="ss-pending" style="display:none">
+          <div class="success-ico" style="background:rgba(245,158,11,.1);border:2px solid rgba(245,158,11,.3)">📋</div>
+          <div class="success-h" style="color:var(--amber)">Order Received!</div>
+          <p class="success-p">Your order is confirmed. We'll send payment details to your WhatsApp/Email within <strong style="color:var(--text)">30 minutes</strong>. Work starts after payment.</p>
+          <div class="success-id" id="orderId2">Order ID: PF-2026-XXXX</div>
+          <div class="success-info" style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2)">
+            ⏳ <strong style="color:var(--text)">Awaiting payment:</strong> Complete payment to unlock your live order tracker and start your build.
+          </div>
+          <div class="success-btns">
+            <a href="https://wa.me/919999999999" target="_blank" class="btn-suc-p">💬 Send Payment on WhatsApp →</a>
+            <a href="index.html" class="btn-suc-g">← Back to Home</a>
+          </div>
+        </div>
+
+        <!-- FAILED -->
+        <div id="ss-failed" style="display:none">
+          <div class="success-ico" style="background:rgba(240,68,68,.1);border:2px solid rgba(240,68,68,.3)">❌</div>
+          <div class="success-h" style="color:var(--red)">Payment Failed</div>
+          <p class="success-p">Your payment could not be processed. No amount was charged. Please try again or contact us.</p>
+          <div class="success-id" id="orderId3">Order ID: PF-2026-XXXX</div>
+          <div class="success-btns">
+            <button class="btn-suc-p" onclick="retryPayment()" style="background:var(--red);border:none;cursor:pointer">🔄 Try Again</button>
+            <a href="https://wa.me/919999999999" target="_blank" class="btn-suc-g">💬 Contact Support</a>
+            <a href="index.html" class="btn-suc-g">← Back to Home</a>
+          </div>
+        </div>
+
+        <!-- VERIFYING -->
+        <div id="ss-verifying">
+          <div class="success-ico" style="background:var(--teal-d);border:2px solid rgba(0,245,200,.2)">⏳</div>
+          <div class="success-h">Verifying Payment…</div>
+          <p class="success-p">Please wait while we confirm your payment with Cashfree.</p>
+          <div style="width:160px;height:2px;background:var(--border);border-radius:2px;margin:.75rem auto 0;overflow:hidden">
+            <div style="height:100%;background:var(--teal);animation:verifySlide 1.5s ease-in-out infinite"></div>
+          </div>
+        </div>
+        <style>@keyframes verifySlide{0%{width:0;margin-left:0}50%{width:100%;margin-left:0}100%{width:0;margin-left:100%}}</style>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <div class="sidebar" id="orderSidebar">
+
+    <!-- ORDER SUMMARY -->
+    <div class="s-card">
+      <div class="s-card-head"><span class="s-card-ico">🧾</span><div class="s-card-title">Order Summary</div></div>
+      <div class="s-card-body">
+        <div class="sum-plan" id="sum-plan-name">Starter</div>
+        <div class="sum-price">₹<span id="sum-plan-price">49</span><small> one-time</small></div>
+        <div id="sum-addons-wrap" style="margin-bottom:.5rem;display:none">
+          <div style="font-family:var(--fm);font-size:.56rem;color:var(--text3);letter-spacing:.1em;margin-bottom:.3rem;text-transform:uppercase">Add-ons</div>
+          <div id="sum-addon-pills"></div>
+        </div>
+        <div class="sum-divider"></div>
+        <div class="sum-line"><span class="k">Base Plan</span><span class="v">₹<span id="sum-base">49</span></span></div>
+        <div class="sum-line" id="sum-addon-line" style="display:none"><span class="k">Add-ons</span><span class="v">+₹<span id="sum-addon-amt">0</span></span></div>
+        <div class="sum-total"><span class="k">Total</span><span class="v">₹<span id="sum-total">49</span></span></div>
+      </div>
+    </div>
+
+    <!-- GUARANTEES -->
+    <div class="s-card">
+      <div class="s-card-head"><span class="s-card-ico">🛡️</span><div class="s-card-title">Guarantees</div></div>
+      <div class="s-card-body">
+        <div class="g-item"><div class="g-ico">⚡</div><div class="g-text"><strong>24h Delivery</strong><span>Delivered in 24h or full refund</span></div></div>
+        <div class="g-item"><div class="g-ico">🔄</div><div class="g-text"><strong>Additional Revisions (₹15 each)</strong><span>One full revision round included</span></div></div>
+        <div class="g-item"><div class="g-ico">📦</div><div class="g-text"><strong>Source Code</strong><span>Full code + deployment guide</span></div></div>
+        <div class="g-item"><div class="g-ico">💬</div><div class="g-text"><strong>WhatsApp Support</strong><span>Direct chat throughout</span></div></div>
+      </div>
+    </div>
+
+    <!-- WHAT HAPPENS NEXT -->
+    <div class="s-card">
+      <div class="s-card-head"><span class="s-card-ico">📅</span><div class="s-card-title">What Happens Next</div></div>
+      <div class="s-card-body">
+        <div class="tl-item"><div class="tl-dot">1</div><div><span class="tl-title">Order Confirmed</span><span class="tl-sub">WhatsApp ping in ~30 mins</span></div></div>
+        <div class="tl-item"><div class="tl-dot">2</div><div><span class="tl-title">Payment</span><span class="tl-sub">UPI / bank details shared</span></div></div>
+        <div class="tl-item"><div class="tl-dot">3</div><div><span class="tl-title">Building Starts</span><span class="tl-sub">Work begins after payment</span></div></div>
+        <div class="tl-item"><div class="tl-dot">✓</div><div><span class="tl-title">Final Delivery</span><span class="tl-sub">Source code + live URL in 24h</span></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+/* ════════════════════════════════════════════════════════
+   FIREBASE v10 MODULE — PortfolioForge Order Writer
+   setDoc with explicit order ID so admin can read it.
+   signInAnonymously satisfies Firestore security rules.
+   window.handleOrderSubmit = alias for window.submitOrder.
+════════════════════════════════════════════════════════ */
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const _cfg = {
+  apiKey:"AIzaSyA5p0Rf5lb_8AKoeW9WlAjb6EHmwP1xbTY",
+  authDomain:"portfolio-forge-73765.firebaseapp.com",
+  projectId:"portfolio-forge-73765",
+  storageBucket:"portfolio-forge-73765.firebasestorage.app",
+  messagingSenderId:"50141160465",
+  appId:"1:50141160465:web:5fcb8b96278d71def7fdb0"
+};
+const _app  = getApps().find(a=>a.name==='pf-order') || initializeApp(_cfg,'pf-order');
+const _db   = getFirestore(_app);
+const _auth = getAuth(_app);
+
+signInAnonymously(_auth)
+  .then(()=>console.log('[PF Firebase] ✅ Anonymous auth OK'))
+  .catch(e=>console.warn('[PF Firebase] ⚠️ Anon auth failed:',e.message));
+
+window._saveOrderToFirestore = async function(orderData) {
+  try {
+    const { id, ...data } = orderData;
+    console.log("[FIRESTORE] Attempting to save order →", id);
+    console.log("[FIRESTORE] Data:", JSON.stringify(data, null, 2));
+
+    await setDoc(doc(_db, 'orders', id), data);
+
+    console.log("[FIRESTORE] SAVE SUCCESS →", id);
+  } catch (err) {
+    console.error("[FIRESTORE] SAVE FAILED →", err.code, err.message);
+    console.error("[FIRESTORE] Full error:", err);
+  }
+};
+
+window._updateOrderInFirestore = async function(orderData) {
+  try {
+    const { id, ...data } = orderData;
+    if(!id){console.error('[PF Firebase] ❌ No order ID');return;}
+    data.updatedAt = serverTimestamp();
+    await setDoc(doc(_db,'orders',id), data, {merge:true});
+    console.log('[PF Firebase] ✅ Updated:',id,'|',orderData.paymentStatus);
+  } catch(e){console.error('[PF Firebase] ❌ Update failed:',e.code,e.message);}
+};
+
+/* alias — set after plain script registers submitOrder */
+function attachAlias(){
+  if(typeof window.submitOrder==='function'){
+    window.handleOrderSubmit=window.submitOrder;
+    console.log('[PF Firebase] ✅ handleOrderSubmit aliased to submitOrder');
+  } else {setTimeout(attachAlias,100);}
+}
+attachAlias();
+console.log('[PF Firebase] ✅ Module loaded');
+</script>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   PORTFOLIOFORGE — MAIN JS
+   All functions exposed on window.* for onclick handlers
+════════════════════════════════════════════════════════ */
+
+/* ── CURSOR ── */
+(function(){
+  var dot=document.getElementById('dot'), ring=document.getElementById('ring');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){
+    mx=e.clientX; my=e.clientY;
+    if(dot){dot.style.left=mx+'px';dot.style.top=my+'px';}
+  });
+  (function anim(){
+    rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
+    if(ring){ring.style.left=rx+'px';ring.style.top=ry+'px';}
+    requestAnimationFrame(anim);
+  })();
+})();
+
+/* ── THEME ── */
+(function(){
+  var btn=document.getElementById('themeBtn');
+  if(!btn) return;
+  btn.addEventListener('click',function(){
+    var d=document.documentElement;
+    d.dataset.theme=d.dataset.theme==='dark'?'light':'dark';
+    btn.textContent=d.dataset.theme==='dark'?'🌙':'☀️';
+  });
+})();
+
+/* ════════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════════ */
+var currentStep    = 1;
+var selectedPlan   = {name:'Starter', price:49, id:'starter'};
+var addons         = [];
+var termsAccepted  = false;
+var selectedPayment= '';
+
+var STEP_DATA = [
+  {tag:'// step 1 of 2', title:'Your Info & Plan',          sub:'Tell us who you are and pick your plan — takes under a minute.'},
+  {tag:'// step 2 of 2', title:'Portfolio Details & Payment',sub:'What should we build? And how would you like to pay?'}
+];
+
+/* ════════════════════════════════════════════════════════
+   STEP UI
+════════════════════════════════════════════════════════ */
+function updateStepUI(n) {
+  var d = STEP_DATA[n-1];
+  var tag=document.getElementById('stepTag'), ttl=document.getElementById('stepTitle'), sub=document.getElementById('stepSub');
+  if(tag) tag.textContent = d.tag;
+  if(ttl) ttl.textContent = d.title;
+  if(sub) sub.textContent = d.sub;
+  [1,2].forEach(function(i){
+    var sc=document.getElementById('sc'+i), sl=document.getElementById('sl'+i);
+    if(!sc||!sl) return;
+    sc.className = 'step-circle'+(i<n?' done':i===n?' active':'');
+    sl.className = 'step-label'+(i===n?' active':'');
+    sc.textContent = i<n ? '✓' : '0'+i;
+  });
+  var ln=document.getElementById('sline1');
+  if(ln) ln.className = 'step-line'+(n>1?' done':'');
+}
+
+/* ════════════════════════════════════════════════════════
+   VALIDATION
+════════════════════════════════════════════════════════ */
+function validate1() {
+  var ok = true;
+  [['f-name','e-name',function(v){return v.trim().length>0;},'f-input'],
+   ['f-email','e-email',function(v){return v.includes('@')&&v.includes('.');},'f-input'],
+   ['f-phone','e-phone',function(v){return v.trim().length>=6;},'f-input']
+  ].forEach(function(c){
+    var el=document.getElementById(c[0]), er=document.getElementById(c[1]);
+    if(!el||!er) return;
+    if(!c[2](el.value)){el.className=c[3]+' err';er.className='f-err show';ok=false;}
+    else{el.className=c[3];er.className='f-err';}
+  });
+  var role=document.getElementById('f-role'), roleErr=document.getElementById('e-role');
+  if(role&&roleErr){
+    if(!role.value){role.className='f-select err';roleErr.className='field-error show';ok=false;}
+    else{role.className='f-select';roleErr.className='field-error';}
+  }
+  return ok;
+}
+
+function validate2(skipPaymentCheck) {
+  var ok = true;
+  var skills=document.getElementById('f-skills'), skillsErr=document.getElementById('e-skills');
+  var projs=document.getElementById('f-projects'), projsErr=document.getElementById('e-projects');
+  var payErr=document.getElementById('e-payment');
+  if(skills&&skillsErr){
+    if(!skills.value.trim()){skills.className='f-input err';skillsErr.className='f-err show';ok=false;}
+    else{skills.className='f-input';skillsErr.className='f-err';}
+  }
+  if(projs&&projsErr){
+    if(!projs.value.trim()){projs.className='f-textarea err';projsErr.className='f-err show';ok=false;}
+    else{projs.className='f-textarea';projsErr.className='f-err';}
+  }
+  /* Skip selectedPayment check when Razorpay popup handles payment directly */
+  if(!skipPaymentCheck && payErr){
+    if(!selectedPayment){payErr.style.display='block';payErr.textContent='Please select a payment method or pay via Razorpay above';ok=false;}
+    else{payErr.style.display='none';}
+  } else if(payErr){
+    payErr.style.display='none';
+  }
+  if(!termsAccepted){
+    var tb=document.getElementById('termsBox');
+    if(tb) tb.style.borderColor='var(--red)';
+    if(ok) alert('Please accept the Terms of Service to continue.');
+    ok=false;
+  }
+  return ok;
+}
+
+/* ════════════════════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════════════════════ */
+function goStep(n) {
+  if(n > currentStep && currentStep===1 && !validate1()) return;
+  var cur=document.getElementById('step'+currentStep);
+  var nxt=document.getElementById('step'+n);
+  if(cur) cur.classList.remove('active');
+  if(nxt) nxt.classList.add('active');
+  currentStep = n;
+  updateStepUI(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ════════════════════════════════════════════════════════
+   PLAN / ADDON / PAYMENT SELECTION
+════════════════════════════════════════════════════════ */
+function selectPlan(el, name, price, id) {
+  document.querySelectorAll('.plan-card').forEach(function(p){p.classList.remove('selected');});
+  el.classList.add('selected');
+  selectedPlan = {name:name, price:price, id:id};
+  updateSummary();
+}
+
+function toggleAddon(el, price, label) {
+  /* Walk up to the .addon-card in case a child element was clicked */
+  var card = el;
+  while(card && !card.classList.contains('addon-card')) { card = card.parentElement; }
+  if(!card) return;
+  card.classList.toggle('on');
+  if(card.classList.contains('on')) {
+    addons.push({price:price, label:label});
+  } else {
+    addons = addons.filter(function(a){ return a.label !== label; });
+  }
+  updateSummary();
+}
+
+/* Reset alt selection back to Razorpay */
+function resetToRazorpay() {
+  document.querySelectorAll('.pay-alt-card').forEach(function(c){ c.classList.remove('selected'); });
+  document.querySelectorAll('.pay-info').forEach(function(p){ p.className='pay-info'; });
+  var hero = document.getElementById('rzpHeroCard');
+  if(hero) hero.style.opacity = '1';
+  var sb = document.getElementById('submitBtn');
+  if(sb) sb.style.display = 'none';
+  selectedPayment = '';
+}
+
+/* ════════════════════════════════════════════════════════
+   RAZORPAY CHECKOUT POPUP — Key ID Integration
+════════════════════════════════════════════════════════ */
+var RZP_KEY = 'rzp_live_SYsGmwi8X3J32l'; // ← Swap for your live key before going live
+
+function handleRazorpayClick() {
+  /* Pass true to skip the selectedPayment guard — Razorpay IS the payment */
+  if(!validate2(true)) return;
+
+  /* Collect prefill data */
+  function gv(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+  var name  = gv('f-name');
+  var email = gv('f-email');
+  var phone = gv('f-phone');
+
+  /* Compute total */
+  var at    = addons.reduce(function(s,a){return s+a.price;},0);
+  var total = selectedPlan.price + at;
+
+  /* Persist order immediately */
+  var orderId   = 'PF-2026-'+Math.floor(1000+Math.random()*9000);
+  var orderData = buildOrderData(orderId);
+  orderData.payment = 'razorpay';
+  localStorage.setItem('pf_order', JSON.stringify(orderData));
+  pushToAdminOrders(orderData);
+
+  var btn = document.getElementById('rzpPayBtn');
+  var txt = document.getElementById('rzpBtnText');
+  if(btn){ btn.disabled = true; btn.style.opacity = '.75'; }
+  if(txt) txt.textContent = 'Loading…';
+
+  /* Load SDK on demand — works even if <script> tag was blocked */
+  function loadAndOpen() {
+    if(!window.Razorpay) {
+      var s = document.createElement('script');
+      s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      s.onload = openPopup;
+      s.onerror = function(){
+        if(btn){btn.disabled=false;btn.style.opacity='1';}
+        if(txt) txt.textContent='Pay ₹'+total+' Securely with Razorpay';
+        alert('Razorpay could not load. Please check your internet connection and try again.');
+      };
+      document.head.appendChild(s);
+    } else {
+      openPopup();
+    }
+  }
+
+  function openPopup() {
+    if(txt) txt.textContent = 'Opening Razorpay…';
+    var options = {
+      key:         RZP_KEY,
+      amount:      total * 100,
+      currency:    'INR',
+      name:        'PortfolioForge',
+      description: selectedPlan.name + ' Plan',
+      prefill:     { name: name, email: email, contact: phone },
+      notes:       { pf_order_id: orderId, plan: selectedPlan.name },
+      theme:       { color: '#00f5c8' },
+      modal: {
+        ondismiss: function() {
+          if(btn){ btn.disabled = false; btn.style.opacity = '1'; }
+          if(txt) txt.textContent = 'Pay ₹' + total + ' Securely with Razorpay';
+        }
+      },
+      handler: function(response) {
+        console.log('[PF] Razorpay success:', response);
+        orderData.status        = 'Payment Confirmed';
+        orderData.paymentStatus = 'paid';
+        orderData.progress      = 30;
+        orderData.razorpayPaymentId = response.razorpay_payment_id || '';
+        orderData.razorpayOrderId   = response.razorpay_order_id   || '';
+        orderData.razorpaySignature = response.razorpay_signature  || '';
+        if(orderData.timeline && orderData.timeline[1]){
+          orderData.timeline[1].done = true;
+          orderData.timeline[1].time = new Date().toLocaleString();
+        }
+        localStorage.setItem('pf_order', JSON.stringify(orderData));
+        pushToAdminOrders(orderData);
+        showSuccessScreen(orderId, 'paid');
+      }
+    };
+    try {
+      var rzp = new Razorpay(options);
+      rzp.on('payment.failed', function(r){
+        console.error('[PF] Payment failed:', r.error);
+        orderData.status = 'Payment Failed'; orderData.paymentStatus = 'failed'; orderData.rzpError = r.error;
+        localStorage.setItem('pf_order', JSON.stringify(orderData));
+        pushToAdminOrders(orderData);
+        if(btn){ btn.disabled = false; btn.style.opacity = '1'; }
+        if(txt) txt.textContent = 'Pay ₹' + total + ' Securely with Razorpay';
+        showSuccessScreen(orderId, 'failed');
+      });
+      rzp.open();
+    } catch(e) {
+      console.error('[PF] Razorpay init error:', e);
+      if(btn){ btn.disabled = false; btn.style.opacity = '1'; }
+      if(txt) txt.textContent = 'Pay ₹' + total + ' Securely with Razorpay';
+      alert('Payment could not start. Please refresh the page and try again.\n\nError: '+e.message);
+    }
+  }
+
+  loadAndOpen();
+}
+
+/* Alt payment selection (UPI / Bank) */
+function selectAltPayment(el, val) {
+  /* clear alt selection */
+  document.querySelectorAll('.pay-alt-card').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedPayment = val;
+
+  /* Dim the Razorpay hero */
+  var hero = document.getElementById('rzpHeroCard');
+  if(hero) hero.style.opacity = '.45';
+
+  ['upi','bank'].forEach(function(v){
+    var pi = document.getElementById('pay-info-'+v);
+    if(pi) pi.className = 'pay-info'+(v===val?' show':'');
+  });
+
+  var btn = document.getElementById('submitBtnText');
+  if(btn) btn.textContent = 'Place Order →';
+
+  /* Show & enable main submit for alt methods */
+  var sb = document.getElementById('submitBtn');
+  if(sb) sb.style.display = 'inline-flex';
+}
+
+/* Legacy selectPayment — kept for compat */
+function selectPayment(el, val) { selectAltPayment(el, val); }
+
+function toggleTerms() {
+  termsAccepted = !termsAccepted;
+  var box=document.getElementById('termsBox'), cb=document.getElementById('termsCheckbox');
+  if(box){box.classList.toggle('checked',termsAccepted); box.style.borderColor=termsAccepted?'var(--teal)':'';}
+  if(cb)  cb.style.color = termsAccepted?'#000':'transparent';
+}
+
+/* ════════════════════════════════════════════════════════
+   ORDER SUMMARY
+════════════════════════════════════════════════════════ */
+function updateSummary() {
+  var at = addons.reduce(function(s,a){return s+a.price;},0);
+  var total = selectedPlan.price + at;
+  function set(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
+  set('sum-plan-name', selectedPlan.name);
+  set('sum-plan-price', total);
+  set('sum-base', selectedPlan.price);
+  set('sum-addon-amt', at);
+  set('sum-total', total);
+  var al=document.getElementById('sum-addon-line'); if(al) al.style.display=at>0?'flex':'none';
+  var pw=document.getElementById('sum-addon-pills');
+  var pr=document.getElementById('sum-addons-wrap');
+  if(pw) pw.innerHTML=addons.map(function(a){return '<span class="addon-pill">'+a.label+' +₹'+a.price+'</span>';}).join('');
+  if(pr) pr.style.display=addons.length>0?'block':'none';
+
+  /* Update Razorpay hero live */
+  var rzpName = document.getElementById('rzp-plan-display');
+  var rzpPrice = document.getElementById('rzp-price-display');
+  var rzpBtn = document.getElementById('rzpBtnText');
+  if(rzpName) rzpName.textContent = selectedPlan.name;
+  if(rzpPrice) rzpPrice.textContent = total;
+  if(rzpBtn) rzpBtn.textContent = 'Pay ₹' + total + ' Securely with Razorpay';
+}
+
+/* ════════════════════════════════════════════════════════
+   BUILD ORDER DATA OBJECT
+════════════════════════════════════════════════════════ */
+function buildOrderData(orderId) {
+  function gv(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+  var total = selectedPlan.price + addons.reduce(function(s,a){return s+a.price;},0);
+  return {
+    id:       orderId,
+    name:     gv('f-name'),
+    email:    gv('f-email'),
+    phone:    gv('f-phone'),
+    role:     gv('f-role'),
+    github:   gv('f-github'),
+    linkedin: gv('f-linkedin'),
+    plan:     selectedPlan,
+    addons:   addons.slice(),
+    total:    total,
+    skills:   gv('f-skills'),
+    projects: gv('f-projects'),
+    bio:      gv('f-bio'),
+    theme:    gv('f-theme'),
+    notes:    gv('f-notes'),
+    payment:  selectedPayment,
+    placedAt: Date.now(),
+    status:   'Pending Payment',
+    paymentStatus: 'unpaid',
+    progress: 10,
+    timeline:[
+      {label:'Order Received',    done:true,  time:new Date().toLocaleString()},
+      {label:'Payment Confirmed', done:false, time:''},
+      {label:'Work In Progress',  done:false, time:''},
+      {label:'Preview Shared',    done:false, time:''},
+      {label:'Final Delivery',    done:false, time:''}
+    ],
+    messages:[{from:'admin', text:'Thanks for your order! We will confirm within 30 minutes. 🚀', time:new Date().toLocaleString()}]
+  };
+}
+
+/* ════════════════════════════════════════════════════════
+   PUSH ORDER TO ADMIN (localStorage + Firestore)
+   Uses polling — no async/await needed in plain script
+════════════════════════════════════════════════════════ */
+function pushToAdminOrders(orderData) {
+  /* Always write to localStorage first — instant fallback */
+  try {
+    var existing = JSON.parse(localStorage.getItem('pf_admin_orders')||'[]');
+    var idx = existing.findIndex(function(o){return o.id===orderData.id;});
+    if(idx>=0) existing[idx]=orderData; else existing.unshift(orderData);
+    localStorage.setItem('pf_admin_orders', JSON.stringify(existing));
+  } catch(e){}
+
+  /* Poll every 300ms until Firebase module registers its functions (max 10s) */
+  var attempts = 0;
+  function tryFirestore() {
+    if(window._updateOrderInFirestore) {
+      window._updateOrderInFirestore(orderData);
+      console.log('[PF] Queued Firestore update for:', orderData.id);
+      return;
+    }
+    if(window._saveOrderToFirestore) {
+      window._saveOrderToFirestore(orderData);
+      console.log('[PF] Queued Firestore save for:', orderData.id);
+      return;
+    }
+    attempts++;
+    if(attempts < 34) { /* 34 × 300ms = ~10s */
+      setTimeout(tryFirestore, 300);
+    } else {
+      console.warn('[PF] Firebase not available after 10s — order saved to localStorage only:', orderData.id);
+    }
+  }
+  tryFirestore();
+}
+
+/* ════════════════════════════════════════════════════════
+   SUCCESS / FAIL SCREENS
+════════════════════════════════════════════════════════ */
+function showSuccessScreen(orderId, payState) {
+  var fc=document.getElementById('formCard');
+  var sb=document.getElementById('orderSidebar');
+  var sp=document.getElementById('successScreen');
+  if(fc) fc.style.display='none';
+  if(sb) sb.style.display='none';
+  if(sp) sp.style.display='block';
+  ['ss-paid','ss-pending','ss-failed','ss-verifying'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  if(payState==='paid'){
+    var el=document.getElementById('ss-paid'); if(el) el.style.display='block';
+    var oi=document.getElementById('orderId'); if(oi) oi.textContent='Order ID: '+orderId;
+    launchConfetti();
+    localStorage.setItem('pf_payment_status','paid');
+  } else if(payState==='failed'){
+    var el=document.getElementById('ss-failed'); if(el) el.style.display='block';
+    var oi=document.getElementById('orderId3'); if(oi) oi.textContent='Order ID: '+orderId;
+    localStorage.setItem('pf_payment_status','failed');
+  } else {
+    var el=document.getElementById('ss-pending'); if(el) el.style.display='block';
+    var oi=document.getElementById('orderId2'); if(oi) oi.textContent='Order ID: '+orderId;
+    localStorage.setItem('pf_payment_status','pending');
+  }
+}
+
+function retryPayment() {
+  var ss=document.getElementById('successScreen');
+  var fc=document.getElementById('formCard');
+  var sb=document.getElementById('orderSidebar');
+  if(ss) ss.style.display='none';
+  if(fc) fc.style.display='block';
+  if(sb) sb.style.display='flex';
+}
+
+/* ════════════════════════════════════════════════════════
+   SUBMIT ORDER — main entry point
+════════════════════════════════════════════════════════ */
+function submitOrder() {
+  if(!validate2()) return;
+
+  var orderId   = 'PF-2026-'+Math.floor(1000+Math.random()*9000);
+  var orderData = buildOrderData(orderId);
+
+  /* Save to localStorage + Firestore immediately */
+  localStorage.setItem('pf_order', JSON.stringify(orderData));
+  pushToAdminOrders(orderData);
+
+  /* Razorpay is handled by handleRazorpayClick directly — only alt methods reach here */
+  showSuccessScreen(orderId, 'pending');
+}
+
+/* ════════════════════════════════════════════════════════
+   CASHFREE PAYMENT
+════════════════════════════════════════════════════════ */
+var CF_CREATE  = 'https://portfolioforge-backend.onrender.com/create-order';
+var CF_VERIFY  = 'https://portfolioforge-backend.onrender.com/verify-payment';
+
+function initiateCashfreePayment(orderId, total, orderData) {
+  var btn=document.getElementById('submitBtn'), txt=document.getElementById('submitBtnText');
+  if(btn) btn.disabled=true;
+  if(txt) txt.textContent='Redirecting to payment gateway…';
+  fetch(CF_CREATE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:total,order_id:orderId})})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data.payment_session_id) throw new Error(data.message||'No session ID returned');
+      orderData.cashfreeSessionId=data.payment_session_id;
+      orderData.cfOrderId=data.cf_order_id||'';
+      localStorage.setItem('pf_order',JSON.stringify(orderData));
+      var cf=Cashfree({mode:'sandbox'});
+      cf.checkout({paymentSessionId:data.payment_session_id,redirectTarget:'_self'});
+    }).catch(function(err){
+      if(btn){btn.disabled=false;}
+      if(txt) txt.textContent='Place Your Order →';
+      alert('Payment error: '+err.message+'\nPlease try again or contact us.');
+    });
+}
+
+function checkCashfreeReturn() {
+  var p=new URLSearchParams(window.location.search);
+  if(!p.has('payment')&&!p.has('order_id')) return;
+  var cfStatus=p.get('payment')||'';
+  var orderId=p.get('order_id')||'';
+  var saved=JSON.parse(localStorage.getItem('pf_order')||'null');
+  window.history.replaceState({},document.title,window.location.pathname);
+  var fc=document.getElementById('formCard'), sb=document.getElementById('orderSidebar'), sp=document.getElementById('successScreen');
+  if(fc) fc.style.display='none'; if(sb) sb.style.display='none'; if(sp) sp.style.display='block';
+  ['ss-paid','ss-pending','ss-failed'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
+  var sv=document.getElementById('ss-verifying'); if(sv) sv.style.display='block';
+  if(cfStatus==='FAILED'||cfStatus==='failure'){
+    if(sv) sv.style.display='none';
+    if(saved){saved.status='Payment Failed';saved.paymentStatus='failed';localStorage.setItem('pf_order',JSON.stringify(saved));pushToAdminOrders(saved);}
+    showSuccessScreen(saved?saved.id:orderId,'failed'); return;
+  }
+  var vid=orderId||(saved?saved.id:'');
+  if(!vid){if(sv)sv.style.display='none';showSuccessScreen('','failed');return;}
+  fetch(CF_VERIFY+'?order_id='+vid).then(function(r){return r.json();}).then(function(data){
+    if(sv) sv.style.display='none';
+    var oid=saved?saved.id:orderId;
+    if(data.payment_status==='SUCCESS'||data.order_status==='PAID'){
+      if(saved){saved.status='Payment Confirmed';saved.paymentStatus='paid';saved.progress=30;if(saved.timeline&&saved.timeline[1]){saved.timeline[1].done=true;saved.timeline[1].time=new Date().toLocaleString();}localStorage.setItem('pf_order',JSON.stringify(saved));pushToAdminOrders(saved);}
+      showSuccessScreen(oid,'paid');
+    } else {
+      if(saved){saved.status='Payment Failed';saved.paymentStatus='failed';localStorage.setItem('pf_order',JSON.stringify(saved));pushToAdminOrders(saved);}
+      showSuccessScreen(oid,'failed');
+    }
+  }).catch(function(){if(sv)sv.style.display='none';showSuccessScreen(saved?saved.id:orderId,'failed');});
+}
+
+
+/* ── CONFETTI ── */
+function launchConfetti(){
+  var wrap=document.getElementById('confettiWrap'); if(!wrap) return;
+  var colors=['#00f5c8','#8b5cf6','#f59e0b','#ef4444','#fff'];
+  for(var i=0;i<80;i++){
+    (function(){
+      var p=document.createElement('div');
+      p.className='confetti-piece';
+      p.style.cssText='left:'+Math.random()*100+'%;top:-20px;background:'+colors[Math.floor(Math.random()*colors.length)]+';width:'+(6+Math.random()*6)+'px;height:'+(6+Math.random()*6)+'px;border-radius:'+(Math.random()>.5?'50%':'2px')+';animation-duration:'+(2+Math.random()*2.5)+'s;animation-delay:'+Math.random()*.8+'s;';
+      wrap.appendChild(p);
+      setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},5000);
+    })();
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   EXPOSE ALL FUNCTIONS TO GLOBAL SCOPE
+   onclick="goStep(2)" etc. require window.goStep
+════════════════════════════════════════════════════════ */
+window.goStep              = goStep;
+window.selectPlan          = selectPlan;
+window.toggleAddon         = toggleAddon;
+window.selectPayment       = selectPayment;
+window.selectAltPayment    = selectAltPayment;
+window.handleRazorpayClick = handleRazorpayClick;
+window.resetToRazorpay     = resetToRazorpay;
+window.toggleTerms         = toggleTerms;
+window.updateSummary       = updateSummary;
+window.submitOrder         = submitOrder;
+window.retryPayment        = retryPayment;
+window.launchConfetti      = launchConfetti;
+
+/* ── AUTO-SELECT PLAN FROM URL or localStorage ── */
+(function(){
+  var PLAN_MAP = {
+    starter: { el:'plan-starter', name:'Starter',  price:49,  id:'starter'  },
+    pro:     { el:'plan-pro',     name:'Pro',       price:139, id:'pro'      },
+    premium: { el:'plan-premium', name:'Premium',   price:299, id:'premium'  }
+  };
+  /* 1. URL param takes priority */
+  var urlParam = new URLSearchParams(window.location.search).get('plan');
+  /* 2. Fall back to localStorage (set by index.html plan buttons) */
+  var lsParam = null;
+  try { lsParam = localStorage.getItem('pf_selected_plan'); } catch(e){}
+  /* 3. Resolve plan */
+  var key = (urlParam || lsParam || 'starter').toLowerCase();
+  var p = PLAN_MAP[key] || PLAN_MAP['starter'];
+  /* 4. Clear localStorage flag */
+  try { localStorage.removeItem('pf_selected_plan'); } catch(e){}
+  /* 5. Set JS state */
+  selectedPlan = { name:p.name, price:p.price, id:p.id };
+  /* 6. Update DOM */
+  document.querySelectorAll('.plan-card').forEach(function(c){ c.classList.remove('selected'); });
+  var el = document.getElementById(p.el);
+  if(el) {
+    el.classList.add('selected');
+    var radio = el.querySelector('input[type="radio"]');
+    if(radio) radio.checked = true;
+  }
+})();
+
+/* ── INIT ── */
+updateSummary();
+checkCashfreeReturn();
+
+
+</script>
+
+</body>
+</html>

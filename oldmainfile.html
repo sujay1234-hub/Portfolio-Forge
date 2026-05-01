@@ -4,13 +4,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>PortfolioForge — Professional Digital Portfolios in 24 Hours</title>
-<!-- Restore theme before paint to prevent flash -->
-<script>
-  (function(){
-    var t = localStorage.getItem('pf_theme');
-    if (t) document.documentElement.setAttribute('data-theme', t);
-  })();
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -24,32 +17,26 @@
   --bg3: #0f1220;
   --surface: #131729;
   --surface2: #1a1f35;
-  --surface3: #1e2540;
   --border: #1e2440;
   --border2: #252d4a;
-  --border3: #2d3656;
 
   --teal: #00f5c8;
   --teal-dim: rgba(0,245,200,.1);
   --teal-glow: rgba(0,245,200,.22);
   --teal2: #00d4aa;
-  --teal-glow-lg: 0 0 80px rgba(0,245,200,.18);
 
   --violet: #8b5cf6;
   --violet-dim: rgba(139,92,246,.12);
-  --violet-glow: rgba(139,92,246,.15);
 
   --amber: #f59e0b;
   --amber-dim: rgba(245,158,11,.12);
-  --amber-glow: rgba(245,158,11,.15);
 
   --red: #ef4444;
   --red-dim: rgba(239,68,68,.12);
 
   --text: #f0f2fa;
-  --text2: #9aa3c4;
-  --text3: #5a6288;
-  --text-muted: #3d4566;
+  --text2: #8892b8;
+  --text3: #4a5278;
 
   --font-display: 'Syne', sans-serif;
   --font-body: 'DM Sans', sans-serif;
@@ -60,63 +47,50 @@
   --r-xl: 24px;
   --shadow: 0 8px 40px rgba(0,0,0,.6);
   --shadow-glow: 0 0 60px rgba(0,245,200,.12);
-  --shadow-lg: 0 20px 60px rgba(0,0,0,.7);
-  --shadow-card: 0 4px 24px rgba(0,0,0,.4);
 }
 [data-theme="light"] {
   --bg: #f4f6fd;
   --bg2: #eceffe;
   --bg3: #ffffff;
   --surface: #ffffff;
-  --surface2: #f5f7fc;
-  --surface3: #eef1f9;
+  --surface2: #f0f2fc;
   --border: #d8ddf0;
   --border2: #c8cfe8;
-  --border3: #b8c2e0;
   --text: #0a0d1e;
   --text2: #4a527a;
   --text3: #8890b4;
-  --text-muted: #a8b0cc;
-  --shadow: 0 8px 40px rgba(0,0,0,.08);
-  --shadow-lg: 0 20px 60px rgba(0,0,0,.12);
-  --shadow-card: 0 4px 24px rgba(0,0,0,.06);
 }
 
 /* ═══════════════════════════════════════════
    BASE
 ═══════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+html { scroll-behavior: smooth; }
 body {
   background: var(--bg); color: var(--text);
-  font-family: var(--font-body); font-size: 16px; line-height: 1.65;
-  overflow-x: hidden; transition: background .3s ease, color .3s ease;
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  overflow-x: hidden; transition: background .3s, color .3s;
 }
 ::selection { background: var(--teal); color: #000; }
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg2); }
-::-webkit-scrollbar-thumb { background: var(--border3); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--teal); }
-img { display: block; max-width: 100%; height: auto; }
-a { color: inherit; text-decoration: none; transition: color .2s ease; }
-button { font-family: inherit; cursor: pointer; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 2px; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
 
 /* ═══════════════════════════════════════════
    CURSOR
 ═══════════════════════════════════════════ */
 #dot {
-  position: fixed; width: 8px; height: 8px; background: var(--teal);
+  position: fixed; width: 7px; height: 7px; background: var(--teal);
   border-radius: 50%; pointer-events: none; z-index: 99999;
-  transform: translate(-50%,-50%); transition: transform .08s ease;
-  box-shadow: 0 0 12px var(--teal-glow), 0 0 4px var(--teal);
+  transform: translate(-50%,-50%); transition: transform .08s;
 }
 #ring {
-  position: fixed; width: 36px; height: 36px; border: 1.5px solid var(--teal);
+  position: fixed; width: 30px; height: 30px; border: 1.5px solid var(--teal);
   border-radius: 50%; pointer-events: none; z-index: 99998;
-  transform: translate(-50%,-50%); opacity: .45; transition: opacity .2s ease, transform .15s ease, width .2s ease, height .2s ease;
-  box-shadow: 0 0 20px rgba(0,245,200,.15);
+  transform: translate(-50%,-50%); opacity: .35; transition: opacity .2s;
 }
-#ring.hover { width: 48px; height: 48px; opacity: .6; border-width: 2px; }
 @media (hover: none) { #dot, #ring { display: none; } }
 
 /* ═══════════════════════════════════════════
@@ -124,32 +98,24 @@ button { font-family: inherit; cursor: pointer; }
 ═══════════════════════════════════════════ */
 #loader {
   position: fixed; inset: 0; background: var(--bg); z-index: 9000;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem;
-  transition: opacity .5s ease, visibility .5s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem;
+  transition: opacity .5s, visibility .5s;
 }
 #loader.gone { opacity: 0; visibility: hidden; }
 .loader-icon {
-  width: 56px; height: 56px; border-radius: 16px;
-  background: linear-gradient(135deg, var(--teal) 0%, #8b5cf6 100%);
+  width: 48px; height: 48px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--teal), #8b5cf6);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.6rem; 
-  box-shadow: 0 0 40px rgba(0,245,200,.35), 0 0 80px rgba(139,92,246,.2);
+  font-size: 1.4rem; box-shadow: 0 0 32px rgba(0,245,200,.3);
   animation: loaderPulse 2s ease-in-out infinite;
-  position: relative;
-  overflow: hidden;
 }
-.loader-icon::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,.2) 0%, transparent 50%);
-}
-@keyframes loaderPulse { 0%,100%{transform:scale(1);box-shadow: 0 0 40px rgba(0,245,200,.35), 0 0 80px rgba(139,92,246,.2)} 50%{transform:scale(1.05);box-shadow: 0 0 50px rgba(0,245,200,.45), 0 0 100px rgba(139,92,246,.3)} }
-.loader-logo { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text); letter-spacing: -.025em; }
+@keyframes loaderPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+.loader-logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
 .loader-logo span { color: var(--teal); }
-.loader-tagline { font-size: .75rem; color: var(--text3); font-weight: 500; letter-spacing: .05em; }
-.loader-bar-wrap { width: 160px; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
-.loader-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--teal), #8b5cf6); animation: loadBar 1.6s ease forwards; border-radius: 2px; }
-.loader-pct { font-family: var(--font-mono); font-size: .7rem; color: var(--text3); letter-spacing: .05em; }
+.loader-tagline { font-size: .72rem; color: var(--text3); font-weight: 400; letter-spacing: .04em; }
+.loader-bar-wrap { width: 140px; height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; }
+.loader-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--teal), #8b5cf6); animation: loadBar 1.6s ease forwards; }
+.loader-pct { font-family: var(--font-mono); font-size: .65rem; color: var(--text3); }
 @keyframes loadBar { 0%{width:0} 60%{width:72%} 100%{width:100%} }
 
 /* ═══════════════════════════════════════════
@@ -165,167 +131,51 @@ body::after {
 /* ═══════════════════════════════════════════
    NAV
 ═══════════════════════════════════════════ */
-/* ═══════════════════════════════════════════
-   NAV — Premium glassmorphism header
-═══════════════════════════════════════════ */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 400;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 clamp(1rem, 4vw, 2.5rem);
-  height: 62px;
-  background: rgba(6,8,16,.75);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  padding: 0 4vw; height: 58px;
+  background: rgba(6,8,16,.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
   will-change: transform;
   transform: translateZ(0);
 }
-[data-theme="light"] nav {
-  background: rgba(244,246,253,.82);
-  border-bottom: 1px solid rgba(0,0,0,.07);
-}
-
-/* Logo */
+[data-theme="light"] nav { background: rgba(244,246,253,.9); }
 .nav-logo {
-  font-family: var(--font-display); font-size: 1.35rem; font-weight: 800;
-  letter-spacing: -.035em; display: flex; align-items: center; gap: .25rem;
-  flex-shrink: 0;
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 800;
+  letter-spacing: -.03em; display: flex; align-items: center; gap: .3rem;
 }
 .nav-logo .g { color: var(--teal); }
-
-/* Center nav links */
-.nav-links {
-  display: flex; align-items: center; gap: 2rem;
-  position: absolute; left: 50%; transform: translateX(-50%);
-}
+.nav-links { display: flex; align-items: center; gap: 2.25rem; }
 .nav-links a {
-  font-size: .8rem; font-weight: 600; color: var(--text2);
-  letter-spacing: .01em; transition: color .2s; white-space: nowrap;
+  font-size: .82rem; font-weight: 600; color: var(--text2);
+  letter-spacing: .01em; transition: color .2s;
 }
 .nav-links a:hover { color: var(--teal); }
-
-/* Right action group */
-.nav-actions {
-  display: flex; align-items: center; gap: 8px;
-  flex-shrink: 0;
-}
-
-/* Track Order button — compact ghost style */
-.nav-track-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  height: 34px; padding: 0 14px;
-  border-radius: 8px;
-  background: rgba(0,245,200,.08);
-  border: 1px solid rgba(0,245,200,.22);
-  color: var(--teal) !important;
-  font-size: .74rem; font-weight: 700; letter-spacing: .01em;
-  white-space: nowrap;
-  transition: all .22s cubic-bezier(.16,1,.3,1);
-}
-.nav-track-btn:hover {
-  background: rgba(0,245,200,.14);
-  border-color: rgba(0,245,200,.42);
-  box-shadow: 0 0 18px rgba(0,245,200,.18);
-  transform: translateY(-1px);
-}
-
-/* Icon button group (theme + menu) */
-.nav-icon-group {
-  display: flex; align-items: center; gap: 4px;
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 10px;
-  padding: 4px;
-}
-[data-theme="light"] .nav-icon-group {
-  background: rgba(0,0,0,.04);
-  border-color: rgba(0,0,0,.08);
-}
-
-/* Shared icon button style */
-.nav-icon-btn {
-  width: 30px; height: 30px; border-radius: 7px;
-  background: transparent; border: none;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: .88rem;
-  color: var(--text2);
-  transition: all .18s ease;
-  position: relative;
-}
-.nav-icon-btn:hover {
-  background: rgba(255,255,255,.08);
-  color: var(--text);
-}
-[data-theme="light"] .nav-icon-btn:hover { background: rgba(0,0,0,.06); }
-
-/* Hamburger lines inside menu icon btn */
-.ham-lines {
-  display: flex; flex-direction: column; gap: 3.5px;
-  width: 15px;
-}
-.ham-lines span {
-  display: block; height: 1.5px; background: currentColor;
-  border-radius: 1px; transition: .25s;
-}
-.ham-lines span:nth-child(2) { width: 70%; }
-.ham-lines span:nth-child(3) { width: 85%; }
-
-/* Legacy theme-btn — keep for compat */
+.nav-actions { display: flex; align-items: center; gap: .75rem; }
 .theme-btn {
-  width: 30px; height: 30px; border-radius: 7px;
-  background: transparent; border: none;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: .88rem;
-  transition: all .18s ease;
+  width: 36px; height: 36px; border-radius: 50%; background: var(--surface);
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: .9rem; transition: border-color .2s;
 }
-.theme-btn:hover { background: rgba(255,255,255,.08); }
-[data-theme="light"] .theme-btn:hover { background: rgba(0,0,0,.06); }
-
-/* nav-cta kept for any other use */
+.theme-btn:hover { border-color: var(--teal); }
 .nav-cta {
-  display: inline-flex; align-items: center; gap: 6px;
-  height: 34px; padding: 0 14px;
-  border-radius: 8px;
-  background: var(--teal); color: #000;
-  font-size: .76rem; font-weight: 700; letter-spacing: .02em;
+  background: var(--teal); color: #000; padding: .5rem 1.4rem;
+  border-radius: var(--r); font-size: .8rem; font-weight: 700; letter-spacing: .02em;
   transition: box-shadow .2s, transform .2s;
-  white-space: nowrap;
 }
 .nav-cta:hover { box-shadow: 0 0 24px var(--teal-glow); transform: translateY(-1px); }
 .nav-wa-btn {
   background: #25d366 !important; color: #fff !important;
   display: inline-flex; align-items: center; gap: .45rem;
-  height: 34px; padding: 0 14px !important;
+  padding: .48rem 1.2rem !important;
 }
 .nav-wa-btn:hover { box-shadow: 0 0 24px rgba(37,211,102,.5) !important; transform: translateY(-1px); }
-
-/* Mobile right cluster — hidden on desktop */
-.nav-mob-right { display: none; align-items: center; gap: 6px; }
-
-/* Quick menu button */
-.nav-qmenu-btn {
-  width: 30px; height: 30px; border-radius: 7px;
-  background: transparent; border: none;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-}
-.nqm-icon {
-  display: flex; flex-direction: column; gap: 3.5px; width: 15px;
-}
-.nqm-icon span {
-  display: block; height: 1.5px; background: var(--text2);
-  border-radius: 1px;
-}
-.nqm-icon span:nth-child(2) { width: 70%; }
-.nqm-icon span:nth-child(3) { width: 85%; }
-.nqm-label { display: none; }
-
-@media (max-width: 860px) {
-  .nav-links { display: none; }
-  .nav-mob-right { display: flex; }
-  .desktop-only { display: none !important; }
-  nav { height: 58px; }
-}
+.ham-btn { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 4px; background: none; border: none; }
+.ham-btn span { display: block; width: 20px; height: 1.5px; background: var(--text); border-radius: 1px; transition: .3s; }
+@media (max-width: 860px) { .nav-links { display: none; } .ham-btn { display: flex; } }
 
 /* ═══════════════════════════════════════════
    TERMS & CONDITIONS MODAL (first-visit)
@@ -983,117 +833,22 @@ h1.hero-headline .outline { -webkit-text-stroke: 1.5px var(--text2); color: tran
 .trust-badge .icon { font-size: .9rem; }
 
 /* ═══════════════════════════════════════════
-   TICKER — GPU-accelerated premium marquee
-   Mobile-first: fast + smooth on all devices
+   TICKER
 ═══════════════════════════════════════════ */
 .ticker {
-  background: var(--teal);
-  overflow: hidden;
-  padding: .6rem 0;
+  background: var(--teal); overflow: hidden; padding: .75rem 0;
   display: flex;
-  /* Stacking context so children composite on GPU */
-  will-change: transform;
-  /* Edge fade for premium feel */
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    #000 6%,
-    #000 94%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    #000 6%,
-    #000 94%,
-    transparent 100%
-  );
 }
-
-/* Inner wrapper — pauses on hover (desktop only) */
-.ticker-inner {
-  display: flex;
-  /* pause-on-hover hook — JS-free */
-}
-@media (hover: hover) and (pointer: fine) {
-  .ticker-inner:hover .ticker-track {
-    animation-play-state: paused;
-  }
-}
-
-/* The scrolling track */
 .ticker-track {
-  display: flex;
-  align-items: center;
-  gap: 0;                    /* spacing handled by spans */
-  white-space: nowrap;
-  flex-shrink: 0;
-  /* GPU layer: composites transform without triggering layout */
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  /* Mobile speed: 18s for snappy feel on small screens */
-  animation: marquee-scroll 18s linear infinite;
+  display: flex; gap: 2.5rem; white-space: nowrap; flex-shrink: 0; padding-right: 2.5rem;
+  animation: tick 20s linear infinite;
 }
-
 .ticker-track span {
-  font-family: var(--font-mono);
-  font-size: .72rem;
-  font-weight: 600;
-  color: #000;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  padding: 0 1.4rem;         /* generous spacing for readability at speed */
-  display: inline-flex;
-  align-items: center;
+  font-family: var(--font-mono); font-size: .72rem; font-weight: 500; color: #000;
+  letter-spacing: .07em; text-transform: uppercase;
 }
-
-.ticker-track .sep {
-  opacity: .35;
-  padding: 0;                /* sep has no extra padding — uses span padding */
-  font-size: .65rem;
-}
-
-/* Seamless loop: translate exactly -50% (content is doubled) */
-@keyframes marquee-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Desktop: slightly slower for comfortable reading */
-@media (min-width: 768px) {
-  .ticker-track {
-    animation-duration: 28s;
-  }
-}
-
-/* Large screens: even more relaxed */
-@media (min-width: 1280px) {
-  .ticker-track {
-    animation-duration: 34s;
-  }
-}
-
-/* Tiny phones: keep it punchy */
-@media (max-width: 380px) {
-  .ticker-track {
-    animation-duration: 14s;
-  }
-  .ticker-track span {
-    font-size: .68rem;
-    padding: 0 1rem;
-  }
-}
-
-/* Respect reduced-motion preference */
-@media (prefers-reduced-motion: reduce) {
-  .ticker-track {
-    animation: none;
-    /* Show static centered text instead */
-    justify-content: center;
-  }
-}
+.ticker-track .sep { opacity: .3; }
+@keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
 /* ═══════════════════════════════════════════
    SECTION COMMONS
@@ -1399,14 +1154,14 @@ h1.hero-headline .outline { -webkit-text-stroke: 1.5px var(--text2); color: tran
   pointer-events: none;
 }
 
-/* ── ₹139 — Value card ── */
+/* ── ₹179 — Value card ── */
 .pc-value {
   background: var(--surface);
   border: 1px solid var(--border2);
 }
 .pc-value:hover { box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 0 0 1px rgba(0,245,200,.2); border-color: rgba(0,245,200,.3); }
 
-/* ── ₹299 — Premium card ── */
+/* ── ₹449 — Premium card ── */
 .pc-premium {
   background: linear-gradient(145deg, #160f2a 0%, #100c20 100%);
   border: 1px solid rgba(139,92,246,.3);
@@ -1930,7 +1685,10 @@ section, footer, nav { overflow-x: hidden; }
   .mob-bcard-sub { font-size: .78rem; color: var(--text3); margin-top: .1rem; }
 }
 
-/* Ticker mobile overrides handled in TICKER block above */
+/* Ticker font size */
+@media (max-width: 480px) {
+  .ticker-track span { font-size: .72rem; }
+}
 
 /* Pricing trust text */
 @media (max-width: 480px) {
@@ -2246,64 +2004,38 @@ section, footer, nav { overflow-x: hidden; }
 
 /* ── NAV QUICK MENU BUTTON ── */
 .nav-qmenu-btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  min-width: 90px; height: 38px;
-  background: linear-gradient(135deg, rgba(0,245,200,.06) 0%, rgba(139,92,246,.04) 100%);
-  border: 1px solid rgba(0,245,200,.25);
-  border-radius: 12px;
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r);
+  padding: .45rem 1rem .45rem .7rem;
   cursor: pointer;
   color: var(--text2);
   font-family: var(--font-body);
-  transition: all .3s cubic-bezier(.16,1,.3,1);
+  font-size: .8rem; font-weight: 600;
+  letter-spacing: .01em;
+  transition: background .2s, border-color .2s, color .2s, box-shadow .2s;
   position: relative;
-  overflow: hidden;
-}
-.nav-qmenu-btn::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(0,245,200,.12) 0%, rgba(139,92,246,.08) 100%);
-  opacity: 0;
-  transition: opacity .3s;
 }
 .nav-qmenu-btn:hover {
+  background: var(--surface2);
   border-color: rgba(0,245,200,.45);
   color: var(--teal);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(0,245,200,.18), 0 0 30px rgba(0,245,200,.1);
-}
-.nav-qmenu-btn:hover::before { opacity: 1; }
-.nav-qmenu-btn:active {
-  transform: scale(.96) translateY(0);
+  box-shadow: 0 0 18px rgba(0,245,200,.12);
 }
 .nqm-icon {
-  display: flex; flex-direction: column; justify-content: center; gap: 4.5px;
-  width: 18px; height: 18px; position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: 3.5px;
+  width: 16px; align-items: flex-start;
 }
 .nqm-icon span {
-  display: block; height: 2px; background: currentColor; border-radius: 2px;
-  transition: all .25s cubic-bezier(.4,0,.2,1);
-  transform-origin: center;
+  display: block; height: 1.5px; background: currentColor; border-radius: 1px;
+  transition: width .2s;
 }
 .nqm-icon span:nth-child(1) { width: 100%; }
-.nqm-icon span:nth-child(2) { width: 65%; }
+.nqm-icon span:nth-child(2) { width: 70%; }
 .nqm-icon span:nth-child(3) { width: 85%; }
 .nav-qmenu-btn:hover .nqm-icon span { width: 100%; }
-.nav-qmenu-btn:active .nqm-icon span:nth-child(1) { transform: rotate(45deg) translateY(5.5px); }
-.nav-qmenu-btn:active .nqm-icon span:nth-child(2) { width: 0; opacity: 0; }
-.nav-qmenu-btn:active .nqm-icon span:nth-child(3) { transform: rotate(-45deg) translateY(-5.5px); width: 100%; }
-.nqm-label { 
-  color: inherit; font-size: .74rem; font-weight: 600; letter-spacing: .03em; 
-  margin-left: .5rem; position: relative; z-index: 1;
-}
-
-@media (max-width: 860px) {
-  .nav-qmenu-btn .nqm-label { display: none !important; }
-  .nav-qmenu-btn { 
-    min-width: 40px; width: 40px; height: 40px; padding: 0; 
-    border-radius: 12px;
-  }
-  .nqm-icon { width: 20px; height: 20px; gap: 5px; }
-}
+.nqm-label { color: inherit; }
 
 /* Floating pill CTA above sidebar on mobile */
 #sb-float-pill {
@@ -2338,134 +2070,15 @@ section, footer, nav { overflow-x: hidden; }
   width: 7px; height: 7px; border-radius: 50%; background: var(--teal);
   animation: blink 1.5s ease infinite; flex-shrink: 0;
 }
-/* Hide float pill - using nav button instead */
-#sb-float-pill { display: none !important; }
-
-
-/* ═══════════════════════════════════════════
-   RESPONSIVE POLISH — Production Fix
-   Covers: 320px → 480px → 768px → 1024px+
-═══════════════════════════════════════════ */
-
-/* Global safe padding on all sections */
-@media (max-width: 480px) {
-  .sec { padding: 3rem 1rem; }
-  .hero { padding: 80px 1rem 3rem; }
-}
-@media (max-width: 768px) {
-  .sec { padding: 3.5rem 1.25rem; }
-}
-
-/* Hero CTA buttons stack on small mobile */
-@media (max-width: 400px) {
-  .hero-ctas { flex-direction: column; }
-  .hero-ctas .btn-primary,
-  .hero-ctas .btn-ghost { width: 100%; justify-content: center; }
-  .btn-primary, .btn-ghost { padding: .85rem 1.5rem; font-size: .88rem; }
-}
-
-/* Trust row overflow fix */
-@media (max-width: 480px) {
-  .trust-row { gap: .75rem; }
-  .trust-badge { font-size: .7rem; }
-  .hero-mini-stats { gap: 1rem; }
-}
-
-/* Benefit cards on mobile */
-@media (max-width: 540px) {
-  .hero-benefit-card { padding: 1rem 1.1rem; gap: .9rem; }
-  .hb-icon { width: 38px; height: 38px; font-size: 1.1rem; }
-  .hb-title { font-size: .95rem; }
-  .hb-desc { font-size: .75rem; }
-}
-
-/* Offer grid stacks on tablet */
-@media (max-width: 768px) {
-  .offer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-}
-
-/* Pricing cards horizontal scroll → stack on mobile */
-@media (max-width: 860px) {
-  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
-  .pc { width: 100%; }
-}
-@media (max-width: 480px) {
-  .pricing-grid { max-width: 100%; }
-  .pc-body { padding: 1.5rem 1.25rem; }
-}
-
-/* Our Work banner stacks */
-@media (max-width: 600px) {
-  .ourwork-hero-banner { padding: 1.5rem; flex-direction: column; gap: 1.25rem; }
-  .owb-stats { gap: 1.5rem; }
-}
-
-/* Process steps stack on mobile */
-@media (max-width: 600px) {
-  .process-grid { grid-template-columns: 1fr; }
-}
-
-/* Footer grid on mobile */
-@media (max-width: 600px) {
-  .footer-grid,
-  .fg { grid-template-columns: 1fr !important; gap: 2rem; }
-}
-
-/* Sticky bar: shrink on very small screens */
-@media (max-width: 360px) {
-  .sticky-cta { padding: .55rem .85rem; font-size: .75rem; }
-  .sbar-badge-hot, .sbar-badge-save { font-size: .5rem; }
-  .sticky-headline { font-size: .82rem; }
-}
-
-/* Nav: better tap targets */
-@media (max-width: 860px) {
-  .nav-links { display: none !important; }
-  .ham-btn { min-width: 44px; min-height: 44px; display: flex !important; }
-}
-
-/* WhatsApp FAB positioning for sticky bar */
-@media (max-width: 860px) {
-  .wa-fab { bottom: 72px; }
-}
-
-/* Add-on note responsive */
-@media (max-width: 600px) {
-  .addon-note { flex-direction: column !important; align-items: flex-start !important; }
-  .addon-note > div:last-child { align-items: flex-start !important; width: 100%; }
-  .addon-note a { width: 100% !important; justify-content: center !important; }
-}
-
-/* Hero offer coupon text overflow */
-@media (max-width: 420px) {
-  .hero-offer-coupon { padding: .9rem; }
-  .hoc-new { font-size: 2rem; }
-}
-
-/* Sidebar responsive */
-@media (max-width: 380px) {
-  #right-sidebar { max-width: 100vw; }
-}
-
-/* Section headers responsive */
-@media (max-width: 480px) {
-  .sec-h { font-size: clamp(1.6rem, 8vw, 2.5rem); line-height: 1.05; }
-  .sec-sub { font-size: .88rem; }
-}
-
-/* Better button touch targets on mobile */
-@media (max-width: 768px) {
-  .nav-cta { min-height: 40px; display: flex; align-items: center; }
-  .nav-wa-btn { min-height: 40px; }
-}
+/* Hide float pill on desktop since nav button is there */
+@media (min-width: 861px) { #sb-float-pill { display: none; } }
+/* Hide nav menu btn on small screens — float pill handles it */
+@media (max-width: 860px) { .nav-qmenu-btn .nqm-label { display: none; } .nav-qmenu-btn { padding: .45rem .7rem; } }
+@media (max-width: 560px) { .nav-qmenu-btn { display: none; } }
 
 </style>
-
-<!-- GATE FULLY REMOVED — site is public -->
-
 </head>
 <body>
-
 
 <!-- CURSOR -->
 <div id="dot"></div>
@@ -2579,60 +2192,44 @@ section, footer, nav { overflow-x: hidden; }
 <!-- NAV -->
 <nav id="mainNav">
   <div class="nav-logo">Portfolio<span class="g">Forge</span></div>
-
-  <!-- Desktop center links -->
   <div class="nav-links">
     <a href="#pricing">Our Services</a>
-    <a href="#our-work" style="color:var(--teal);font-weight:700">Our Work ✦</a>
     <a href="about.html">About Us</a>
     <a href="revision.html">Revision Now</a>
-    <a href="submit-order.html" onclick="savePlan('starter')">Order Now</a>
+    <a href="submit-order.html">Order Now</a>
   </div>
-
-  <!-- Desktop right actions -->
   <div class="nav-actions">
-    <!-- Track Order — shown only after payment -->
-    <a href="track-order.html" class="nav-track-btn desktop-only" id="navTrackBtn" style="display:none;">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
-      Track Order
-    </a>
-
-    <!-- Icon group: theme toggle + menu -->
-    <div class="nav-icon-group desktop-only">
-      
-      <button class="nav-icon-btn" id="navMenuBtnDesktop" title="Quick Menu"
-        onclick="document.getElementById('right-sidebar').classList.add('open');document.getElementById('sidebar-overlay').classList.add('open')">
-        <span class="ham-lines"><span></span><span></span><span></span></span>
-      </button>
-    </div>
-
-    <!-- Mobile right cluster -->
-    <div class="nav-mob-right">
-      <a href="track-order.html" class="nav-track-btn" id="navTrackBtnMob" style="display:none;font-size:.7rem;padding:0 10px;height:30px;">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
-        Track
-      </a>
-      <div class="nav-icon-group">
-        
-        <button class="nav-icon-btn" title="Quick Menu"
-          onclick="document.getElementById('right-sidebar').classList.add('open');document.getElementById('sidebar-overlay').classList.add('open')">
-          <span class="ham-lines"><span></span><span></span><span></span></span>
-        </button>
-      </div>
-    </div>
+    <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+    <!-- Show Track Order only if payment confirmed -->
+    <a href="track-order.html" class="nav-cta nav-track-btn" id="navTrackBtn" style="display:none;background:rgba(0,245,200,.15);border:1px solid rgba(0,245,200,.3);color:var(--teal)">📊 Track Order</a>
+    <!-- QUICK MENU BUTTON — always visible -->
+    <button class="nav-qmenu-btn" id="navMenuBtn" onclick="document.getElementById('right-sidebar').classList.add('open');document.getElementById('sidebar-overlay').classList.add('open')" title="Quick Menu">
+      <span class="nqm-icon">
+        <span></span><span></span><span></span>
+      </span>
+      <span class="nqm-label">Menu</span>
+    </button>
+  
   </div>
 </nav>
 
 <!-- MOBILE MENU -->
 <nav class="mob-menu" id="mobMenu">
   <a href="#pricing" onclick="closeMob()">Our Services</a>
-  <a href="#our-work" onclick="closeMob()" style="color:var(--teal);font-weight:700">Our Work ✦</a>
   <a href="about.html" onclick="closeMob()">About Us</a>
   <a href="terms.html" onclick="closeMob()">Terms &amp; Conditions</a>
-  <a href="submit-order.html" onclick="savePlan('starter')" style="color:var(--teal);font-weight:700;margin-top:.5rem">Get Started →</a>
+  <a href="submit-order.html" style="color:var(--teal);font-weight:700;margin-top:.5rem">Get Started →</a>
   <a href="track-order.html" id="mobTrackBtn" style="display:none;color:var(--teal);font-weight:700;border:1px solid rgba(0,245,200,.3);border-radius:var(--r);padding:.6rem 1rem;text-align:center;margin-top:.5rem">📊 Track Your Order →</a>
 </nav>
 
+<!-- PAYMENT SUCCESS BANNER (shown only after confirmed payment) -->
+<div id="paySuccessBanner" style="display:none;position:fixed;top:58px;left:0;right:0;z-index:399;background:rgba(0,245,200,.06);border-bottom:1px solid rgba(0,245,200,.18);backdrop-filter:blur(12px);padding:.5rem 5vw;align-items:center;justify-content:space-between;gap:.75rem;">
+  <div style="display:flex;align-items:center;gap:.6rem;min-width:0;">
+    <span style="font-size:.9rem;flex-shrink:0">🎉</span>
+    <span style="font-size:.78rem;font-weight:600;color:var(--teal);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="bannerOrderId">Payment confirmed — portfolio in progress</span>
+  </div>
+  <a href="track-order.html" style="display:inline-flex;align-items:center;gap:.3rem;background:var(--teal);color:#000;padding:.32rem .9rem;border-radius:var(--r);font-size:.72rem;font-weight:700;white-space:nowrap;flex-shrink:0;">Track →</a>
+</div>
 
 <!-- STICKY OFFER BAR -->
 <div id="sticky-bar">
@@ -2666,13 +2263,13 @@ section, footer, nav { overflow-x: hidden; }
           <span class="sticky-sub-dot"></span>
           <span class="sticky-sub-item"><span class="ssi-icon">🚀</span> Delivered in 24h</span>
           <span class="sticky-sub-dot"></span>
-          <span class="sticky-sub-item"><span class="ssi-icon">📦</span> Full source code included</span>
+          <span class="sticky-sub-item"><span class="ssi-icon">🔥</span> Only a few spots left!</span>
         </div>
       </div>
     </div>
 
     <!-- RIGHT: CTA -->
-    <a href="submit-order.html" class="sticky-cta" onclick="savePlan('starter')">
+    <a href="submit-order.html" class="sticky-cta">
       Grab This Deal <span class="cta-arrow">→</span>
     </a>
 
@@ -2707,22 +2304,18 @@ section, footer, nav { overflow-x: hidden; }
         <div class="trust-badge"><span class="icon">✅</span> 24h Delivery</div>
         <div class="trust-badge"><span class="icon">🔒</span> Secure Pay</div>
         <div class="trust-badge"><span class="icon">📦</span> Source Code</div>
-        <div class="trust-badge"><span class="icon">🔄</span>  s Included</div>
+        <div class="trust-badge"><span class="icon">🔄</span> Additional Revisions (₹15 each)</div>
       </div>
       <div class="hero-mini-stats rv d3">
         <div class="hms-item"><span class="hms-num">50+</span> portfolios built</div>
         <div class="hms-item"><span class="hms-num">₹49</span> starting price</div>
         <div class="hms-item"><span class="hms-num">24h</span> guaranteed</div>
       </div>
-      <a href="#our-work" class="hero-work-teaser rv d3">
-        🏆 <span>See real portfolios we've built</span> — for students like you
-        <span class="hero-work-teaser-arrow">→</span>
-      </a>
     </div>
 
     <!-- RIGHT: Interactive benefit cards -->
     <div class="hero-right rv d2">
-      <a href="submit-order.html" class="hero-benefit-card" onclick="savePlan('starter')">
+      <a href="submit-order.html" class="hero-benefit-card">
         <div class="hb-icon">🎯</div>
         <div class="hb-text">
           <div class="hb-title">Get internships faster</div>
@@ -2730,7 +2323,7 @@ section, footer, nav { overflow-x: hidden; }
         </div>
         <div class="hb-arrow">→</div>
       </a>
-      <a href="submit-order.html" class="hero-benefit-card" onclick="savePlan('starter')">
+      <a href="submit-order.html" class="hero-benefit-card">
         <div class="hb-icon">🏆</div>
         <div class="hb-text">
           <div class="hb-title">Stand out in placements</div>
@@ -2738,7 +2331,7 @@ section, footer, nav { overflow-x: hidden; }
         </div>
         <div class="hb-arrow">→</div>
       </a>
-      <a href="submit-order.html" class="hero-benefit-card" onclick="savePlan('starter')">
+      <a href="submit-order.html" class="hero-benefit-card">
         <div class="hb-icon">✨</div>
         <div class="hb-text">
           <div class="hb-title">Impress recruiters</div>
@@ -2753,21 +2346,21 @@ section, footer, nav { overflow-x: hidden; }
 
 <!-- MOBILE BENEFIT STRIP (visible only < 860px) -->
 <div class="mobile-benefit-strip" aria-hidden="true">
-  <a href="submit-order.html" class="mob-bcard" onclick="savePlan('starter')">
+  <a href="submit-order.html" class="mob-bcard">
     <div class="mob-bcard-icon">🎯</div>
     <div>
       <div class="mob-bcard-text">Get internships faster</div>
       <div class="mob-bcard-sub">Stand out with a portfolio site</div>
     </div>
   </a>
-  <a href="submit-order.html" class="mob-bcard" onclick="savePlan('starter')">
+  <a href="submit-order.html" class="mob-bcard">
     <div class="mob-bcard-icon">🏆</div>
     <div>
       <div class="mob-bcard-text">Stand out in placements</div>
       <div class="mob-bcard-sub">Show projects live to recruiters</div>
     </div>
   </a>
-  <a href="submit-order.html" class="mob-bcard" onclick="savePlan('starter')">
+  <a href="submit-order.html" class="mob-bcard">
     <div class="mob-bcard-icon">✨</div>
     <div>
       <div class="mob-bcard-text">Impress recruiters</div>
@@ -2778,25 +2371,23 @@ section, footer, nav { overflow-x: hidden; }
 
 <!-- TICKER -->
 <div class="ticker" aria-hidden="true">
-  <div class="ticker-inner">
-    <div class="ticker-track">
-      <span>Professional Design</span><span class="sep">◆</span>
-      <span>24 Hour Delivery</span><span class="sep">◆</span>
-      <span>Starting ₹49</span><span class="sep">◆</span>
-      <span>Mobile Optimized</span><span class="sep">◆</span>
-      <span>Source Code Included</span><span class="sep">◆</span>
-      <span>Deploy Ready</span><span class="sep">◆</span>
-      <span>Revisions Available</span><span class="sep">◆</span>
-      <span>100% Satisfaction</span><span class="sep">◆</span>
-      <span>Professional Design</span><span class="sep">◆</span>
-      <span>24 Hour Delivery</span><span class="sep">◆</span>
-      <span>Starting ₹49</span><span class="sep">◆</span>
-      <span>Mobile Optimized</span><span class="sep">◆</span>
-      <span>Source Code Included</span><span class="sep">◆</span>
-      <span>Deploy Ready</span><span class="sep">◆</span>
-      <span>Revisions Available</span><span class="sep">◆</span>
-      <span>100% Satisfaction</span><span class="sep">◆</span>
-    </div>
+  <div class="ticker-track">
+    <span>Professional Design</span><span class="sep"> ◆ </span>
+    <span>24 Hour Delivery</span><span class="sep"> ◆ </span>
+    <span>Starting ₹49</span><span class="sep"> ◆ </span>
+    <span>Mobile Optimized</span><span class="sep"> ◆ </span>
+    <span>Source Code Included</span><span class="sep"> ◆ </span>
+    <span>Deploy Ready</span><span class="sep"> ◆ </span>
+    <span>Additional Revisions (₹15 each)</span><span class="sep"> ◆ </span>
+    <span>100% Satisfaction</span><span class="sep"> ◆ </span>
+    <span>Professional Design</span><span class="sep"> ◆ </span>
+    <span>24 Hour Delivery</span><span class="sep"> ◆ </span>
+    <span>Starting ₹49</span><span class="sep"> ◆ </span>
+    <span>Mobile Optimized</span><span class="sep"> ◆ </span>
+    <span>Source Code Included</span><span class="sep"> ◆ </span>
+    <span>Deploy Ready</span><span class="sep"> ◆ </span>
+    <span>Additional Revisions (₹15 each)</span><span class="sep"> ◆ </span>
+    <span>100% Satisfaction</span><span class="sep"> ◆ </span>
   </div>
 </div>
 
@@ -2835,12 +2426,12 @@ section, footer, nav { overflow-x: hidden; }
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>Full source code ownership</div>
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>Deployment guide included</div>
         </div>
-        <a href="submit-order.html?plan=starter" class="pc-cta" onclick="savePlan('starter')">Get Started for ₹49 →</a>
-        <button onclick="openPortfolioGallery('starter')" class="pc-view-example" style="background:none;border:1px solid rgba(0,245,200,.25);cursor:pointer;width:100%;text-align:center;">View Examples ↗</button>
+        <a href="submit-order.html" class="pc-cta">Get Started for ₹49 →</a>
+        <a href="https://sujay1234-hub.github.io/Sujay-Banarjee/" target="_blank" class="pc-view-example">View Example ↗</a>
       </div>
     </div>
 
-    <!-- ₹139 — Best Value -->
+    <!-- ₹179 — Best Value -->
     <div class="pc pc-value rv d1">
       <div class="pc-badge-row">⭐ Best Value</div>
       <div class="pc-body">
@@ -2849,7 +2440,7 @@ section, footer, nav { overflow-x: hidden; }
         <div class="pc-tagline">// For those who want to stand out</div>
         <div class="pc-price-row">
           <div class="pc-currency" style="color:var(--amber)">₹</div>
-          <div class="pc-amount" style="color:var(--amber)">139</div>
+          <div class="pc-amount" style="color:var(--amber)">179</div>
           <div class="pc-note">one-time</div>
         </div>
         <div class="pc-old-price" style="text-decoration:line-through;color:var(--text3);opacity:1">Was ₹199</div>
@@ -2859,15 +2450,15 @@ section, footer, nav { overflow-x: hidden; }
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>Modern animated portfolio design</div>
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>Smooth scroll animations &amp; transitions</div>
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>Projects showcase with live links</div>
-          <div class="pc-feat"><div class="pc-feat-icon">✓</div>1   round included</div>
+          <div class="pc-feat"><div class="pc-feat-icon">✓</div>1 Additional Revisions (₹15 each) round included</div>
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>Full source code + deployment ready</div>
         </div>
-        <a href="submit-order.html?plan=pro" class="pc-cta" onclick="savePlan('pro')">Get Best Value →</a>
-        <button onclick="openPortfolioGallery('pro')" class="pc-view-example" style="background:none;border:1px solid rgba(245,158,11,.3);color:var(--amber);cursor:pointer;width:100%;text-align:center;">View Examples ↗</button>
+        <a href="submit-order.html" class="pc-cta">Get Best Value →</a>
+        <a href="https://sujay-portfolio-git-main-sujay1234-hubs-projects.vercel.app/" target="_blank" class="pc-view-example" style="border-color:rgba(245,158,11,.3);color:var(--amber)">View Example ↗</a>
       </div>
     </div>
 
-    <!-- ₹299 — Premium -->
+    <!-- ₹449 — Premium -->
     <div class="pc pc-premium rv d2">
       <div class="pc-badge-row">💎 Premium</div>
       <div class="pc-body">
@@ -2876,21 +2467,21 @@ section, footer, nav { overflow-x: hidden; }
         <div class="pc-tagline">// Maximum impact</div>
         <div class="pc-price-row">
           <div class="pc-currency" style="color:#c4b5fd">₹</div>
-          <div class="pc-amount" style="color:#c4b5fd">299</div>
+          <div class="pc-amount" style="color:#c4b5fd">449</div>
           <div class="pc-note">one-time</div>
         </div>
-        <div class="pc-old-price" style="text-decoration:line-through;color:var(--text3);opacity:1">Was ₹599</div>
+        <div class="pc-old-price" style="opacity:.6">&nbsp;</div>
         <div class="pc-delivery">⚡ Delivered in 24h</div>
         <div class="pc-divider"></div>
         <div class="pc-features">
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>Advanced portfolio with 3D animations</div>
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>GitHub integration &amp; live repo stats</div>
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>Multiple custom sections + blog-ready</div>
-          <div class="pc-feat"><div class="pc-feat-icon">✓</div>2   rounds included</div>
+          <div class="pc-feat"><div class="pc-feat-icon">✓</div>2 Additional Revisions (₹15 each) rounds included</div>
           <div class="pc-feat"><div class="pc-feat-icon">✓</div>Vercel / Netlify deployment assistance</div>
         </div>
-        <a href="submit-order.html?plan=premium" class="pc-cta" onclick="savePlan('premium')">Go Premium →</a>
-        <button onclick="openPortfolioGallery('premium')" class="pc-view-example" style="background:none;border:1px solid rgba(139,92,246,.3);color:#c4b5fd;cursor:pointer;width:100%;text-align:center;">View Examples ↗</button>
+        <a href="submit-order.html" class="pc-cta">Go Premium →</a>
+        <a href="https://sujay-banarjee-portfolio.vercel.app/" target="_blank" class="pc-view-example" style="border-color:rgba(139,92,246,.3);color:#c4b5fd">View Example ↗</a>
       </div>
     </div>
 
@@ -2907,7 +2498,7 @@ section, footer, nav { overflow-x: hidden; }
       <div style="display:inline-flex;align-items:center;gap:.4rem;font-family:var(--font-mono);font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);background:rgba(0,245,200,.1);border:1px solid rgba(0,245,200,.22);border-radius:100px;padding:.18rem .75rem;margin-bottom:.65rem;">
         ✏️ &nbsp;Add-On Available
       </div>
-      <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:.28rem;line-height:1.25;">Need Changes After Delivery?</div>
+      <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:.28rem;line-height:1.25;">Need Changes to Your Portfolio?</div>
       <div style="font-size:.84rem;color:var(--text2);font-weight:300;line-height:1.6;">Already ordered with us? Request a revision — update content, layout, colours, or add certificate showcases &amp; more.</div>
     </div>
 
@@ -2924,838 +2515,7 @@ section, footer, nav { overflow-x: hidden; }
 
 <!-- offer section removed -->
 
-<!-- ═══════════════════════════════════════════
-   EXAMPLES SECTION — dynamic portfolio cards
-══════════════════════════════════════════ -->
-<style>
-/* ── Examples Section overrides / extensions ── */
-.examples-sec {
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 5rem clamp(1.5rem,5vw,3rem) 5.5rem;
-}
-.examples-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-top: 2.75rem;
-}
-@media (max-width: 900px) {
-  .examples-grid { grid-template-columns: repeat(2, 1fr); gap: 1.1rem; }
-}
-@media (max-width: 540px) {
-  .examples-grid { grid-template-columns: 1fr; gap: 1rem; }
-}
-
-/* Card */
-.ex-card {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  padding: 1.75rem 1.6rem 1.65rem;
-  display: flex;
-  flex-direction: column;
-  gap: .85rem;
-  cursor: pointer;
-  transition: transform .32s cubic-bezier(.22,.68,0,1.2),
-              border-color .28s ease,
-              box-shadow .32s ease;
-  /* fade-in on load */
-  opacity: 0;
-  transform: translateY(18px);
-  animation: exCardIn .5s ease forwards;
-}
-@keyframes exCardIn {
-  to { opacity:1; transform:translateY(0); }
-}
-/* top accent line */
-.ex-card::before {
-  content:'';
-  position:absolute; top:0; left:0; right:0; height:2px;
-  background: linear-gradient(90deg, transparent, var(--teal), transparent);
-  opacity:0;
-  transition: opacity .3s ease;
-}
-.ex-card:hover::before { opacity:1; }
-.ex-card:hover {
-  transform: translateY(-8px) scale(1.012);
-  border-color: rgba(0,245,200,.4);
-  box-shadow: 0 20px 56px rgba(0,245,200,.1), 0 0 0 1px rgba(0,245,200,.1);
-}
-
-/* Icon */
-.ex-icon {
-  width: 44px; height: 44px; border-radius: 12px;
-  background: var(--teal-dim);
-  border: 1px solid rgba(0,245,200,.18);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.25rem;
-  flex-shrink: 0;
-  transition: transform .3s ease, background .3s ease;
-}
-.ex-card:hover .ex-icon {
-  transform: scale(1.1) rotate(-5deg);
-  background: rgba(0,245,200,.18);
-}
-
-/* Top row */
-.ex-top { display:flex; align-items:center; gap:.75rem; }
-.ex-program {
-  font-family: var(--font-display);
-  font-size: 1.1rem; font-weight: 700;
-  color: var(--text);
-  letter-spacing: -.015em;
-  line-height: 1.25;
-  flex:1;
-}
-
-/* Price badge */
-.ex-price-badge {
-  font-family: var(--font-mono);
-  font-size: .7rem; font-weight: 700;
-  letter-spacing: .04em;
-  padding: .22rem .7rem;
-  border-radius: 100px;
-  white-space: nowrap;
-  flex-shrink:0;
-}
-.ex-price-badge.tier-basic    { background: rgba(0,245,200,.1);  border:1px solid rgba(0,245,200,.25);  color: var(--teal); }
-.ex-price-badge.tier-standard { background: rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.25); color: var(--amber); }
-.ex-price-badge.tier-pro      { background: rgba(139,92,246,.1); border:1px solid rgba(139,92,246,.25); color: #c4b5fd; }
-
-/* Price display */
-.ex-price-line {
-  font-family: var(--font-mono);
-  font-size: .75rem; color: var(--text3);
-  letter-spacing:.02em;
-}
-.ex-price-line strong { color: var(--teal); font-size: 1rem; font-weight:700; }
-
-/* CTA button */
-.ex-btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
-  padding: .65rem 1.1rem;
-  border-radius: var(--r);
-  font-size: .8rem; font-weight: 700; letter-spacing: .02em;
-  border: none; cursor: pointer; text-decoration: none;
-  transition: box-shadow .25s ease, transform .25s ease, opacity .2s ease;
-  margin-top: auto;
-}
-.ex-btn.live {
-  background: linear-gradient(135deg, var(--teal), var(--teal2));
-  color: #000;
-}
-.ex-btn.live:hover {
-  box-shadow: 0 0 24px rgba(0,245,200,.4);
-  transform: translateY(-2px);
-}
-.ex-btn.coming {
-  background: rgba(255,255,255,.04);
-  border: 1px solid var(--border2);
-  color: var(--text3);
-  cursor: default;
-  pointer-events: none;
-}
-
-/* Section header */
-.examples-header {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  flex-wrap: wrap; gap: 1rem;
-}
-.examples-header .sec-tag { margin-bottom:.5rem; }
-.examples-show-all {
-  display: inline-flex; align-items:center; gap:.4rem;
-  font-size: .8rem; font-weight: 600; color: var(--teal);
-  background: var(--teal-dim);
-  border: 1px solid rgba(0,245,200,.25);
-  padding: .45rem 1.1rem; border-radius: 100px;
-  cursor: pointer; transition: background .2s, box-shadow .2s;
-  white-space:nowrap;
-  border: none;
-}
-.examples-show-all:hover { background: rgba(0,245,200,.18); box-shadow: 0 0 16px rgba(0,245,200,.18); }
-</style>
-
-<section class="examples-sec" id="examples">
-  <div class="examples-header rv">
-    <div>
-      <div class="sec-tag">02 — Real Work</div>
-      <h2 class="sec-h">Portfolio <span class="g">Examples</span></h2>
-      <p class="sec-sub" style="margin-top:.5rem">Every card below is a real, live portfolio — click to preview it.</p>
-    </div>
-    <button class="examples-show-all" onclick="openPortfolioGallery('pro')">Browse All ↗</button>
-  </div>
-
-  <div class="examples-grid" id="examples-grid">
-    <!-- Rendered by JS below -->
-  </div>
-</section>
-
-<script>
-(function renderExamples() {
-  /* reuse the PORTFOLIOS array defined in the gallery script below.
-     If this script runs before it, queue for DOMContentLoaded.       */
-  function build() {
-    const grid = document.getElementById('examples-grid');
-    if (!grid || typeof PORTFOLIOS === 'undefined') return;
-
-    function tier(price) {
-      if (price <= 49)  return 'basic';
-      if (price >= 449) return 'pro';
-      return 'standard';
-    }
-    function tierBadgeLabel(t) {
-      return { basic: '₹49 · Basic', standard: '₹179 · Standard', pro: '₹449 · Pro' }[t];
-    }
-
-    grid.innerHTML = PORTFOLIOS.map((p, i) => {
-      const t      = tier(p.price);
-      const isLive = !!p.link;
-      return `
-      <div class="ex-card rv" style="animation-delay:${i * 0.05}s"
-           onclick="${isLive ? `window.open('${p.link}','_blank')` : ''}">
-        <div class="ex-top">
-          <div class="ex-icon">${p.icon}</div>
-          <div class="ex-program">${p.program}</div>
-          <span class="ex-price-badge tier-${t}">${tierBadgeLabel(t)}</span>
-        </div>
-        <div class="ex-price-line">Starting at <strong>₹${p.price}</strong></div>
-        ${isLive
-          ? `<a href="${p.link}" target="_blank" rel="noopener" class="ex-btn live" onclick="event.stopPropagation()">↗ View Portfolio</a>`
-          : `<button class="ex-btn coming" disabled>🔜 Coming Soon</button>`}
-      </div>`;
-    }).join('');
-  }
-
-  /* PORTFOLIOS is defined later in the page — wait for it */
-  function tryBuild() {
-    if (typeof PORTFOLIOS !== 'undefined') { build(); }
-    else { setTimeout(tryBuild, 30); }
-  }
-  tryBuild();
-})();
-</script>
-
-<!-- ═══════════════════════════════════════════
-   OUR WORK CSS
-══════════════════════════════════════════ -->
-<style>
-/* ── Our Work Section ── */
-.ourwork-section {
-  position: relative;
-  padding: 6rem 4vw 7rem;
-  overflow: hidden;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-/* Premium ambient glow - more subtle and professional */
-.ourwork-section::before {
-  content: '';
-  position: absolute;
-  top: -150px; left: 50%;
-  transform: translateX(-50%);
-  width: 1000px; height: 600px;
-  background: radial-gradient(ellipse at center,
-    rgba(0,245,200,.045) 0%,
-    rgba(139,92,246,.03) 40%,
-    transparent 70%);
-  pointer-events: none; z-index: 0;
-}
-/* Subtle bottom-right glow */
-.ourwork-section::after {
-  content: '';
-  position: absolute;
-  bottom: -120px; right: -100px;
-  width: 600px; height: 600px;
-  background: radial-gradient(ellipse, rgba(139,92,246,.035), transparent 55%);
-  pointer-events: none; z-index: 0;
-}
-
-/* Hero Work Banner — full-width "tease" above the grid */
-.ourwork-hero-banner {
-  position: relative; z-index: 1;
-  max-width: 1140px; margin: 0 auto 4rem;
-  background: linear-gradient(145deg, rgba(0,245,200,.04) 0%, rgba(139,92,246,.025) 50%, rgba(0,245,200,.02) 100%);
-  border: 1px solid rgba(0,245,200,.12);
-  border-radius: var(--r-xl);
-  padding: 2.5rem 3rem;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 2rem; flex-wrap: wrap;
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-}
-.ourwork-hero-banner::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent 5%, var(--teal) 40%, #8b5cf6 70%, transparent 95%);
-}
-.ourwork-hero-banner::after {
-  content: '';
-  position: absolute; top: -50%; left: -30%; width: 160%; height: 200%;
-  background: radial-gradient(ellipse at 30% 50%, rgba(0,245,200,.03) 0%, transparent 50%);
-  pointer-events: none;
-}
-.owb-left { flex: 1; min-width: 280px; position: relative; z-index: 1; }
-.owb-tag {
-  display: inline-flex; align-items: center; gap: .45rem;
-  font-family: var(--font-mono); font-size: .6rem; font-weight: 700;
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--teal); background: var(--teal-dim);
-  border: 1px solid rgba(0,245,200,.15); padding: .32rem .9rem;
-  border-radius: 100px; margin-bottom: 1.1rem;
-}
-.owb-tag::before {
-  content: ''; width: 5px; height: 5px; border-radius: 50%;
-  background: var(--teal); box-shadow: 0 0 8px var(--teal);
-  animation: pulse 2s ease-in-out infinite;
-}
-.owb-title {
-  font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-weight: 800; letter-spacing: -.03em; line-height: 1.15;
-  color: var(--text); margin-bottom: .65rem;
-}
-.owb-title span { color: var(--teal); }
-.owb-sub { font-size: .9rem; color: var(--text2); line-height: 1.65; max-width: 500px; }
-.owb-stats {
-  display: flex; gap: 2.2rem; flex-wrap: wrap; flex-shrink: 0;
-  position: relative; z-index: 1;
-}
-.owb-stat { text-align: center; position: relative; }
-.owb-stat::after {
-  content: ''; position: absolute; right: -1.1rem; top: 50%; transform: translateY(-50%);
-  width: 1px; height: 28px; background: var(--border);
-}
-.owb-stat:last-child::after { display: none; }
-.owb-stat-num {
-  font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
-  color: var(--teal); letter-spacing: -.04em; line-height: 1;
-}
-.owb-stat-lbl {
-  font-family: var(--font-mono); font-size: .56rem; color: var(--text3);
-  letter-spacing: .1em; text-transform: uppercase; margin-top: .25rem;
-}
-.owb-cta {
-  display: inline-flex; align-items: center; gap: .5rem;
-  background: var(--teal); color: #000;
-  padding: .6rem 1.3rem; border-radius: var(--r);
-  font-size: .8rem; font-weight: 700; letter-spacing: .02em;
-  transition: box-shadow .2s, transform .2s;
-  margin-top: 1rem;
-}
-.owb-cta:hover { box-shadow: 0 0 28px rgba(0,245,200,.35); transform: translateY(-2px); }
-@media (max-width: 768px) {
-  .ourwork-hero-banner { padding: 1.75rem 1.5rem; }
-  .owb-stats { gap: 1.25rem; justify-content: flex-start; }
-  .owb-stat::after { display: none; }
-  .owb-stat-num { font-size: 1.8rem; }
-  .owb-stat { text-align: left; }
-}
-
-/* Section Header */
-.ourwork-header {
-  position: relative; z-index: 1;
-  text-align: center; max-width: 580px;
-  margin: 0 auto 2.5rem;
-}
-.ourwork-eyebrow {
-  display: inline-flex; align-items: center; gap: .5rem;
-  font-family: var(--font-mono); font-size: .62rem; font-weight: 600;
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--teal); background: var(--teal-dim);
-  border: 1px solid rgba(0,245,200,.12); padding: .35rem .95rem;
-  border-radius: 100px; margin-bottom: 1.25rem;
-}
-.ourwork-eyebrow::before {
-  content: ''; width: 5px; height: 5px; border-radius: 50%;
-  background: var(--teal); box-shadow: 0 0 8px var(--teal);
-  animation: pulse 2s ease-in-out infinite;
-}
-.ourwork-title {
-  font-family: var(--font-display); font-size: clamp(1.9rem, 4vw, 2.75rem);
-  font-weight: 800; letter-spacing: -.03em; line-height: 1.12;
-  color: var(--text); margin-bottom: .8rem;
-}
-.ourwork-title .accent { color: var(--teal); }
-.ourwork-sub {
-  font-size: .97rem; color: var(--text2); line-height: 1.6;
-}
-
-/* Premium Filter tabs */
-.ow-filter-row {
-  position: relative; z-index: 1;
-  display: flex; align-items: center; justify-content: center;
-  gap: .4rem; flex-wrap: wrap; margin-bottom: 3rem;
-  background: var(--surface);
-  padding: .4rem;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-}
-.ow-filter-btn {
-  font-family: var(--font-body); font-size: .75rem; font-weight: 600;
-  padding: .45rem 1.1rem; border-radius: 10px; border: none;
-  background: transparent; color: var(--text2); cursor: pointer;
-  transition: all .25s ease; letter-spacing: .01em;
-}
-.ow-filter-btn:hover { color: var(--text); background: var(--bg2); }
-.ow-filter-btn.active {
-  background: var(--teal); color: #000;
-  box-shadow: 0 2px 12px rgba(0,245,200,.3);
-}
-
-/* Grid */
-.ow-grid {
-  position: relative; z-index: 1;
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem; max-width: 1140px; margin: 0 auto;
-}
-@media (max-width: 960px) { .ow-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 580px) { .ow-grid { grid-template-columns: 1fr; } }
-
-/* Premium Card */
-.ow-card {
-  position: relative; background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r-xl); padding: 1.75rem 1.6rem 1.5rem;
-  display: flex; flex-direction: column; overflow: hidden; cursor: pointer;
-  transition: transform .28s cubic-bezier(.34,1.56,.64,1), box-shadow .28s ease, border-color .28s ease;
-  opacity: 0; transform: translateY(24px);
-  animation: owCardIn .55s cubic-bezier(.34,1.2,.64,1) forwards;
-}
-.ow-card:nth-child(1) { animation-delay: .6s; }
-.ow-card:nth-child(2) { animation-delay: .72s; }
-.ow-card:nth-child(3) { animation-delay: .84s; }
-.ow-card:nth-child(4) { animation-delay: .96s; }
-.ow-card:nth-child(5) { animation-delay: 1.08s; }
-.ow-card:nth-child(6) { animation-delay: 1.2s; }
-@keyframes owCardIn { to { opacity: 1; transform: translateY(0); } }
-
-.ow-card:hover {
-  transform: translateY(-6px) scale(1.012);
-  box-shadow: 0 24px 64px rgba(0,0,0,.45), 0 0 0 1px rgba(0,245,200,.08);
-  border-color: rgba(0,245,200,.2);
-}
-.ow-card::before {
-  content: '';
-  position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--teal), transparent);
-  opacity: 0; transition: opacity .3s ease;
-}
-.ow-card:hover::before { opacity: 1; }
-.ow-card::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at top left, rgba(0,245,200,.035), transparent 60%);
-  pointer-events: none; border-radius: inherit; opacity: 0; transition: opacity .3s;
-}
-.ow-card:hover::after { opacity: 1; }
-
-/* Card internals */
-.ow-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.1rem; }
-.ow-avatar {
-  width: 48px; height: 48px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.15rem; font-weight: 700; font-family: var(--font-display);
-  flex-shrink: 0; border: 2px solid var(--border); 
-  background: var(--surface2); color: var(--teal);
-  transition: border-color .25s, box-shadow .25s;
-}
-.ow-card:hover .ow-avatar { 
-  border-color: rgba(0,245,200,.4); 
-  box-shadow: 0 0 16px rgba(0,245,200,.15);
-}
-.ow-badge {
-  display: inline-flex; align-items: center; gap: .35rem;
-  font-family: var(--font-mono); font-size: .55rem; font-weight: 600;
-  letter-spacing: .09em; text-transform: uppercase; padding: .28rem .75rem;
-  border-radius: 100px; white-space: nowrap;
-}
-.ow-badge-internship { background: rgba(34,197,94,.1); color: #22c55e; border: 1px solid rgba(34,197,94,.18); }
-.ow-badge-freelancer  { background: rgba(245,158,11,.1); color: #f59e0b; border: 1px solid rgba(245,158,11,.18); }
-.ow-badge-placed      { background: rgba(139,92,246,.1); color: #8b5cf6; border: 1px solid rgba(139,92,246,.18); }
-.ow-badge-remote      { background: rgba(56,189,248,.08);  color: #38bdf8; border: 1px solid rgba(56,189,248,.15); }
-.ow-badge-offer       { background: rgba(244,63,94,.1);  color: #f43f5e; border: 1px solid rgba(244,63,94,.18); }
-
-.ow-name {
-  font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
-  letter-spacing: -.02em; color: var(--text); margin-bottom: .2rem; line-height: 1.2;
-}
-.ow-role {
-  display: inline-flex; align-items: center; gap: .45rem;
-  font-size: .73rem; font-weight: 500; color: var(--teal);
-  font-family: var(--font-mono); margin-bottom: .9rem;
-}
-.ow-role-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--teal); opacity: .5; }
-.ow-desc {
-  font-size: .84rem; color: var(--text2); line-height: 1.6;
-  flex-grow: 1; margin-bottom: 1.5rem; min-height: 2.4em;
-}
-.ow-divider {
-  height: 1px; background: linear-gradient(90deg, var(--border) 0%, transparent 100%); 
-  margin-bottom: 1.2rem;
-  transition: background .25s;
-}
-.ow-card:hover .ow-divider { background: linear-gradient(90deg, rgba(0,245,200,.2) 0%, transparent 100%); }
-.ow-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: 1.5rem; }
-.ow-tag {
-  font-family: var(--font-mono); font-size: .58rem; font-weight: 500;
-  color: var(--text3); background: var(--bg2); border: 1px solid var(--border);
-  padding: .25rem .6rem; border-radius: 6px; letter-spacing .03em;
-  transition: color .2s, border-color .2s, background .2s;
-}
-.ow-card:hover .ow-tag { color: var(--text2); border-color: var(--border2); background: var(--bg3); }
-.ow-btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  font-size: .8rem; font-weight: 700; font-family: var(--font-body);
-  letter-spacing: .02em; color: #000; background: var(--teal);
-  border-radius: var(--r); padding: .65rem 1.3rem; width: 100%;
-  transition: box-shadow .25s, transform .2s;
-  position: relative; z-index: 1;
-}
-.ow-btn svg { transition: transform .25s cubic-bezier(.34,1.56,.64,1); }
-.ow-card:hover .ow-btn { box-shadow: 0 4px 20px rgba(0,245,200,.3); transform: translateY(-2px); }
-.ow-card:hover .ow-btn svg { transform: translateX(4px); }
-
-[data-theme="light"] .ow-card { background: var(--surface); box-shadow: 0 2px 16px rgba(0,0,0,.04); }
-[data-theme="light"] .ow-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,.08), 0 0 0 1px rgba(0,200,160,.12); }
-[data-theme="light"] .ow-tag { background: var(--bg); }
-[data-theme="light"] .ow-avatar { background: var(--bg2); }
-
-/* Premium Bottom CTA */
-.ow-footer {
-  position: relative; z-index: 1;
-  text-align: center; margin-top: 4rem;
-  padding: 2.5rem; 
-  background: linear-gradient(135deg, rgba(0,245,200,.04) 0%, rgba(139,92,246,.025) 100%);
-  border: 1px solid rgba(0,245,200,.1);
-  border-radius: var(--r-xl);
-}
-.ow-footer::before {
-  content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,245,200,.3), transparent);
-}
-.ow-footer p { font-size: .9rem; color: var(--text2); margin-bottom: 1.5rem; }
-.ow-footer p span { color: var(--text); font-weight: 500; }
-.ow-footer-btns { display: flex; align-items: center; justify-content: center; gap: .85rem; flex-wrap: wrap; }
-.ow-btn-primary {
-  display: inline-flex; align-items: center; gap: .5rem;
-  font-size: .85rem; font-weight: 700; letter-spacing: .02em;
-  color: #000; background: var(--teal); padding: .75rem 2rem;
-  border-radius: var(--r); transition: box-shadow .2s, transform .2s;
-}
-.ow-btn-primary:hover { box-shadow: 0 4px 24px rgba(0,245,200,.35); transform: translateY(-2px); }
-.ow-btn-ghost {
-  display: inline-flex; align-items: center; gap: .5rem;
-  font-size: .85rem; font-weight: 600; color: var(--text2);
-  border: 1px solid var(--border); background: var(--surface);
-  padding: .73rem 1.6rem; border-radius: var(--r);
-  transition: border-color .2s, color .2s, transform .2s, background .2s;
-}
-.ow-btn-ghost:hover { border-color: var(--border2); color: var(--text); background: var(--surface2); transform: translateY(-2px); }
-
-/* Hero section "Our Work" teaser link */
-.hero-work-teaser {
-  display: inline-flex; align-items: center; gap: .6rem;
-  margin-top: 1.5rem; padding: .7rem 1.25rem;
-  background: rgba(0,245,200,.06); border: 1px solid rgba(0,245,200,.2);
-  border-radius: var(--r-lg); font-size: .82rem; font-weight: 600;
-  color: var(--teal); text-decoration: none;
-  transition: background .2s, transform .2s, box-shadow .2s;
-}
-.hero-work-teaser:hover { background: rgba(0,245,200,.12); transform: translateY(-2px); box-shadow: 0 0 24px rgba(0,245,200,.15); }
-.hero-work-teaser span { color: var(--text2); font-weight: 400; }
-.hero-work-teaser-arrow { transition: transform .25s cubic-bezier(.34,1.56,.64,1); }
-.hero-work-teaser:hover .hero-work-teaser-arrow { transform: translateX(4px); }
-
-/* "Our Work" inline highlight strip between pricing and work section */
-.work-transition-strip {
-  background: linear-gradient(135deg, rgba(0,245,200,.03) 0%, rgba(139,92,246,.02) 100%);
-  border-top: 1px solid rgba(0,245,200,.08);
-  border-bottom: 1px solid rgba(0,245,200,.08);
-  padding: 2.25rem 4vw;
-  text-align: center;
-  position: relative;
-}
-.work-transition-strip::before {
-  content: ''; position: absolute; top: 0; left: 30%; right: 30%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,245,200,.2), transparent);
-}
-.wts-inner {
-  max-width: 720px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: center;
-  gap: 1.25rem; flex-wrap: wrap;
-}
-.wts-text {
-  font-family: var(--font-display); font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: 600; color: var(--text); letter-spacing: -.01em; line-height: 1.5;
-}
-.wts-text em { font-style: normal; color: var(--teal); }
-.wts-arrow-btn {
-  display: inline-flex; align-items: center; gap: .5rem;
-  background: var(--teal); color: #000;
-  padding: .6rem 1.5rem; border-radius: var(--r);
-  font-size: .82rem; font-weight: 700; letter-spacing: .02em;
-  transition: box-shadow .2s, transform .2s; white-space: nowrap;
-  box-shadow: 0 2px 16px rgba(0,245,200,.25);
-}
-.wts-arrow-btn:hover { box-shadow: 0 4px 28px rgba(0,245,200,.4); transform: translateY(-2px); }
-</style>
-
-<!-- Transition strip: guides eye from pricing → our work -->
-<div class="work-transition-strip">
-  <div class="wts-inner">
-    <div class="wts-text">Want to see the <em>real results</em>? Check out portfolios we've built for students just like you.</div>
-    <a href="#our-work" class="wts-arrow-btn">See Our Work ↓</a>
-  </div>
-</div>
-
-<!-- ═══ OUR WORK SECTION ═══ -->
-<section class="ourwork-section" id="our-work">
-
-  <!-- Hero Banner -->
-  <div class="ourwork-hero-banner">
-    <div class="owb-left">
-      <div class="owb-tag">Real Student Work</div>
-      <div class="owb-title">Portfolios That <span>Got Results</span></div>
-      <p class="owb-sub">These aren't mock-ups. These are live portfolio sites we hand-coded for real students — who used them to land internships, freelance gigs, and full-time jobs.</p>
-    </div>
-    <div class="owb-stats">
-      <div class="owb-stat">
-        <div class="owb-stat-num">50+</div>
-        <div class="owb-stat-lbl">Portfolios Built</div>
-      </div>
-      <div class="owb-stat">
-        <div class="owb-stat-num">100%</div>
-        <div class="owb-stat-lbl">Satisfaction</div>
-      </div>
-      <div class="owb-stat">
-        <div class="owb-stat-num">24h</div>
-        <div class="owb-stat-lbl">Delivery</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Header -->
-  <div class="ourwork-header">
-    <div class="ourwork-eyebrow">Explore Real Portfolios</div>
-    <h2 class="ourwork-title">Our <span class="accent">Work</span> Speaks for Itself</h2>
-    <p class="ourwork-sub">Live, polished websites we've built for students — designed to impress recruiters and win opportunities.</p>
-  </div>
-
-  <!-- Trust Badges -->
-  <div class="ow-trust-row" style="display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:2.5rem;position:relative;z-index:1;">
-    <div style="display:flex;align-items:center;gap:.5rem;color:var(--text2);font-size:.78rem;font-weight:500;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      <span>100% Original Code</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:.5rem;color:var(--text2);font-size:.78rem;font-weight:500;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      <span>Verified Results</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:.5rem;color:var(--text2);font-size:.78rem;font-weight:500;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      <span>24h Delivery</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:.5rem;color:var(--text2);font-size:.78rem;font-weight:500;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      <span> Revision Available</span>
-    </div>
-  </div>
-
-  <!-- Filter tabs -->
-  
-
-  <!-- Cards Grid -->
-  <div class="ow-grid" id="owGrid">
-
-    <!-- Card 1 -->
-    <div class="ow-card" data-owcat="internship">
-      <div class="ow-card-top">
-        <div class="ow-avatar" style="background:linear-gradient(135deg,#0a1a14,#0e2a20);color:var(--teal)">AK</div>
-        <span class="ow-badge ow-badge-internship">
-          <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="4"/></svg>
-          Got Internship
-        </span>
-      </div>
-      <div class="ow-name">Aryan Kapoor</div>
-      <div class="ow-role"><span class="ow-role-dot"></span>CSE Student · IIT Indore</div>
-      <p class="ow-desc">Full-stack developer portfolio with live projects, GitHub stats, and an interactive terminal.</p>
-      <div class="ow-divider"></div>
-      <div class="ow-tags">
-        <span class="ow-tag">React</span><span class="ow-tag">Node.js</span><span class="ow-tag">MongoDB</span><span class="ow-tag">Tailwind</span>
-      </div>
-      <a href="https://aryankapoor.dev" target="_blank" rel="noopener noreferrer" class="ow-btn">
-        View Portfolio
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-      </a>
-    </div>
-
-    <!-- Card 2 -->
-    <div class="ow-card" data-owcat="freelancer">
-      <div class="ow-card-top">
-        <div class="ow-avatar" style="background:linear-gradient(135deg,#1a120a,#2a1c0e);color:var(--amber)">SM</div>
-        <span class="ow-badge ow-badge-freelancer">
-          <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="4"/></svg>
-          Freelancer
-        </span>
-      </div>
-      <div class="ow-name">Sana Mirza</div>
-      <div class="ow-role"><span class="ow-role-dot"></span>UI/UX Designer · NIFT Delhi</div>
-      <p class="ow-desc">Minimal design portfolio with case studies, Figma embeds, and a curated project gallery.</p>
-      <div class="ow-divider"></div>
-      <div class="ow-tags">
-        <span class="ow-tag">Figma</span><span class="ow-tag">UI/UX</span><span class="ow-tag">Webflow</span><span class="ow-tag">Prototyping</span>
-      </div>
-      <a href="https://sanamirza.design" target="_blank" rel="noopener noreferrer" class="ow-btn">
-        View Portfolio
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-      </a>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="ow-card" data-owcat="placed">
-      <div class="ow-card-top">
-        <div class="ow-avatar" style="background:linear-gradient(135deg,#120a1a,#1c0e2a);color:#8b5cf6">RV</div>
-        <span class="ow-badge ow-badge-placed">
-          <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="4"/></svg>
-          Placed @ Wipro
-        </span>
-      </div>
-      <div class="ow-name">Rohan Verma</div>
-      <div class="ow-role"><span class="ow-role-dot"></span>Data Science · VIT Vellore</div>
-      <p class="ow-desc">Data-driven portfolio with ML project demos, interactive charts, and a blog section.</p>
-      <div class="ow-divider"></div>
-      <div class="ow-tags">
-        <span class="ow-tag">Python</span><span class="ow-tag">TensorFlow</span><span class="ow-tag">D3.js</span><span class="ow-tag">Jupyter</span>
-      </div>
-      <a href="https://rohanverma.ml" target="_blank" rel="noopener noreferrer" class="ow-btn">
-        View Portfolio
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-      </a>
-    </div>
-
-    <!-- Card 4 -->
-    <div class="ow-card" data-owcat="internship">
-      <div class="ow-card-top">
-        <div class="ow-avatar" style="background:linear-gradient(135deg,#0a1220,#0e1c30);color:#38bdf8">PS</div>
-        <span class="ow-badge ow-badge-internship">
-          <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="4"/></svg>
-          Got Internship
-        </span>
-      </div>
-      <div class="ow-name">Priya Sharma</div>
-      <div class="ow-role"><span class="ow-role-dot"></span>Frontend Dev · BITS Pilani</div>
-      <p class="ow-desc">Creative developer portfolio with 3D elements, smooth scroll animations, and dark mode.</p>
-      <div class="ow-divider"></div>
-      <div class="ow-tags">
-        <span class="ow-tag">Three.js</span><span class="ow-tag">GSAP</span><span class="ow-tag">Vue</span><span class="ow-tag">CSS Art</span>
-      </div>
-      <a href="https://priyasharma.dev" target="_blank" rel="noopener noreferrer" class="ow-btn">
-        View Portfolio
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-      </a>
-    </div>
-
-    <!-- Card 5 -->
-    <div class="ow-card" data-owcat="remote">
-      <div class="ow-card-top">
-        <div class="ow-avatar" style="background:linear-gradient(135deg,#1a0a12,#2a0e1c);color:#f43f5e">NK</div>
-        <span class="ow-badge ow-badge-remote">
-          <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="4"/></svg>
-          Remote @ Toptal
-        </span>
-      </div>
-      <div class="ow-name">Nikhil Kumar</div>
-      <div class="ow-role"><span class="ow-role-dot"></span>Backend Dev · NIT Trichy</div>
-      <p class="ow-desc">Systems-focused portfolio highlighting API design, open-source contributions, and DevOps work.</p>
-      <div class="ow-divider"></div>
-      <div class="ow-tags">
-        <span class="ow-tag">Go</span><span class="ow-tag">Docker</span><span class="ow-tag">AWS</span><span class="ow-tag">PostgreSQL</span>
-      </div>
-      <a href="https://nikhilkumar.io" target="_blank" rel="noopener noreferrer" class="ow-btn">
-        View Portfolio
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-      </a>
-    </div>
-
-    <!-- Card 6 -->
-    <div class="ow-card" data-owcat="freelancer">
-      <div class="ow-card-top">
-        <div class="ow-avatar" style="background:linear-gradient(135deg,#0a1a0e,#0e2614);color:#22c55e">DP</div>
-        <span class="ow-badge ow-badge-freelancer">
-          <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="4"/></svg>
-          Freelancer
-        </span>
-      </div>
-      <div class="ow-name">Divya Pandey</div>
-      <div class="ow-role"><span class="ow-role-dot"></span>Content + Dev · Jadavpur Univ</div>
-      <p class="ow-desc">Personal brand site blending writing, micro-projects, and a newsletter with 2k+ subscribers.</p>
-      <div class="ow-divider"></div>
-      <div class="ow-tags">
-        <span class="ow-tag">Next.js</span><span class="ow-tag">MDX</span><span class="ow-tag">SEO</span><span class="ow-tag">ConvertKit</span>
-      </div>
-      <a href="https://divyapandey.me" target="_blank" rel="noopener noreferrer" class="ow-btn">
-        View Portfolio
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-      </a>
-    </div>
-
-  </div><!-- /grid -->
-
-  <!-- Bottom CTA -->
-  <div class="ow-footer">
-    <p>Want yours to look this good? <span>We'll build it in 24 hours.</span></p>
-    <div class="ow-footer-btns">
-      <a href="submit-order.html" class="ow-btn-primary" onclick="savePlan('starter')">
-        Get My Portfolio
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-      </a>
-      <a href="https://wa.me/9612871060?text=Hi!%20I%20want%20to%20order%20a%20portfolio" target="_blank" rel="noopener noreferrer" class="ow-btn-ghost">
-        💬 Chat on WhatsApp
-      </a>
-    </div>
-  </div>
-
-</section>
-
-<!-- Our Work filter JS -->
-<script>
-(function() {
-  const owBtns = document.querySelectorAll('.ow-filter-btn');
-  const owCards = document.querySelectorAll('.ow-card');
-  owBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      owBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const f = btn.dataset.owfilter;
-      owCards.forEach(card => {
-        const match = f === 'all' || card.dataset.owcat === f;
-        card.style.transition = 'opacity .3s ease, transform .3s ease';
-        card.style.opacity = match ? '1' : '0.18';
-        card.style.transform = match ? 'translateY(0) scale(1)' : 'translateY(4px) scale(.98)';
-        card.style.pointerEvents = match ? 'auto' : 'none';
-      });
-    });
-  });
-
-  // Scroll-triggered reveal
-  const owObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.animationPlayState = 'running';
-        owObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.08 });
-  owCards.forEach(card => {
-    card.style.animationPlayState = 'paused';
-    owObserver.observe(card);
-  });
-})();
-</script>
+<!-- examples section removed -->
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
@@ -3774,17 +2534,16 @@ section, footer, nav { overflow-x: hidden; }
       <div class="fc-links">
         <a href="about.html">About Us</a>
         <a href="#pricing">Our Services</a>
-        <a href="#our-work">Our Work</a>
-        <a href="submit-order.html" onclick="savePlan('starter')">Place Order</a>
+        <a href="submit-order.html">Place Order</a>
         <a href="track-order.html">Track Order</a>
       </div>
     </div>
     <div>
       <div class="fc-title">Plans</div>
       <div class="fc-links">
-        <a href="submit-order.html?plan=starter">Starter · ₹49 🔥</a>
-        <a href="submit-order.html?plan=pro">Pro Animated · ₹139</a>
-        <a href="submit-order.html?plan=premium">Premium · ₹299</a>
+        <a href="submit-order.html">Starter · ₹49 🔥</a>
+        <a href="submit-order.html">Pro Animated · ₹179</a>
+        <a href="submit-order.html">Premium · ₹449</a>
       </div>
       <div class="fc-title" style="margin-top:2rem">Contact</div>
       <div class="fc-links">
@@ -3804,7 +2563,7 @@ section, footer, nav { overflow-x: hidden; }
 <!-- ═══════════════════════════════════════════
    JAVASCRIPT
 ═══════════════════════════════════════════ -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 document.addEventListener('DOMContentLoaded', function() {
 
 /* ══════════════════════════════════════════
@@ -3930,45 +2689,15 @@ if (dot && ring) {
 })();
 
 /* ── THEME ── */
-(function() {
-  // Restore saved theme preference
-  const saved = localStorage.getItem('pf_theme');
-  if (saved && saved !== document.documentElement.getAttribute('data-theme')) {
-    document.documentElement.setAttribute('data-theme', saved);
-  }
-
-  function syncIcons(theme) {
-    const icon = theme === 'light' ? '☀️' : '🌙';
-    document.querySelectorAll('#themeBtnDesktop, #themeBtn, #rsbThemeIcon')
-      .forEach(el => { if (el) el.textContent = icon; });
-    // sync sidebar toggle visual state
-    const rsbToggle = document.getElementById('rsbToggle');
-    if (rsbToggle) rsbToggle.classList.toggle('on', theme === 'light');
-  }
-
-  // Sync icons on load
-  syncIcons(document.documentElement.getAttribute('data-theme') || 'dark');
-
-  function applyToggle() {
-    const current = document.documentElement.getAttribute('data-theme') || 'dark';
-    const newTheme = current === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('pf_theme', newTheme);
-    syncIcons(newTheme);
-  }
-
-  const desktopBtn = document.getElementById('themeBtnDesktop');
-  if (desktopBtn) desktopBtn.addEventListener('click', applyToggle);
-
-  const mobileBtn = document.getElementById('themeBtn');
-  if (mobileBtn) mobileBtn.addEventListener('click', applyToggle);
-
-  // Override sidebar inline onclick to use the same function
-  const rsbToggle = document.getElementById('rsbToggle');
-  if (rsbToggle) {
-    rsbToggle.onclick = applyToggle;
-  }
-})();
+const themeBtn = document.getElementById('themeBtn');
+const html = document.documentElement;
+if (themeBtn) {
+  themeBtn.addEventListener('click', () => {
+    const isLight = html.getAttribute('data-theme') === 'light';
+    html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    themeBtn.textContent = isLight ? '🌙' : '☀️';
+  });
+}
 
 
 
@@ -4082,6 +2811,41 @@ document.querySelectorAll('[data-count]').forEach(el => {
   el.textContent = '0' + suffix;
 });
 
+/* ── PAYMENT STATUS DETECTION ── */
+(function checkPaymentStatus() {
+  const status = localStorage.getItem('pf_payment_status');
+  const order  = JSON.parse(localStorage.getItem('pf_order') || 'null');
+
+  // Check if order is completed — if so, clean up everything
+  const orderDone = order && (
+    (order.status || '').toLowerCase().includes('complet') ||
+    (order.status || '').toLowerCase().includes('deliver') ||
+    (order.timeline || []).every(t => t.done)
+  );
+
+  if (orderDone) {
+    localStorage.removeItem('pf_payment_status');
+    return;
+  }
+
+  if (status === 'paid' && order) {
+    const trackBtn = document.getElementById('navTrackBtn');
+    const orderBtn = document.getElementById('navOrderBtn');
+    const mobTrack = document.getElementById('mobTrackBtn');
+    const banner   = document.getElementById('paySuccessBanner');
+
+    if (trackBtn)  trackBtn.style.display = 'flex';
+    if (orderBtn)  orderBtn.style.display = 'none';
+    if (mobTrack)  mobTrack.style.display = 'block';
+    if (banner) {
+      banner.style.display = 'flex';
+      const bannerOid = document.getElementById('bannerOrderId');
+      if (bannerOid) bannerOid.textContent = order.id ? ('Order ' + order.id + ' · In progress') : 'Payment confirmed — portfolio in progress';
+      const hero = document.querySelector('.hero');
+      if (hero) hero.style.paddingTop = 'calc(80px + 36px)';
+    }
+  }
+})();
 
 /* ── BENEFIT CARD HOVER ── */
 document.querySelectorAll('.hero-benefit-card').forEach(card => {
@@ -4120,617 +2884,6 @@ document.querySelectorAll('.hero-benefit-card').forEach(card => {
 })();
 
 }); // end DOMContentLoaded
-
-/* GATE LOGIC REMOVED — site is now public */
-
-/* ── PLAN SELECTION HELPER ──────────────────────────────
-   Called by all plan CTA buttons on index.html.
-   Saves selected plan to localStorage so submit-order.html
-   can read it and pre-select the correct plan card.
-   planId: 'starter' | 'pro' | 'premium'
-──────────────────────────────────────────────────────── */
-function savePlan(planId) {
-  try { localStorage.setItem('pf_selected_plan', planId); } catch(e) {}
-}
-</script>
-
-<!-- ═══════════════════════════════════════════
-     PORTFOLIO GALLERY MODAL
-═══════════════════════════════════════════ -->
-<style>
-/* ════════════════════════════════════════════
-   PORTFOLIO GALLERY MODAL — Mobile-first
-════════════════════════════════════════════ */
-
-/* ── Overlay ── */
-#pg-overlay {
-  position: fixed; inset: 0; z-index: 8500;
-  background: rgba(4,6,14,.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  display: flex; align-items: flex-end; justify-content: center;
-  padding: 0;
-  opacity: 0; visibility: hidden;
-  transition: opacity .3s ease, visibility .3s ease;
-  /* safe area insets for notched phones */
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-@media (min-width: 600px) {
-  #pg-overlay {
-    align-items: center;
-    padding: 16px;
-    padding-bottom: 16px;
-  }
-}
-#pg-overlay.open { opacity: 1; visibility: visible; }
-
-/* ── Modal shell ── */
-.pg-modal {
-  background: var(--bg2);
-  border: 1px solid rgba(0,245,200,.15);
-  /* mobile: full-width bottom sheet */
-  border-radius: 20px 20px 0 0;
-  width: 100%;
-  /* dvh = dynamic viewport height (accounts for mobile chrome bar) */
-  height: min(92dvh, 92vh);
-  max-height: min(92dvh, 92vh);
-  display: flex; flex-direction: column;
-  box-shadow: 0 -8px 40px rgba(0,0,0,.6), 0 0 0 1px rgba(0,245,200,.05);
-  transform: translateY(100%);
-  transition: transform .38s cubic-bezier(.16,1,.3,1);
-  overflow: hidden;
-}
-@media (min-width: 600px) {
-  .pg-modal {
-    border-radius: 20px;
-    max-width: 980px;
-    height: auto;
-    max-height: min(90dvh, 90vh);
-    transform: translateY(20px) scale(.97);
-    box-shadow: 0 32px 80px rgba(0,0,0,.75), 0 0 0 1px rgba(0,245,200,.05);
-  }
-}
-#pg-overlay.open .pg-modal {
-  transform: translateY(0) scale(1);
-}
-
-/* drag handle (mobile only) */
-.pg-modal::after {
-  content: '';
-  display: block;
-  position: absolute; top: 8px; left: 50%;
-  transform: translateX(-50%);
-  width: 36px; height: 4px;
-  background: var(--border3);
-  border-radius: 2px;
-  pointer-events: none;
-}
-@media (min-width: 600px) {
-  .pg-modal::after { display: none; }
-}
-
-/* top accent line */
-.pg-modal::before {
-  content: ''; display: block; height: 2px; flex-shrink: 0;
-  background: linear-gradient(90deg, var(--teal), #8b5cf6, #f59e0b, var(--teal));
-}
-
-/* ── Header ── */
-.pg-head {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem;
-  padding: 1.1rem 1rem .8rem;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--border);
-  margin-top: 4px; /* space for drag handle */
-}
-@media (min-width: 600px) {
-  .pg-head { padding: 1.4rem 1.75rem 1rem; margin-top: 0; }
-}
-
-.pg-head-left { flex: 1; min-width: 0; }
-.pg-head-badge {
-  display: inline-flex; align-items: center; gap: .4rem;
-  font-family: var(--font-mono); font-size: .56rem; font-weight: 700;
-  letter-spacing: .12em; text-transform: uppercase;
-  color: var(--teal); background: var(--teal-dim);
-  border: 1px solid rgba(0,245,200,.18); border-radius: 100px;
-  padding: .2rem .7rem; margin-bottom: .45rem;
-}
-.pg-head-badge-dot {
-  width: 5px; height: 5px; border-radius: 50%; background: var(--teal);
-  animation: pgPulse 1.8s ease-in-out infinite;
-}
-@keyframes pgPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.7)} }
-
-.pg-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.1rem, 5vw, 1.65rem);
-  font-weight: 800; letter-spacing: -.03em; color: var(--text);
-  line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.pg-title span { color: var(--teal); }
-.pg-sub {
-  font-size: .76rem; color: var(--text3); margin-top: .3rem;
-  display: none;
-}
-@media (min-width: 480px) { .pg-sub { display: block; } }
-
-/* Close button — bigger tap target on mobile */
-.pg-close {
-  width: 40px; height: 40px; border-radius: 10px;
-  background: var(--surface); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--text2); font-size: 1.1rem;
-  transition: all .18s ease; flex-shrink: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-.pg-close:hover { background: var(--surface2); color: var(--text); border-color: var(--border3); }
-.pg-close:active { transform: scale(.92); }
-
-/* ── Filter tabs — horizontal scroll on mobile ── */
-.pg-tabs {
-  display: flex; gap: .35rem;
-  padding: .65rem 1rem .55rem;
-  flex-shrink: 0;
-  overflow-x: auto; overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  border-bottom: 1px solid var(--border);
-}
-.pg-tabs::-webkit-scrollbar { display: none; }
-@media (min-width: 600px) {
-  .pg-tabs {
-    padding: .7rem 1.75rem .55rem;
-    flex-wrap: wrap; overflow: visible;
-  }
-}
-
-.pg-tab {
-  font-family: var(--font-body); font-size: .72rem; font-weight: 600;
-  padding: .38rem 1rem; border-radius: 8px; border: 1px solid var(--border2);
-  background: var(--surface); color: var(--text2); cursor: pointer;
-  transition: all .2s ease;
-  white-space: nowrap; flex-shrink: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-.pg-tab:hover { color: var(--text); border-color: var(--border3); }
-.pg-tab:active { transform: scale(.95); }
-.pg-tab.active { background: var(--teal); color: #000; border-color: var(--teal); box-shadow: 0 2px 12px rgba(0,245,200,.3); }
-.pg-tab.amber.active { background: var(--amber); border-color: var(--amber); box-shadow: 0 2px 12px rgba(245,158,11,.3); }
-.pg-tab.violet.active { background: #8b5cf6; border-color: #8b5cf6; color: #fff; box-shadow: 0 2px 12px rgba(139,92,246,.3); }
-
-/* ── Search row ── */
-.pg-search-row {
-  padding: .65rem 1rem;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
-  display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
-}
-@media (min-width: 600px) {
-  .pg-search-row { padding: .8rem 1.75rem; }
-}
-
-.pg-search-wrap {
-  position: relative; flex: 1; min-width: 0;
-}
-.pg-search-ico {
-  position: absolute; left: .85rem; top: 50%; transform: translateY(-50%);
-  color: var(--text3); font-size: .85rem; pointer-events: none;
-}
-#pg-search-input {
-  width: 100%; height: 40px;
-  background: var(--surface); border: 1px solid var(--border2);
-  border-radius: 10px; padding: 0 1rem 0 2.4rem;
-  color: var(--text); font-family: var(--font-body); font-size: .9rem;
-  outline: none; transition: border-color .2s, box-shadow .2s;
-  caret-color: var(--teal);
-  /* prevent iOS zoom on focus */
-  font-size: max(.9rem, 16px);
-}
-#pg-search-input::placeholder { color: var(--text3); }
-#pg-search-input:focus {
-  border-color: rgba(0,245,200,.4);
-  box-shadow: 0 0 0 3px rgba(0,245,200,.07);
-}
-.pg-count {
-  font-family: var(--font-mono); font-size: .6rem; color: var(--text3);
-  letter-spacing: .06em; white-space: nowrap; flex-shrink: 0;
-}
-#pg-count-num { color: var(--teal); }
-
-/* ── Scrollable grid body ── */
-.pg-body {
-  overflow-y: auto; overflow-x: hidden;
-  padding: 1rem 1rem 1.5rem;
-  flex: 1; min-height: 0;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-}
-@media (min-width: 600px) {
-  .pg-body { padding: 1.5rem 1.75rem 2rem; }
-}
-.pg-body::-webkit-scrollbar { width: 4px; }
-.pg-body::-webkit-scrollbar-track { background: transparent; }
-.pg-body::-webkit-scrollbar-thumb { background: var(--border3); border-radius: 3px; }
-
-/* ── Portfolio grid ──
-   Mobile: 2 cols  |  Tablet: 3 cols  |  Desktop: 4 cols  */
-#pg-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: .75rem;
-}
-@media (min-width: 600px)  { #pg-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
-@media (min-width: 900px)  { #pg-grid { grid-template-columns: repeat(4, 1fr); gap: 1rem; } }
-@media (max-width: 340px)  { #pg-grid { grid-template-columns: 1fr; } }
-
-/* ── Portfolio card ── */
-.pg-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: .9rem .85rem .85rem;
-  display: flex; flex-direction: column; align-items: flex-start;
-  cursor: pointer; position: relative; overflow: hidden;
-  transition: transform .28s cubic-bezier(.34,1.3,.64,1),
-              box-shadow .28s ease, border-color .28s ease;
-  opacity: 0; animation: pgCardIn .4s cubic-bezier(.34,1.2,.64,1) forwards;
-  -webkit-tap-highlight-color: transparent;
-}
-@media (min-width: 600px) {
-  .pg-card { padding: 1.2rem 1rem 1rem; border-radius: 14px; }
-}
-@keyframes pgCardIn { to { opacity: 1; } }
-
-.pg-card::before {
-  content: '';
-  position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--teal), transparent);
-  opacity: 0; transition: opacity .25s;
-}
-.pg-card::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at top, rgba(0,245,200,.04), transparent 65%);
-  pointer-events: none; opacity: 0; transition: opacity .25s;
-}
-/* hover only on devices that support it */
-@media (hover: hover) and (pointer: fine) {
-  .pg-card:hover::before { opacity: 1; }
-  .pg-card:hover::after  { opacity: 1; }
-  .pg-card:hover {
-    transform: translateY(-5px) scale(1.015);
-    box-shadow: 0 18px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(0,245,200,.1);
-    border-color: rgba(0,245,200,.25);
-  }
-  .pg-card:hover .pg-card-icon {
-    border-color: rgba(0,245,200,.35);
-    box-shadow: 0 0 12px rgba(0,245,200,.12);
-  }
-  .pg-card:hover .pg-thumb img { transform: scale(1.05); }
-}
-/* touch active state */
-.pg-card:active {
-  transform: scale(.97);
-  border-color: rgba(0,245,200,.3);
-}
-
-/* thumbnail */
-.pg-thumb {
-  width: 100%; aspect-ratio: 16/9;
-  background: var(--surface2);
-  border-radius: 7px; margin-bottom: .65rem;
-  overflow: hidden; position: relative;
-  border: 1px solid var(--border);
-}
-@media (min-width: 600px) {
-  .pg-thumb { border-radius: 8px; margin-bottom: .85rem; }
-}
-.pg-thumb img {
-  width: 100%; height: 100%; object-fit: cover;
-  transition: transform .4s ease;
-}
-.pg-thumb-placeholder {
-  width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.5rem;
-  background: linear-gradient(135deg, var(--surface2), var(--bg3));
-}
-@media (min-width: 600px) {
-  .pg-thumb-placeholder { font-size: 1.8rem; }
-}
-
-/* plan badge */
-.pg-plan-badge {
-  position: absolute; top: .35rem; right: .35rem;
-  font-family: var(--font-mono); font-size: .44rem; font-weight: 700;
-  letter-spacing: .08em; text-transform: uppercase;
-  padding: .15rem .45rem; border-radius: 100px;
-}
-.pg-plan-starter  { background: rgba(0,245,200,.12); color: var(--teal); border: 1px solid rgba(0,245,200,.25); }
-.pg-plan-pro      { background: rgba(245,158,11,.12); color: var(--amber); border: 1px solid rgba(245,158,11,.25); }
-.pg-plan-premium  { background: rgba(139,92,246,.12); color: #c4b5fd; border: 1px solid rgba(139,92,246,.25); }
-.pg-plan-ppt      { background: rgba(239,68,68,.12); color: #f87171; border: 1px solid rgba(239,68,68,.25); }
-
-/* icon */
-.pg-card-icon {
-  width: 30px; height: 30px; border-radius: 8px;
-  background: var(--surface2); border: 1px solid var(--border2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: .95rem; margin-bottom: .5rem;
-  transition: border-color .25s, box-shadow .25s;
-}
-@media (min-width: 600px) {
-  .pg-card-icon { width: 34px; height: 34px; border-radius: 9px; font-size: 1.05rem; margin-bottom: .6rem; }
-}
-
-.pg-card-title {
-  font-family: var(--font-display); font-size: .8rem; font-weight: 700;
-  color: var(--text); letter-spacing: -.01em; margin-bottom: .2rem;
-  line-height: 1.25;
-}
-@media (min-width: 600px) {
-  .pg-card-title { font-size: .88rem; }
-}
-
-.pg-card-label {
-  font-family: var(--font-mono); font-size: .52rem; color: var(--text3);
-  letter-spacing: .04em; margin-bottom: .65rem;
-  display: flex; align-items: center; justify-content: space-between; gap: .3rem;
-  width: 100%;
-}
-@media (min-width: 600px) {
-  .pg-card-label { font-size: .58rem; letter-spacing: .06em; margin-bottom: .75rem; }
-}
-
-/* CTA button — bigger tap target */
-.pg-card-btn {
-  margin-top: auto; width: 100%;
-  background: var(--teal-dim); border: 1px solid rgba(0,245,200,.22);
-  color: var(--teal); border-radius: 8px;
-  padding: .55rem .75rem;
-  font-size: .72rem; font-weight: 700; letter-spacing: .02em;
-  font-family: var(--font-body);
-  display: flex; align-items: center; justify-content: center; gap: .35rem;
-  cursor: pointer; transition: background .2s, box-shadow .2s;
-  min-height: 36px;
-  -webkit-tap-highlight-color: transparent;
-}
-.pg-card-btn:hover { background: rgba(0,245,200,.18); box-shadow: 0 0 16px rgba(0,245,200,.2); }
-.pg-card-btn:active { transform: scale(.96); }
-
-/* ── Empty state ── */
-.pg-empty {
-  grid-column: 1/-1; text-align: center; padding: 3rem 1rem;
-  color: var(--text3); font-size: .9rem;
-}
-.pg-empty-icon { font-size: 2.5rem; margin-bottom: .75rem; }
-
-/* ── Footer bar ── */
-.pg-foot {
-  border-top: 1px solid var(--border);
-  padding: .75rem 1rem;
-  /* pad for iPhone home bar */
-  padding-bottom: max(.75rem, env(safe-area-inset-bottom, .75rem));
-  display: flex; align-items: center; justify-content: space-between;
-  flex-shrink: 0; gap: .75rem;
-  background: var(--bg);
-}
-@media (min-width: 600px) {
-  .pg-foot { padding: .85rem 1.75rem; flex-wrap: wrap; }
-}
-.pg-foot-note {
-  font-size: .7rem; color: var(--text3); flex: 1; min-width: 0;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-@media (min-width: 480px) {
-  .pg-foot-note { white-space: normal; overflow: visible; }
-}
-.pg-foot-note a { color: var(--teal); }
-.pg-foot-cta {
-  display: inline-flex; align-items: center; gap: .4rem;
-  background: var(--teal); color: #000;
-  font-size: .78rem; font-weight: 800; letter-spacing: .02em;
-  padding: .55rem 1.1rem; border-radius: var(--r);
-  transition: box-shadow .2s, transform .15s; flex-shrink: 0;
-  white-space: nowrap;
-  -webkit-tap-highlight-color: transparent;
-}
-.pg-foot-cta:hover { box-shadow: 0 0 28px rgba(0,245,200,.45); transform: translateY(-1px); }
-.pg-foot-cta:active { transform: scale(.96); }
-</style>
-
-<!-- Modal HTML -->
-<div id="pg-overlay" role="dialog" aria-modal="true" aria-label="Portfolio Gallery">
-  <div class="pg-modal">
-    <!-- Accent line via ::before -->
-
-    <!-- Header -->
-    <div class="pg-head">
-      <div class="pg-head-left">
-        <div class="pg-head-badge"><span class="pg-head-badge-dot"></span> Portfolio Showcase</div>
-        <div class="pg-title">Browse <span>Real Examples</span></div>
-        <div class="pg-sub">Click any portfolio to preview it live</div>
-      </div>
-      <button class="pg-close" onclick="closePortfolioGallery()" aria-label="Close gallery">✕</button>
-    </div>
-
-    <!-- Plan filter tabs -->
-    <div class="pg-tabs" id="pg-tabs">
-      <button class="pg-tab active" data-plan="all"      onclick="filterByPlan('all', this)">All</button>
-      <button class="pg-tab"        data-plan="basic"    onclick="filterByPlan('basic', this)">⚡ Basic · ₹49</button>
-      <button class="pg-tab amber"  data-plan="standard" onclick="filterByPlan('standard', this)">🚀 Standard · ₹179</button>
-      <button class="pg-tab violet" data-plan="pro"      onclick="filterByPlan('pro', this)">💎 Pro · ₹449</button>
-    </div>
-
-    <!-- Search -->
-    <div class="pg-search-row">
-      <div class="pg-search-wrap">
-        <span class="pg-search-ico">🔍</span>
-        <input id="pg-search-input" type="text" placeholder="Search branch, course…" oninput="filterPortfolios()" autocomplete="off"/>
-      </div>
-      <div class="pg-count">Showing <span id="pg-count-num">0</span> portfolios</div>
-    </div>
-
-    <!-- Grid -->
-    <div class="pg-body">
-      <div id="pg-grid"></div>
-    </div>
-
-    <!-- Footer -->
-    <div class="pg-foot">
-      <div class="pg-foot-note">Don't see your branch? <a href="https://wa.me/9612871060?text=Hi!%20I%20want%20a%20custom%20portfolio" target="_blank">WhatsApp us</a> — we build any course.</div>
-      <a href="submit-order.html" class="pg-foot-cta" onclick="savePlan(window._pgActivePlan||'starter')">Order Now →</a>
-    </div>
-  </div>
-</div>
-
-<script>
-/* ══════════════════════════════════════════
-   PORTFOLIO GALLERY — DATA & LOGIC
-   To add more: just push to PORTFOLIOS array
-══════════════════════════════════════════ */
-/* ─── PORTFOLIO DATA (from live catalogue) ─── */
-const PORTFOLIOS = [
-  // ── ₹179 STANDARD ────────────────────────
-  { id:  1, program: 'BSC Agriculture', price: 179, icon: '🌾', link: 'https://sujaybanarjee744-hash.github.io/Arjun-Sharma/' },
-  { id:  2, program: 'BBA',             price: 179, icon: '📊', link: 'https://sujaybanarjee744-hash.github.io/Aarav-Sharma/' },
-  { id:  3, program: 'BCA',             price: 179, icon: '🖥️', link: 'https://sujaybanarjee744-hash.github.io/Aryan-Kuamar-Sharma/' },
-  { id:  4, program: 'LAW',             price: 179, icon: '⚖️', link: 'https://sujaybanarjee744-hash.github.io/Ranjan-Kumar/' },
-  { id:  5, program: 'MBA',             price: 179, icon: '🎯', link: 'https://sujaybanarjee744-hash.github.io/Aarav-banarjee/' },
-  { id:  6, program: 'CSE',             price: 179, icon: '💻', link: '' },
-  { id:  7, program: 'PPT',             price: 179, icon: '📑', link: 'https://sujaybanarjee744-hash.github.io/Sujay-Banarjee/' },
-  { id:  8, program: 'Psychology',      price: 179, icon: '🧠', link: '' },
-  { id:  9, program: 'Pharma',          price: 179, icon: '💊', link: 'https://sujaybanarjee744-hash.github.io/Alex-Rivera-/' },
-
-  // ── ₹449 PRO ─────────────────────────────
-  { id: 10, program: 'CSE (Pro)',        price: 449, icon: '💻', link: 'https://sujaybanarjee.pages.dev/' },
-  { id: 11, program: 'Psychology (Pro)', price: 449, icon: '🧠', link: 'https://sujaybanarjee744-hash.github.io/abiaportfolio_pro/' },
-
-  // ── ₹49 BASIC ────────────────────────────
-  { id: 12, program: 'BBA (Basic)',      price: 49,  icon: '📊', link: 'https://sujaybanarjee744-hash.github.io/bba-basic-portfolio/' },
-  { id: 13, program: 'BCA (Basic)',      price: 49,  icon: '🖥️', link: 'https://sujaybanarjee744-hash.github.io/bca-basic-portfolio/' },
-  { id: 14, program: 'CSE (Basic)',      price: 49,  icon: '💻', link: 'https://sujaybanarjee744-hash.github.io/cse-basic-portfolio/' },
-  { id: 15, program: 'MBA (Basic)',      price: 49,  icon: '🎯', link: 'https://sujaybanarjee744-hash.github.io/mba-basic-portfolio/' },
-];
-
-/* price tier helpers */
-function priceTier(p) {
-  if (p.price <= 49)  return 'basic';
-  if (p.price >= 449) return 'pro';
-  return 'standard';
-}
-function tierLabel(t) {
-  return { basic: '₹49 Basic', standard: '₹179 Standard', pro: '₹449 Pro' }[t] || t;
-}
-function tierCls(t) {
-  return { basic: 'pg-plan-starter', standard: 'pg-plan-pro', pro: 'pg-plan-premium' }[t] || 'pg-plan-starter';
-}
-
-let _pgPlan   = 'all';
-let _pgSearch = '';
-window._pgActivePlan = 'standard';
-
-function openPortfolioGallery(plan) {
-  /* map old plan names → new tier names */
-  const tierMap = { starter: 'basic', pro: 'standard', premium: 'pro', ppt: 'all' };
-  const tier = tierMap[plan] || 'all';
-  window._pgActivePlan = tier;
-  _pgPlan = tier;
-
-  document.querySelectorAll('.pg-tab').forEach(t => t.classList.remove('active'));
-  const activeTab = document.querySelector(`.pg-tab[data-plan="${_pgPlan}"]`);
-  if (activeTab) activeTab.classList.add('active');
-
-  document.getElementById('pg-search-input').value = '';
-  _pgSearch = '';
-
-  renderGrid();
-  document.getElementById('pg-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closePortfolioGallery() {
-  document.getElementById('pg-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function filterByPlan(tier, btn) {
-  _pgPlan = tier;
-  window._pgActivePlan = tier === 'all' ? 'standard' : tier;
-  document.querySelectorAll('.pg-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  renderGrid();
-}
-
-function filterPortfolios() {
-  _pgSearch = document.getElementById('pg-search-input').value.toLowerCase().trim();
-  renderGrid();
-}
-
-function renderGrid() {
-  const grid = document.getElementById('pg-grid');
-  const filtered = PORTFOLIOS.filter(p => {
-    const tier = priceTier(p);
-    const tierMatch  = _pgPlan === 'all' || tier === _pgPlan;
-    const searchMatch = !_pgSearch || p.program.toLowerCase().includes(_pgSearch);
-    return tierMatch && searchMatch;
-  });
-
-  document.getElementById('pg-count-num').textContent = filtered.length;
-
-  if (!filtered.length) {
-    grid.innerHTML = `<div class="pg-empty"><div class="pg-empty-icon">🔍</div>No portfolios matched "<strong>${_pgSearch}</strong>".<br>Try a different search or browse all tiers.</div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map((p, i) => {
-    const tier    = priceTier(p);
-    const tLabel  = tierLabel(tier);
-    const tCls    = tierCls(tier);
-    const isLive  = !!p.link;
-
-    return `
-    <div class="pg-card" style="animation-delay:${i * 0.04}s"
-         onclick="${isLive ? `window.open('${p.link}','_blank')` : "showComingSoon(this)"}">
-      <div class="pg-thumb">
-        <div class="pg-thumb-placeholder">${p.icon}</div>
-        <span class="pg-plan-badge ${tCls}">${tLabel}</span>
-      </div>
-      <div class="pg-card-icon">${p.icon}</div>
-      <div class="pg-card-title">${p.program} Portfolio</div>
-      <div class="pg-card-label" style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
-        <span>${p.program}</span>
-        <span style="font-family:var(--font-mono);font-size:.8rem;font-weight:700;color:var(--teal)">₹${p.price}</span>
-      </div>
-      <button class="pg-card-btn" onclick="event.stopPropagation();${isLive ? `window.open('${p.link}','_blank')` : "showComingSoon(this.closest('.pg-card'))"}"
-        aria-label="View ${p.program} portfolio">
-        ${isLive ? '↗ View Portfolio' : '🔜 Coming Soon'}
-      </button>
-    </div>`;
-  }).join('');
-}
-
-function showComingSoon(card) {
-  /* brief flash effect for unreleased portfolios */
-  card.style.boxShadow = '0 0 0 2px rgba(245,158,11,.6), 0 18px 48px rgba(0,0,0,.4)';
-  card.style.borderColor = 'rgba(245,158,11,.5)';
-  setTimeout(() => {
-    card.style.boxShadow = '';
-    card.style.borderColor = '';
-  }, 700);
-}
-
-/* close on overlay click */
-document.getElementById('pg-overlay').addEventListener('click', function(e) {
-  if (e.target === this) closePortfolioGallery();
-});
-
-/* close on Escape */
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closePortfolioGallery();
-});
 </script>
 
 <!-- FLOATING MENU PILL (mobile only) -->
@@ -4768,17 +2921,12 @@ document.addEventListener('keydown', function(e) {
       <div class="rsb-sec-title">Navigation</div>
       <div class="rsb-nav-links">
         
-        <a href="#our-work" class="rsb-nav-link">
-          <div class="rsb-link-icon">🏆</div>
-          Our Work
-          <span class="rsb-link-arr">›</span>
-        </a>
         <a href="revision.html" class="rsb-nav-link">
           <div class="rsb-link-icon">✏️</div>
           Revision Now
           <span class="rsb-link-arr">›</span>
         </a>
-        <a href="submit-order.html" class="rsb-nav-link" onclick="savePlan('starter')">
+        <a href="submit-order.html" class="rsb-nav-link">
           <div class="rsb-link-icon">📋</div>
           Place an Order
           <span class="rsb-link-arr">›</span>
@@ -4811,7 +2959,7 @@ document.addEventListener('keydown', function(e) {
           <span class="rsb-offer-new">₹49</span>
         </div>
         <div class="rsb-offer-desc">Professional portfolio delivered in 24 hours. Full source code included.</div>
-        <a href="submit-order.html" class="rsb-offer-link" onclick="savePlan('starter')">Grab the Offer →</a>
+        <a href="submit-order.html" class="rsb-offer-link">Grab the Offer →</a>
       </div>
     </div>
 
@@ -4858,7 +3006,7 @@ document.addEventListener('keydown', function(e) {
           <div class="rsb-faq-q" onclick="this.parentElement.classList.toggle('open')">
             Can I request changes? <span class="rsb-faq-arr">›</span>
           </div>
-          <div class="rsb-faq-a">Pro and Premium plans include   rounds. Additional changes are available at ₹15 each for all plans.</div>
+          <div class="rsb-faq-a">Pro and Premium plans include Additional Revisions (₹15 each) rounds. Starter can add revisions for a small fee.</div>
         </div>
         <div class="rsb-faq-item">
           <div class="rsb-faq-q" onclick="this.parentElement.classList.toggle('open')">
@@ -4877,14 +3025,13 @@ document.addEventListener('keydown', function(e) {
           <span class="rsb-cb-icon">💬</span>
           Chat on WhatsApp
         </a>
-        <a href="mailto:hello@portfolioforge.in" class="rsb-contact-btn">
+        <a href="/cdn-cgi/l/email-protection#167e737a7a79566679646270797a7f797079647173387f78" class="rsb-contact-btn">
           <span class="rsb-cb-icon">✉️</span>
           Send us an Email
         </a>
       </div>
     </div>
 
-   
     <!-- Appearance -->
     <div>
       <div class="rsb-sec-title">Appearance</div>
@@ -4893,12 +3040,18 @@ document.addEventListener('keydown', function(e) {
           <span id="rsbThemeIcon">🌙</span>
           Dark Mode
         </div>
-      <div class="rsb-toggle" id="rsbToggle" onclick="(function(){var c=document.documentElement.getAttribute('data-theme')||'dark';var n=c==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('pf_theme',n);var icon=n==='light'?'☀️':'🌙';['themeBtnDesktop','themeBtn','rsbThemeIcon'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=icon;});document.getElementById('rsbToggle').classList.toggle('on',n==='light');})()"></div>
+        <div class="rsb-toggle" id="rsbToggle" onclick="
+          const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+          document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+          const tb = document.getElementById('themeBtn');
+          if(tb) tb.textContent = isLight ? '🌙' : '☀️';
+          document.getElementById('rsbThemeIcon').textContent = isLight ? '🌙' : '☀️';
+        "></div>
       </div>
     </div>
 
   </div><!-- /rsb-body -->
 </aside>
-</section>
+
 </body>
 </html>

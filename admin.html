@@ -1,0 +1,2406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>PortfolioForge — Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══ TOKENS ═══ */
+:root{
+  --bg:#080a0f;--bg2:#0d0f16;--bg3:#111420;
+  --surface:#161924;--surface2:#1c2030;--border:#1e2336;--border2:#252c40;
+  --green:#00e87a;--green-dim:rgba(0,232,122,.1);--green-glow:rgba(0,232,122,.3);
+  --blue:#00b8ff;--blue-dim:rgba(0,184,255,.1);
+  --purple:#a855f7;--purple-dim:rgba(168,85,247,.1);
+  --yellow:#ffd32a;--yellow-dim:rgba(255,211,42,.1);
+  --red:#ff4757;--red-dim:rgba(255,71,87,.1);
+  --orange:#ff8c00;
+  --text:#eef0f6;--text2:#8a92b2;--text3:#454e6e;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-b:'Manrope',sans-serif;
+  --font-m:'Fira Code',monospace;
+  --r:8px;--r-lg:14px;--r-xl:20px;
+  --nav-w:240px;
+  --topbar-h:58px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:14px;line-height:1.6;overflow-x:hidden}
+::selection{background:var(--green);color:#000}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--green)}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--font-b);cursor:pointer}
+input,select,textarea{font-family:var(--font-b)}
+
+/* ═══ LOGIN SCREEN ═══ */
+#loginScreen{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+}
+.login-card{
+  width:100%;max-width:400px;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--r-xl);overflow:hidden;
+  box-shadow:0 40px 80px rgba(0,0,0,.6);
+  position:relative;
+}
+.login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue))}
+.login-head{
+  padding:2.5rem 2.5rem 1.5rem;text-align:center;
+  background:linear-gradient(180deg,rgba(0,232,122,.06) 0%,transparent 100%);
+}
+.login-logo{font-family:var(--font-d);font-size:2rem;letter-spacing:.06em;margin-bottom:.35rem}
+.login-logo span{color:var(--green)}
+.login-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:var(--red-dim);border:1px solid rgba(255,71,87,.2);
+  padding:.25rem .75rem;border-radius:100px;
+  font-family:var(--font-m);font-size:.6rem;color:var(--red);letter-spacing:.1em;text-transform:uppercase;
+}
+.login-body{padding:1.5rem 2.5rem 2.5rem;display:flex;flex-direction:column;gap:1rem}
+.login-label{font-family:var(--font-m);font-size:.6rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.3rem}
+.login-input{
+  width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r);
+  padding:.75rem 1rem;color:var(--text);font-size:.88rem;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.login-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,232,122,.08)}
+.login-input.err{border-color:var(--red)}
+.login-btn{
+  width:100%;padding:.85rem;background:var(--green);color:#000;border:none;
+  border-radius:var(--r);font-size:.9rem;font-weight:800;letter-spacing:.04em;
+  transition:box-shadow .2s,transform .2s;margin-top:.25rem;
+}
+.login-btn:hover{box-shadow:0 0 30px var(--green-glow);transform:translateY(-1px)}
+.login-err{font-size:.78rem;color:var(--red);text-align:center;display:none}
+.login-hint{font-family:var(--font-m);font-size:.62rem;color:var(--text3);text-align:center;letter-spacing:.04em}
+
+/* ═══ APP LAYOUT ═══ */
+#app{display:none;min-height:100vh}
+.layout{display:flex;min-height:100vh}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{
+  width:var(--nav-w);flex-shrink:0;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  position:fixed;top:0;bottom:0;left:0;z-index:200;
+  display:flex;flex-direction:column;
+  transition:transform .3s ease;
+}
+.sb-brand{
+  height:var(--topbar-h);
+  padding:0 1.25rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.sb-logo{font-family:var(--font-d);font-size:1.3rem;letter-spacing:.06em}
+.sb-logo span{color:var(--green)}
+.sb-admin-tag{font-family:var(--font-m);font-size:.52rem;color:var(--red);letter-spacing:.1em;background:var(--red-dim);border:1px solid rgba(255,71,87,.15);padding:.15rem .45rem;border-radius:100px}
+.sb-close{display:none;background:none;border:none;color:var(--text2);font-size:1rem;padding:.2rem}
+
+.sb-user{
+  padding:1rem 1.25rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.65rem;flex-shrink:0;
+}
+.sb-avatar{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--green),var(--blue));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-d);font-size:1rem;color:#000;
+}
+.sb-uname{font-size:.82rem;font-weight:700;color:var(--text);line-height:1.2}
+.sb-urole{font-size:.65rem;color:var(--text3);font-weight:400}
+
+.sb-nav{flex:1;overflow-y:auto;padding:.5rem 0}
+.sb-section{font-family:var(--font-m);font-size:.52rem;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;padding:.5rem 1.25rem .2rem;margin-top:.25rem}
+.sb-item{
+  display:flex;align-items:center;gap:.7rem;padding:.65rem 1.25rem;
+  font-size:.82rem;font-weight:600;color:var(--text2);
+  cursor:pointer;border-left:2px solid transparent;
+  transition:background .15s,color .15s,border-color .15s;
+  position:relative;user-select:none;
+}
+.sb-item:hover{background:var(--surface);color:var(--text)}
+.sb-item.active{background:var(--surface);color:var(--green);border-left-color:var(--green)}
+.sb-item .si-icon{width:16px;text-align:center;font-size:.9rem;flex-shrink:0}
+.sb-item .si-badge{
+  margin-left:auto;
+  font-family:var(--font-m);font-size:.5rem;font-weight:800;
+  padding:.1rem .4rem;border-radius:100px;letter-spacing:.04em;
+}
+.si-badge.green{background:var(--green);color:#000}
+.si-badge.red{background:var(--red);color:#fff}
+.si-badge.yellow{background:var(--yellow);color:#000}
+.si-badge.blue{background:var(--blue);color:#000}
+
+.sb-foot{padding:.85rem 1.25rem;border-top:1px solid var(--border);flex-shrink:0}
+.sb-foot-btn{
+  width:100%;padding:.55rem;background:var(--red-dim);border:1px solid rgba(255,71,87,.15);
+  color:var(--red);border-radius:var(--r);font-size:.78rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:.4rem;
+  transition:.2s;
+}
+.sb-foot-btn:hover{background:rgba(255,71,87,.2)}
+
+/* ═══ MAIN ═══ */
+.main{margin-left:var(--nav-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* ═══ TOPBAR ═══ */
+.topbar{
+  height:var(--topbar-h);padding:0 1.75rem;
+  background:rgba(8,10,15,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  position:sticky;top:0;z-index:100;flex-shrink:0;
+}
+.tb-left{display:flex;align-items:center;gap:.75rem}
+.tb-ham{display:none;background:none;border:none;color:var(--text2);padding:.2rem}
+.tb-ham svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.tb-breadcrumb{font-family:var(--font-m);font-size:.68rem;color:var(--text3);letter-spacing:.04em;display:flex;align-items:center;gap:.35rem}
+.tb-breadcrumb span{color:var(--text)}
+.tb-search{
+  display:flex;align-items:center;gap:.5rem;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--r);padding:.4rem .75rem;
+  transition:border-color .2s;
+}
+.tb-search:focus-within{border-color:var(--green)}
+.tb-search svg{width:13px;height:13px;fill:none;stroke:var(--text3);stroke-width:2;flex-shrink:0}
+.tb-search input{background:none;border:none;outline:none;color:var(--text);font-size:.78rem;width:180px}
+.tb-search input::placeholder{color:var(--text3)}
+
+.tb-right{display:flex;align-items:center;gap:.5rem}
+.tb-btn{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:.78rem;transition:border-color .2s;position:relative;
+}
+.tb-btn:hover{border-color:var(--green)}
+.tb-btn .dot{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg2)}
+.tb-view-site{
+  display:flex;align-items:center;gap:.4rem;
+  background:var(--green-dim);border:1px solid rgba(0,232,122,.2);
+  color:var(--green);padding:.38rem .85rem;border-radius:var(--r);
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;transition:.2s;
+}
+.tb-view-site:hover{background:var(--green);color:#000}
+
+/* ═══ PAGES ═══ */
+.page{display:none;padding:1.75rem;flex:1;animation:pageFadeIn .3s ease}
+.page.active{display:block}
+@keyframes pageFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.page-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:1rem}
+.ph-title{font-family:var(--font-d);font-size:1.85rem;letter-spacing:.04em;line-height:1;color:var(--text)}
+.ph-title span{color:var(--green)}
+.ph-sub{font-size:.78rem;color:var(--text3);font-weight:300;margin-top:.25rem}
+.ph-actions{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+
+/* ═══ STAT CARDS ═══ */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+@media(max-width:1100px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.stats-row{grid-template-columns:1fr 1fr}}
+
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:1.25rem 1.5rem;
+  position:relative;overflow:hidden;cursor:default;
+  transition:transform .2s,border-color .2s;
+}
+.stat-card:hover{transform:translateY(-2px)}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.stat-card.g::after{background:var(--green)}.stat-card.b::after{background:var(--blue)}
+.stat-card.y::after{background:var(--yellow)}.stat-card.r::after{background:var(--red)}
+.stat-card.p::after{background:var(--purple)}
+.sc-icon{font-size:1.5rem;margin-bottom:.6rem}
+.sc-val{font-family:var(--font-d);font-size:2rem;letter-spacing:.04em;line-height:1;color:var(--text);margin-bottom:.15rem}
+.sc-val.g{color:var(--green)}.sc-val.b{color:var(--blue)}
+.sc-val.y{color:var(--yellow)}.sc-val.r{color:var(--red)}
+.sc-label{font-family:var(--font-m);font-size:.58rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
+.sc-delta{font-size:.68rem;color:var(--text3);margin-top:.3rem;display:flex;align-items:center;gap:.25rem}
+.sc-delta.up{color:var(--green)}.sc-delta.down{color:var(--red)}
+
+/* ═══ CARDS ═══ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.card-head{
+  padding:.9rem 1.25rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;
+}
+.card-title{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:.85rem;color:var(--text)}
+.card-title-icon{font-size:.95rem}
+.card-actions{display:flex;gap:.4rem;align-items:center}
+.card-body{padding:1.25rem}
+
+/* ═══ MINI CHART ═══ */
+.mini-chart-wrap{height:120px;position:relative;margin-bottom:.5rem}
+canvas.mini-chart{width:100%!important;height:100%!important}
+
+/* ═══ TABLE ═══ */
+.tbl-wrap{overflow-x:auto}
+table.admin-tbl{width:100%;border-collapse:collapse;min-width:700px}
+.admin-tbl thead tr{border-bottom:1px solid var(--border)}
+.admin-tbl th{font-family:var(--font-m);font-size:.58rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;padding:.65rem .9rem;text-align:left;white-space:nowrap;background:var(--bg2)}
+.admin-tbl td{padding:.7rem .9rem;font-size:.82rem;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+.admin-tbl tr:last-child td{border:none}
+.admin-tbl tr:hover td{background:rgba(255,255,255,.02)}
+.admin-tbl .bold{font-weight:700;color:var(--text)}
+.admin-tbl .mono{font-family:var(--font-m);font-size:.7rem}
+.admin-tbl .green{color:var(--green);font-weight:700}
+.admin-tbl .row-check{width:36px}
+
+/* ═══ BADGES ═══ */
+.badge{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .6rem;border-radius:100px;font-family:var(--font-m);font-size:.58rem;font-weight:700;letter-spacing:.06em;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.badge.pending{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(255,211,42,.2)}
+.badge.active{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,232,122,.2)}
+.badge.complete{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(0,184,255,.2)}
+.badge.revision{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,.2)}
+.badge.cancelled{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,71,87,.2)}
+.badge.paid{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,232,122,.2)}
+.badge.unpaid{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(255,211,42,.2)}
+
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .9rem;border-radius:var(--r);font-size:.78rem;font-weight:700;border:none;cursor:pointer;transition:.15s;white-space:nowrap}
+.btn-green{background:var(--green);color:#000}
+.btn-green:hover{box-shadow:0 0 18px var(--green-glow);transform:translateY(-1px)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border2);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--green);color:var(--green)}
+.btn-red{background:var(--red-dim);border:1.5px solid rgba(255,71,87,.2);color:var(--red)}
+.btn-red:hover{background:rgba(255,71,87,.2)}
+.btn-blue{background:var(--blue-dim);border:1.5px solid rgba(0,184,255,.2);color:var(--blue)}
+.btn-blue:hover{background:rgba(0,184,255,.2)}
+.btn-sm{padding:.3rem .65rem;font-size:.7rem}
+.btn-icon{width:28px;height:28px;padding:0;justify-content:center;font-size:.8rem}
+
+/* ═══ FORM ELEMENTS ═══ */
+.fi{background:var(--bg);border:1.5px solid var(--border2);border-radius:var(--r);padding:.6rem .85rem;color:var(--text);font-size:.83rem;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+.fi:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,232,122,.07)}
+.fi::placeholder{color:var(--text3)}
+.fi option{background:var(--bg2)}
+.fi-label{font-family:var(--font-m);font-size:.58rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.3rem;display:block}
+.fi-group{margin-bottom:.85rem}
+.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+@media(max-width:560px){.fi-row{grid-template-columns:1fr}}
+textarea.fi{resize:vertical;min-height:75px}
+
+/* ═══ MODAL ═══ */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.modal-overlay.show{opacity:1;pointer-events:all}
+.modal{
+  background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-xl);
+  width:100%;max-width:580px;max-height:90vh;overflow-y:auto;
+  transform:translateY(20px) scale(.97);transition:.2s;
+  position:relative;
+}
+.modal-overlay.show .modal{transform:none}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:var(--r-xl) var(--r-xl) 0 0}
+.modal-head{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:var(--font-d);font-size:1.3rem;letter-spacing:.04em;color:var(--text)}
+.modal-close{background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:.15s}
+.modal-close:hover{background:var(--red-dim);color:var(--red)}
+.modal-body{padding:1.5rem}
+.modal-foot{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.5rem}
+
+/* ═══ PROGRESS BAR ═══ */
+.prog-wrap{background:var(--border);border-radius:4px;overflow:hidden;height:5px}
+.prog-fill{height:100%;border-radius:4px;transition:width .5s ease;background:linear-gradient(90deg,var(--green),var(--blue))}
+
+/* ═══ TIMELINE ═══ */
+.tl{display:flex;flex-direction:column;gap:0}
+.tl-row{display:flex;gap:.75rem;padding:.55rem 0;position:relative}
+.tl-row::before{content:'';position:absolute;left:9px;top:32px;bottom:0;width:1px;background:var(--border)}
+.tl-row:last-child::before{display:none}
+.tl-dot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:800;margin-top:.2rem}
+.tl-dot.done{background:var(--green);color:#000}
+.tl-dot.cur{background:var(--green-dim);border:1.5px solid var(--green);color:var(--green)}
+.tl-dot.next{background:var(--surface2);border:1.5px solid var(--border2);color:var(--text3)}
+.tl-content strong{display:block;font-size:.8rem;font-weight:700;color:var(--text)}
+.tl-content span{font-size:.7rem;color:var(--text3);font-weight:300}
+
+/* ═══ ACTIVITY FEED ═══ */
+.activity-item{display:flex;gap:.65rem;padding:.65rem 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.activity-item:last-child{border:none;padding-bottom:0}
+.act-icon{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.72rem;margin-top:.05rem}
+.act-text{font-size:.78rem;color:var(--text2);line-height:1.5;flex:1}
+.act-text strong{color:var(--text);font-weight:700}
+.act-time{font-family:var(--font-m);font-size:.55rem;color:var(--text3);white-space:nowrap;margin-top:.15rem}
+
+/* ═══ MSG THREAD ═══ */
+.msg-thread{display:flex;flex-direction:column;gap:.5rem;max-height:340px;overflow-y:auto;padding:.75rem 0}
+.msg-bubble{max-width:85%}
+.msg-bubble.out{align-self:flex-end}
+.msg-bubble-inner{padding:.6rem .9rem;border-radius:10px;font-size:.82rem;line-height:1.55}
+.msg-bubble.in .msg-bubble-inner{background:var(--surface2);color:var(--text);border-radius:4px 10px 10px 10px}
+.msg-bubble.out .msg-bubble-inner{background:var(--green);color:#000;border-radius:10px 4px 10px 10px}
+.msg-meta{font-family:var(--font-m);font-size:.55rem;color:var(--text3);margin-top:.2rem;display:flex;align-items:center;gap:.3rem}
+.msg-bubble.out .msg-meta{justify-content:flex-end}
+
+/* ═══ TOGGLE ═══ */
+.toggle{width:38px;height:20px;background:var(--border2);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--green)}
+.toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s}
+.toggle.on::after{transform:translateX(18px)}
+
+/* ═══ CHART BARS ═══ */
+.bar-chart{display:flex;align-items:flex-end;gap:4px;height:80px;padding-top:4px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bar{width:100%;border-radius:3px 3px 0 0;transition:height .6s ease;min-height:3px;cursor:pointer}
+.bar:hover{opacity:.8}
+.bar-lbl{font-family:var(--font-m);font-size:.48rem;color:var(--text3);letter-spacing:.04em;text-align:center}
+
+/* ═══ REVENUE DONUT ═══ */
+.donut-wrap{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.donut-legend{display:flex;flex-direction:column;gap:.5rem}
+.dl-item{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--text2)}
+.dl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ═══ ORDER DETAIL PANEL ═══ */
+.detail-grid{display:grid;grid-template-columns:1fr 300px;gap:1.25rem;align-items:start}
+@media(max-width:960px){.detail-grid{grid-template-columns:1fr}}
+.detail-meta{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1rem}
+.dm-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.7rem .9rem}
+.dm-key{font-family:var(--font-m);font-size:.55rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem}
+.dm-val{font-size:.82rem;font-weight:600;color:var(--text)}
+
+/* ═══ SETTINGS ═══ */
+.settings-grid{display:grid;grid-template-columns:220px 1fr;gap:1.25rem;align-items:start}
+@media(max-width:860px){.settings-grid{grid-template-columns:1fr}}
+.settings-nav .sn-item{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;border-radius:var(--r);font-size:.82rem;font-weight:600;color:var(--text2);cursor:pointer;transition:.15s;border:1px solid transparent}
+.settings-nav .sn-item:hover{background:var(--surface);color:var(--text)}
+.settings-nav .sn-item.active{background:var(--surface);color:var(--green);border-color:var(--border)}
+.settings-section{display:none}.settings-section.active{display:block}
+
+/* ═══ NOTIFICATION DROPDOWN ═══ */
+.notif-dd{
+  position:fixed;top:var(--topbar-h);right:1rem;z-index:300;
+  width:290px;background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--r-lg);box-shadow:0 16px 40px rgba(0,0,0,.5);
+  display:none;overflow:hidden;
+}
+.notif-dd.show{display:block;animation:pageFadeIn .15s ease}
+.nd-hdr{padding:.75rem 1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.nd-hdr-title{font-family:var(--font-d);font-size:.95rem;letter-spacing:.04em}
+.nd-clear{font-size:.68rem;color:var(--green);cursor:pointer;font-weight:600}
+.nd-item{display:flex;gap:.55rem;padding:.7rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.nd-item:last-child{border:none}
+.nd-item:hover{background:var(--bg2)}
+.nd-ico{font-size:.9rem;flex-shrink:0;margin-top:.1rem}
+.nd-txt{font-size:.74rem;color:var(--text2);line-height:1.5;flex:1}
+.nd-txt b{color:var(--text);font-weight:700;display:block;margin-bottom:.05rem}
+.nd-t{font-family:var(--font-m);font-size:.52rem;color:var(--text3)}
+.nd-unread{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:.35rem}
+
+/* ═══ OVERLAY / MOBILE ═══ */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:199}
+.sb-overlay.show{display:block}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sb-close{display:block}
+  .main{margin-left:0}
+  .tb-ham{display:flex}
+  .tb-search{display:none}
+  .page{padding:1rem}
+  .stats-row{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .fi-row{grid-template-columns:1fr}
+}
+
+/* ═══ MISC ═══ */
+.separator{height:1px;background:var(--border);margin:1rem 0}
+.empty{text-align:center;padding:2.5rem 1rem}
+.empty-icon{font-size:2rem;opacity:.35;margin-bottom:.5rem}
+.empty-text{font-size:.82rem;color:var(--text3)}
+.tag{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-family:var(--font-m);font-size:.58rem;font-weight:700;letter-spacing:.04em}
+.tag-green{background:var(--green-dim);color:var(--green)}
+.tag-blue{background:var(--blue-dim);color:var(--blue)}
+.tag-purple{background:var(--purple-dim);color:var(--purple)}
+.avatar-sm{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:.75rem;font-weight:700}
+.dot-pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,232,122,.4)}50%{opacity:.6;box-shadow:0 0 0 5px rgba(0,232,122,0)}}
+.skeleton{background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ═══ NEW ORDER POPUP ═══ */
+#newOrderPopup{
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:9998;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--r-lg);padding:1.1rem 1.25rem;
+  width:300px;box-shadow:0 16px 48px rgba(0,0,0,.6);
+  transform:translateY(120px);opacity:0;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s ease;
+  pointer-events:none;
+}
+#newOrderPopup.show{transform:translateY(0);opacity:1;pointer-events:all;}
+#newOrderPopup::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:var(--r-lg) var(--r-lg) 0 0}
+.nop-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+.nop-badge{font-family:var(--font-m);font-size:.58rem;font-weight:700;color:var(--green);background:var(--green-dim);border:1px solid rgba(0,232,122,.2);padding:.15rem .55rem;border-radius:100px;letter-spacing:.06em;display:flex;align-items:center;gap:.3rem}
+.nop-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.2s ease infinite}
+.nop-close{background:none;border:none;color:var(--text3);font-size:.8rem;cursor:pointer;padding:.1rem .3rem;transition:color .15s}
+.nop-close:hover{color:var(--red)}
+.nop-name{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.15rem}
+.nop-detail{font-size:.74rem;color:var(--text2);margin-bottom:.75rem}
+.nop-actions{display:flex;gap:.5rem}
+.nop-btn{flex:1;padding:.42rem;border-radius:var(--r);font-size:.74rem;font-weight:700;border:none;cursor:pointer;transition:.15s;text-align:center}
+.nop-btn.primary{background:var(--green);color:#000}
+.nop-btn.primary:hover{box-shadow:0 0 16px var(--green-glow)}
+.nop-btn.ghost{background:transparent;border:1.5px solid var(--border2);color:var(--text2)}
+.nop-btn.ghost:hover{border-color:var(--green);color:var(--green)}
+
+/* ═══ ADMIN MOBILE — COMPREHENSIVE ═══ */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sb-close{display:block}
+  .main{margin-left:0}
+  .tb-ham{display:flex}
+  .tb-search{display:none}
+  .page{padding:1rem}
+  .stats-row{grid-template-columns:1fr 1fr}
+
+  /* Topbar — hide long labels */
+  .tb-view-site { display: none; }
+  .tb-right > a:last-child { display: none; } /* hide Client View link */
+
+  /* Live badge shrink */
+  .tb-right > div:first-child { display: none; }
+
+  /* Tables — horizontal scroll */
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .admin-tbl { min-width: 600px; font-size: .78rem; }
+  .admin-tbl th, .admin-tbl td { padding: .65rem .75rem; }
+
+  /* Modal full width */
+  .modal-box { max-width: 95vw; margin: 1rem; max-height: 90vh; overflow-y: auto; }
+
+  /* New order popup — full width bottom on mobile */
+  #newOrderPopup { right: .75rem; left: .75rem; width: auto; bottom: .75rem; }
+}
+
+@media(max-width:640px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .fi-row{grid-template-columns:1fr}
+
+  /* Page headers */
+  .ph-title { font-size: 1.4rem; }
+  .ph-actions { flex-wrap: wrap; gap: .4rem; }
+  .ph-actions .btn { font-size: .72rem; padding: .38rem .75rem; }
+
+  /* Cards */
+  .card-body { padding: .85rem; }
+  .card-h { padding: .75rem .85rem; flex-wrap: wrap; gap: .4rem; }
+
+  /* Revenue page */
+  .rev-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Messages layout */
+  .msg-layout { grid-template-columns: 1fr; }
+  .thread-list { max-height: 220px; overflow-y: auto; border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+@media(max-width:480px){
+  /* Login card */
+  .login-card { border-radius: 14px; }
+  .login-head { padding: 1.75rem 1.5rem 1.25rem; }
+  .login-body { padding: 1.25rem 1.5rem 1.75rem; }
+  .login-logo { font-size: 1.6rem; }
+
+  /* Topbar */
+  .topbar { padding: 0 .85rem; height: 52px; }
+  .tb-breadcrumb { font-size: .6rem; }
+  .tb-btn { width: 28px; height: 28px; font-size: .72rem; }
+  .tb-ham svg { width: 16px; height: 16px; }
+
+  /* Sidebar */
+  .sb-brand { height: 52px; padding: 0 1rem; }
+  .sb-logo { font-size: 1.2rem; }
+  .sb-item { font-size: .78rem; padding: .6rem 1rem; }
+  .sb-section { padding: .4rem 1rem .15rem; font-size: .5rem; }
+
+  /* Stats */
+  .stats-row { grid-template-columns: 1fr 1fr; gap: .65rem; }
+  .stat-card { padding: .85rem 1rem; }
+  .stat-val { font-size: 1.5rem; }
+
+  /* Activity feed */
+  .activity-item { padding: .65rem .85rem; }
+  .act-icon { width: 26px; height: 26px; font-size: .75rem; }
+  .act-text { font-size: .76rem; }
+  .act-time { font-size: .58rem; }
+
+  /* Page */
+  .page { padding: .85rem; }
+
+  /* Portfolio builder on mobile */
+  .builder-grid { grid-template-columns: 1fr !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ LOGIN ═══════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-head">
+      <div class="login-logo">Portfolio<span>Forge</span></div>
+      <div style="margin-bottom:.75rem"><div class="login-badge">🔐 Admin Access Only</div></div>
+      <p style="font-size:.78rem;color:var(--text3);font-weight:300">Sign in to manage orders, clients, and revenue.</p>
+    </div>
+    <div class="login-body">
+      <div>
+        <div class="login-label">Admin Email</div>
+        <input class="login-input" id="loginUser" type="email" placeholder="you@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+      <div>
+        <div class="login-label">Password</div>
+        <input class="login-input" id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+      <div class="login-err" id="loginErr"></div>
+      <button class="login-btn" id="loginBtn" onclick="doLogin()">Sign In →</button>
+      <div class="login-hint">🔐 Firebase Auth · Admin Access Only</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ APP ═══════════════════════════ -->
+<div id="app">
+
+<!-- NEW ORDER LIVE POPUP -->
+<div id="newOrderPopup">
+  <div class="nop-head">
+    <div class="nop-badge">🆕 NEW ORDER</div>
+    <button class="nop-close" onclick="dismissPopup()">✕</button>
+  </div>
+  <div class="nop-name" id="popName">—</div>
+  <div class="nop-detail" id="popDetail">—</div>
+  <div class="nop-actions">
+    <button class="nop-btn primary" onclick="popViewOrder()">View Order →</button>
+    <button class="nop-btn ghost" onclick="dismissPopup()">Dismiss</button>
+  </div>
+</div>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">Portfolio<span>Forge</span></div>
+    <div style="display:flex;align-items:center;gap:.5rem">
+      <div class="sb-admin-tag">ADMIN</div>
+      <button class="sb-close" onclick="closeSB()">✕</button>
+    </div>
+  </div>
+  <div class="sb-user">
+    <div class="sb-avatar">S</div>
+    <div>
+      <div class="sb-uname">Sujay Banarjee</div>
+      <div class="sb-urole" style="display:flex;align-items:center;gap:.3rem"><div class="dot-pulse"></div> Super Admin</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Overview</div>
+    <div class="sb-item active" data-page="dashboard" onclick="showPage('dashboard',this)"><span class="si-icon">📊</span> Dashboard</div>
+    <div class="sb-item" data-page="analytics" onclick="showPage('analytics',this)"><span class="si-icon">📈</span> Analytics</div>
+    <div class="sb-section">Management</div>
+    <div class="sb-item" data-page="orders" onclick="showPage('orders',this)"><span class="si-icon">📋</span> Orders <span class="si-badge red" id="sb-pending-ct">3</span></div>
+    <div class="sb-item" data-page="clients" onclick="showPage('clients',this)"><span class="si-icon">👥</span> Clients</div>
+    <div class="sb-item" data-page="messages" onclick="showPage('messages',this)"><span class="si-icon">💬</span> Messages <span class="si-badge green" id="sb-msg-ct">5</span></div>
+    <div class="sb-item" data-page="revenue" onclick="showPage('revenue',this)"><span class="si-icon">💰</span> Revenue</div>
+    <div class="sb-section">System</div>
+    <div class="sb-item" data-page="portfolio-builder" onclick="showPage('portfolio-builder',this)"><span class="si-icon">🔨</span> Portfolio Builder</div>
+    <div class="sb-item" data-page="settings" onclick="showPage('settings',this)"><span class="si-icon">⚙️</span> Settings</div>
+    <div class="sb-item" data-page="logs" onclick="showPage('logs',this)"><span class="si-icon">📜</span> Activity Log</div>
+    <div class="sb-item" data-page="test-payments" onclick="showPage('test-payments',this)"><span class="si-icon">🧪</span> Test Payments</div>
+    <div class="sb-section">Quick Links</div>
+    <div class="sb-item" onclick="window.open('submit-order.html','_blank')"><span class="si-icon">📝</span> Order Form</div>
+    <div class="sb-item" onclick="window.open('track-order.html','_blank')"><span class="si-icon">📊</span> Client Tracker</div>
+    <div class="sb-item" onclick="window.open('index.html','_blank')"><span class="si-icon">🌐</span> View Site</div>
+    <div class="sb-item" onclick="window.open('https://wa.me/919999999999','_blank')"><span class="si-icon">📱</span> WhatsApp</div>
+  </nav>
+  <div class="sb-foot">
+    <button class="sb-foot-btn" onclick="logout()">🚪 Sign Out</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main" id="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <button class="tb-ham" onclick="openSB()"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <div class="tb-breadcrumb">Admin / <span id="bcTitle">Dashboard</span></div>
+      <div class="tb-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search orders, clients…" id="globalSearch" oninput="globalSearchFn(this.value)"/>
+      </div>
+    </div>
+    <div class="tb-right">
+      <!-- Live pulse indicator -->
+      <div style="display:flex;align-items:center;gap:.4rem;font-family:var(--font-m);font-size:.6rem;color:var(--green);letter-spacing:.06em;background:var(--green-dim);border:1px solid rgba(0,232,122,.2);padding:.28rem .7rem;border-radius:100px">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:livePulse 1.5s ease infinite"></span>
+        LIVE
+      </div>
+      <div class="tb-btn" id="notifToggleBtn" onclick="toggleNotif()">🔔<div class="dot" id="notifDot"></div></div>
+      <div class="tb-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">🌙</div>
+      <a href="index.html" target="_blank" class="tb-view-site">↗ View Site</a>
+      <a href="track-order.html" target="_blank" style="display:flex;align-items:center;gap:.4rem;background:var(--blue-dim);border:1px solid rgba(0,184,255,.2);color:var(--blue);padding:.38rem .85rem;border-radius:var(--r);font-size:.72rem;font-weight:700;letter-spacing:.04em;transition:.2s" onmouseover="this.style.background='var(--blue)';this.style.color='#000'" onmouseout="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'">📊 Client View</a>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="notif-dd" id="notifDD">
+    <div class="nd-hdr"><span class="nd-hdr-title">Notifications</span><span class="nd-clear" onclick="clearNotifs()">Mark all read</span></div>
+    <div id="notifList"></div>
+  </div>
+
+  <!-- ══════════════════ DASHBOARD PAGE ══════════════════ -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-hdr">
+      <div>
+        <div class="ph-title">Dashboard <span>Overview</span></div>
+        <div class="ph-sub" id="dashDate"></div>
+      </div>
+      <div class="ph-actions">
+        <button class="btn btn-ghost btn-sm" onclick="refreshOrders()">🔄 Refresh</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportData()">⬇ Export</button>
+        <button class="btn btn-red btn-sm" onclick="clearAllData()" id="wipeBtn" title="Delete ALL orders from Firestore">🗑 Wipe All</button>
+        <button class="btn btn-green btn-sm" onclick="openModal('new-order-modal')">+ New Order</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card g"><div class="sc-icon">💰</div><div class="sc-val g" id="ds-revenue">₹0</div><div class="sc-label">Total Revenue</div><div class="sc-delta up" id="ds-rev-delta">↑ this week</div></div>
+      <div class="stat-card b"><div class="sc-icon">📋</div><div class="sc-val b" id="ds-orders">0</div><div class="sc-label">Total Orders</div><div class="sc-delta up" id="ds-ord-delta">↑ this month</div></div>
+      <div class="stat-card y"><div class="sc-icon">⏳</div><div class="sc-val y" id="ds-pending">0</div><div class="sc-label">Pending Payment</div><div class="sc-delta" id="ds-pend-note">requires action</div></div>
+      <div class="stat-card p"><div class="sc-icon">👥</div><div class="sc-val" id="ds-clients">0</div><div class="sc-label">Total Clients</div><div class="sc-delta up">↑ growing</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:1.25rem;margin-bottom:1.25rem">
+      <!-- REVENUE CHART -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="card-title-icon">📈</span> Revenue (Last 7 Days)</div>
+          <div class="card-actions">
+            <select class="fi" style="width:auto;padding:.25rem .5rem;font-size:.7rem" id="chartRange" onchange="renderRevenueChart()">
+              <option value="7">7 days</option><option value="30">30 days</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="mini-chart-wrap"><canvas id="revenueChart"></canvas></div>
+          <div class="bar-chart" id="revBarChart"></div>
+        </div>
+      </div>
+      <!-- PLAN BREAKDOWN -->
+      <div class="card">
+        <div class="card-head"><div class="card-title"><span class="card-title-icon">🥧</span> Plan Split</div></div>
+        <div class="card-body">
+          <div class="donut-wrap">
+            <canvas id="donutChart" width="110" height="110"></canvas>
+            <div class="donut-legend" id="donutLegend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+      <!-- RECENT ORDERS -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="card-title-icon">📋</span> Recent Orders</div>
+          <div class="card-actions"><span class="btn btn-ghost btn-sm" onclick="showPage('orders',document.querySelector('[data-page=orders]'))">View all →</span></div>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div class="tbl-wrap">
+            <table class="admin-tbl" id="recentOrdersTbl"></table>
+          </div>
+        </div>
+      </div>
+      <!-- ACTIVITY FEED -->
+      <div class="card">
+        <div class="card-head"><div class="card-title"><span class="card-title-icon">⚡</span> Live Activity</div><div class="card-actions"><div class="dot-pulse"></div></div></div>
+        <div class="card-body" id="activityFeed" style="padding:.75rem 1.25rem;max-height:280px;overflow-y:auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ ORDERS PAGE ══════════════════ -->
+  <div class="page" id="page-orders">
+    <div class="page-hdr">
+      <div><div class="ph-title">All <span>Orders</span></div><div class="ph-sub" id="orders-count-label">Loading…</div></div>
+      <div class="ph-actions">
+        <select class="fi" style="width:auto" id="orderStatusFilter" onchange="renderOrdersTable()">
+          <option value="all">All Status</option>
+          <option value="Pending Payment">Pending Payment</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Preview Shared">Preview Shared</option>
+          <option value="Completed">Completed</option>
+          <option value="Revision Requested">Revision Requested</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        <select class="fi" style="width:auto" id="orderPlanFilter" onchange="renderOrdersTable()">
+          <option value="all">All Plans</option>
+          <option value="founding">⚡ Founding</option>
+          <option value="starter">Starter</option>
+          <option value="pro">Pro Animated</option>
+          <option value="premium">Premium</option>
+        </select>
+        <button class="btn btn-green btn-sm" onclick="openModal('new-order-modal')">+ New Order</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+          <input class="fi" style="width:200px" type="text" placeholder="🔍 Search by name, ID…" id="ordersSearchInput" oninput="renderOrdersTable()"/>
+          <span style="font-family:var(--font-m);font-size:.6rem;color:var(--text3)" id="ordersFoundLabel"></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-ghost btn-sm" onclick="exportOrders()">⬇ CSV</button>
+          <button class="btn btn-red btn-sm" id="bulkDeleteBtn" onclick="bulkDelete()" style="display:none">🗑 Delete Selected</button>
+        </div>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="tbl-wrap">
+          <table class="admin-tbl" id="ordersTable">
+            <thead><tr>
+              <th class="row-check"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"/></th>
+              <th>Order ID</th><th>Client</th><th>Plan</th><th>Total</th>
+              <th>Payment</th><th>Status</th><th>Date</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ CLIENTS PAGE ══════════════════ -->
+  <div class="page" id="page-clients">
+    <div class="page-hdr">
+      <div><div class="ph-title">All <span>Clients</span></div><div class="ph-sub">Manage your client relationships</div></div>
+      <div class="ph-actions">
+        <input class="fi" style="width:200px" type="text" placeholder="🔍 Search clients…" id="clientSearchInput" oninput="renderClientsTable()"/>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding:0">
+        <div class="tbl-wrap">
+          <table class="admin-tbl" id="clientsTable">
+            <thead><tr><th>Client</th><th>Email</th><th>Phone</th><th>Role</th><th>Plan</th><th>Total Spent</th><th>Joined</th><th>Actions</th></tr></thead>
+            <tbody id="clientsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ MESSAGES PAGE ══════════════════ -->
+  <div class="page" id="page-messages">
+    <div class="page-hdr">
+      <div><div class="ph-title">Messages <span>Inbox</span></div><div class="ph-sub">Communicate with clients directly</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:280px 1fr;gap:1.25rem;height:calc(100vh - 180px)">
+      <!-- Thread list -->
+      <div class="card" style="height:100%;overflow:hidden;display:flex;flex-direction:column">
+        <div class="card-head"><div class="card-title"><span class="card-title-icon">💬</span> Conversations</div></div>
+        <div style="flex:1;overflow-y:auto" id="threadList"></div>
+      </div>
+      <!-- Active thread -->
+      <div class="card" style="height:100%;overflow:hidden;display:flex;flex-direction:column">
+        <div class="card-head" id="threadHead">
+          <div class="card-title">Select a conversation</div>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:1rem" id="threadMessages"></div>
+        <div style="padding:.75rem;border-top:1px solid var(--border);display:flex;gap:.5rem" id="threadCompose">
+          <input class="fi" style="flex:1" type="text" id="threadInput" placeholder="Type a reply…" onkeydown="if(event.key==='Enter')sendThreadMsg()"/>
+          <button class="btn btn-green" onclick="sendThreadMsg()">Send →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ REVENUE PAGE ══════════════════ -->
+  <div class="page" id="page-revenue">
+    <div class="page-hdr">
+      <div><div class="ph-title">Revenue <span>Analytics</span></div><div class="ph-sub">Track your earnings and growth</div></div>
+      <div class="ph-actions">
+        <button class="btn btn-ghost btn-sm" onclick="exportRevenue()">⬇ Export Report</button>
+      </div>
+    </div>
+    <div class="stats-row" style="grid-template-columns:repeat(5,1fr)">
+      <div class="stat-card g"><div class="sc-icon">💰</div><div class="sc-val g" id="rev-total">₹0</div><div class="sc-label">Total Revenue</div></div>
+      <div class="stat-card b"><div class="sc-icon">✅</div><div class="sc-val b" id="rev-collected">₹0</div><div class="sc-label">Collected</div></div>
+      <div class="stat-card y"><div class="sc-icon">⏳</div><div class="sc-val y" id="rev-pending">₹0</div><div class="sc-label">Pending</div></div>
+      <div class="stat-card p"><div class="sc-icon">📦</div><div class="sc-val" id="rev-orders">0</div><div class="sc-label">Paid Orders</div></div>
+      <div class="stat-card r"><div class="sc-icon">🎯</div><div class="sc-val" id="rev-avg">₹0</div><div class="sc-label">Avg. Order</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.25rem;margin-bottom:1.25rem">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><span class="card-title-icon">📊</span> Revenue by Plan</div></div>
+        <div class="card-body">
+          <div id="planRevBars"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title"><span class="card-title-icon">🥧</span> Plan Distribution</div></div>
+        <div class="card-body"><canvas id="revDonut" width="180" height="180"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title"><span class="card-title-icon">🧾</span> Payment Ledger</div></div>
+      <div class="card-body" style="padding:0">
+        <div class="tbl-wrap">
+          <table class="admin-tbl">
+            <thead><tr><th>Order ID</th><th>Client</th><th>Plan</th><th>Amount</th><th>Payment Method</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+            <tbody id="ledgerBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ ANALYTICS PAGE ══════════════════ -->
+  <div class="page" id="page-analytics">
+    <div class="page-hdr"><div><div class="ph-title">Site <span>Analytics</span></div><div class="ph-sub">Performance metrics and growth data</div></div></div>
+    <div class="stats-row">
+      <div class="stat-card g"><div class="sc-icon">📋</div><div class="sc-val g" id="ana-total">0</div><div class="sc-label">Total Orders</div><div class="sc-delta">all time</div></div>
+      <div class="stat-card y"><div class="sc-icon">⏳</div><div class="sc-val y" id="ana-pending">0</div><div class="sc-label">Pending Payment</div><div class="sc-delta">awaiting action</div></div>
+      <div class="stat-card b"><div class="sc-icon">✅</div><div class="sc-val b" id="ana-completed">0</div><div class="sc-label">Completed</div><div class="sc-delta">delivered</div></div>
+      <div class="stat-card p"><div class="sc-icon">💰</div><div class="sc-val" id="ana-avg">₹0</div><div class="sc-label">Avg. Order Value</div><div class="sc-delta">per order</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><span class="card-title-icon">📱</span> Traffic Sources</div></div>
+        <div class="card-body" id="trafficBars"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title"><span class="card-title-icon">🌍</span> Order Sources</div></div>
+        <div class="card-body">
+          <div id="orderSourcesTable">
+            <!-- Populated by renderAnalytics() from real order data -->
+          </div>
+          <div style="margin-top:.75rem;padding:.65rem;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);font-size:.72rem;color:var(--text3);line-height:1.6">
+            💡 <strong style="color:var(--text2)">Want real traffic analytics?</strong><br/>
+            Connect <a href="https://analytics.google.com" target="_blank" style="color:var(--green)">Google Analytics</a> to your site to see real visitor data, referrers and conversion rates.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ PORTFOLIO BUILDER PAGE ══════════════════ -->
+  <div class="page" id="page-portfolio-builder">
+    <div class="page-hdr"><div><div class="ph-title">Portfolio <span>Builder</span></div><div class="ph-sub">Track and manage all active builds</div></div></div>
+    <div class="card">
+      <div class="card-head"><div class="card-title"><span class="card-title-icon">🔨</span> Active Builds</div></div>
+      <div class="card-body" style="padding:0">
+        <div class="tbl-wrap">
+          <table class="admin-tbl">
+            <thead><tr><th>Order</th><th>Client</th><th>Plan</th><th>Progress</th><th>ETA</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="builderBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ TEST PAYMENTS PAGE ══════════════════ -->
+  <div class="page" id="page-test-payments">
+    <div class="page-hdr">
+      <div>
+        <div class="ph-title">Test <span>Payments</span></div>
+        <div class="ph-sub">Simulate demo payments and verify they appear here — so you know real payments will too.</div>
+      </div>
+      <div class="ph-actions">
+        <a href="submit-order.html" target="_blank" class="btn btn-green btn-sm">↗ Open Order Form</a>
+        <button class="btn btn-ghost btn-sm" onclick="renderTestPaymentsPage()">🔄 Refresh</button>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="card" style="margin-bottom:1.25rem;border-color:rgba(0,232,122,.25)">
+      <div class="card-head" style="background:rgba(0,232,122,.04)">
+        <div class="card-title"><span class="card-title-icon">💡</span> How to Test</div>
+      </div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+          <div style="display:flex;gap:.75rem;align-items:flex-start">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--green-dim);border:1px solid rgba(0,232,122,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.72rem;color:var(--green);flex-shrink:0;font-weight:700">1</div>
+            <div><div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:.2rem">Open Order Form</div><div style="font-size:.74rem;color:var(--text3);line-height:1.5">Click "Open Order Form" above — fill in any details</div></div>
+          </div>
+          <div style="display:flex;gap:.75rem;align-items:flex-start">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--yellow-dim);border:1px solid rgba(255,211,42,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.72rem;color:var(--yellow);flex-shrink:0;font-weight:700">2</div>
+            <div><div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:.2rem">Select Demo Payment</div><div style="font-size:.74rem;color:var(--text3);line-height:1.5">On Step 2, choose "Demo Test Payment" and pick Success or Failed</div></div>
+          </div>
+          <div style="display:flex;gap:.75rem;align-items:flex-start">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--blue-dim);border:1px solid rgba(0,184,255,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.72rem;color:var(--blue);flex-shrink:0;font-weight:700">3</div>
+            <div><div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:.2rem">Check This Page</div><div style="font-size:.74rem;color:var(--text3);line-height:1.5">Click Refresh — the test order should appear below with the correct payment status</div></div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;padding:.75rem 1rem;background:rgba(0,232,122,.06);border:1px solid rgba(0,232,122,.15);border-radius:var(--r);font-size:.78rem;color:var(--text2);line-height:1.6">
+          ✅ <strong style="color:var(--text)">If test orders appear here correctly</strong> — real Cashfree payments will appear in your Orders page exactly the same way. Both use the same Firestore write path.
+        </div>
+      </div>
+    </div>
+
+    <!-- STATUS OVERVIEW -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem" id="testPayStats">
+      <div class="stat-card g"><div class="sc-icon">✅</div><div class="sc-val g" id="tp-success-ct">0</div><div class="sc-label">Demo Successes</div></div>
+      <div class="stat-card r"><div class="sc-icon">❌</div><div class="sc-val r" id="tp-fail-ct">0</div><div class="sc-label">Demo Failures</div></div>
+      <div class="stat-card y"><div class="sc-icon">⏳</div><div class="sc-val y" id="tp-pending-ct">0</div><div class="sc-label">Pending</div></div>
+    </div>
+
+    <!-- TEST ORDERS TABLE -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="card-title-icon">🧪</span> All Test / Demo Orders</div>
+        <div class="card-actions">
+          <button class="btn btn-red btn-sm" onclick="clearTestOrders()">🗑 Clear Test Orders</button>
+        </div>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="tbl-wrap">
+          <table class="admin-tbl">
+            <thead><tr>
+              <th>Order ID</th><th>Client</th><th>Plan</th><th>Total</th>
+              <th>Payment Method</th><th>Payment Status</th><th>Order Status</th><th>Time</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="testPayBody">
+              <tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text3);font-size:.8rem">No test orders yet. Run a demo payment from the order form.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIRESTORE CONNECTION STATUS -->
+    <div class="card" style="margin-top:1.25rem">
+      <div class="card-head">
+        <div class="card-title"><span class="card-title-icon">🔌</span> Firestore Connection Status</div>
+        <button class="btn btn-ghost btn-sm" onclick="checkFirestoreConnection()">Check Now</button>
+      </div>
+      <div class="card-body">
+        <div id="firestoreStatus" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;background:var(--bg);border:1px solid var(--border2);border-radius:var(--r)">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--text3)" id="fsStatusDot"></div>
+          <div>
+            <div style="font-size:.82rem;font-weight:700;color:var(--text)" id="fsStatusText">Click "Check Now" to test connection</div>
+            <div style="font-size:.7rem;color:var(--text3);margin-top:.1rem" id="fsStatusSub">Checks if orders from the submit form are reaching Firestore</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ SETTINGS PAGE ══════════════════ -->
+  <div class="page" id="page-settings">
+    <div class="page-hdr"><div><div class="ph-title">Admin <span>Settings</span></div><div class="ph-sub">Configure your PortfolioForge panel</div></div></div>
+    <div class="settings-grid">
+      <div class="settings-nav card" style="padding:.5rem">
+        <div class="sn-item active" onclick="showSettingsSection('general',this)">🏠 General</div>
+        <div class="sn-item" onclick="showSettingsSection('pricing',this)">💰 Pricing</div>
+        <div class="sn-item" onclick="showSettingsSection('notifications',this)">🔔 Notifications</div>
+        <div class="sn-item" onclick="showSettingsSection('security',this)">🔒 Security</div>
+        <div class="sn-item" onclick="showSettingsSection('integrations',this)">🔗 Integrations</div>
+      </div>
+      <div>
+        <!-- General -->
+        <div class="settings-section active card" id="ss-general">
+          <div class="card-head"><div class="card-title">🏠 General Settings</div></div>
+          <div class="card-body">
+            <div class="fi-row">
+              <div class="fi-group"><label class="fi-label">Brand Name</label><input class="fi" value="PortfolioForge" id="s-brand"/></div>
+              <div class="fi-group"><label class="fi-label">Admin Name</label><input class="fi" value="Sujay Banarjee" id="s-adminname"/></div>
+            </div>
+            <div class="fi-row">
+              <div class="fi-group"><label class="fi-label">Contact Email</label><input class="fi" type="email" value="portfolioforge@gmail.com" id="s-email"/></div>
+              <div class="fi-group"><label class="fi-label">WhatsApp Number</label><input class="fi" value="+91 96128 71060" id="s-whatsapp"/></div>
+            </div>
+            <div class="fi-group"><label class="fi-label">Site URL</label><input class="fi" value="https://portfolioforge.vercel.app" id="s-url"/></div>
+            <div class="fi-group"><label class="fi-label">Delivery Time Guarantee</label>
+              <select class="fi" id="s-delivery">
+                <option>24 hours</option><option>48 hours</option><option>72 hours</option>
+              </select>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-top:1px solid var(--border)">
+              <div><div style="font-size:.85rem;font-weight:600;color:var(--text)">Maintenance Mode</div><div style="font-size:.72rem;color:var(--text3)">Temporarily disable new orders</div></div>
+              <div class="toggle" id="maintenanceToggle" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-top:1px solid var(--border)">
+              <div><div style="font-size:.85rem;font-weight:600;color:var(--text)">Founding Offer Active</div><div style="font-size:.72rem;color:var(--text3)">Show ₹49 founding offer on site</div></div>
+              <div class="toggle on" id="foundingToggle" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <button class="btn btn-green" style="margin-top:.75rem;width:100%;justify-content:center;padding:.75rem" onclick="saveSettings()">Save Settings →</button>
+          </div>
+        </div>
+        <!-- Pricing -->
+        <div class="settings-section card" id="ss-pricing">
+          <div class="card-head"><div class="card-title">💰 Pricing Management</div></div>
+          <div class="card-body">
+            <div style="margin-bottom:.75rem;font-family:var(--font-m);font-size:.6rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase">Plan Prices (₹)</div>
+            <div class="fi-row">
+              <div class="fi-group"><label class="fi-label">⚡ Founding Offer</label><input class="fi" type="number" value="49" id="p-founding"/></div>
+              <div class="fi-group"><label class="fi-label">Starter Portfolio</label><input class="fi" type="number" value="99" id="p-starter"/></div>
+            </div>
+            <div class="fi-row">
+              <div class="fi-group"><label class="fi-label">Pro Animated</label><input class="fi" type="number" value="249" id="p-pro"/></div>
+              <div class="fi-group"><label class="fi-label">Premium Portfolio</label><input class="fi" type="number" value="449" id="p-premium"/></div>
+            </div>
+            <div style="margin:.75rem 0;font-family:var(--font-m);font-size:.6rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase">Add-on Prices (₹)</div>
+            <div class="fi-row">
+              <div class="fi-group"><label class="fi-label">Custom Domain</label><input class="fi" type="number" value="49"/></div>
+              <div class="fi-group"><label class="fi-label">Blog Section</label><input class="fi" type="number" value="79"/></div>
+              <div class="fi-group"><label class="fi-label">Contact Form</label><input class="fi" type="number" value="59"/></div>
+              <div class="fi-group"><label class="fi-label">SEO Package</label><input class="fi" type="number" value="99"/></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-top:1px solid var(--border)">
+              <div><div style="font-size:.85rem;font-weight:600;color:var(--text)">Founding Offer Slots</div><div style="font-size:.72rem;color:var(--text3)">Remaining founding offer slots</div></div>
+              <input class="fi" type="number" value="2" style="width:70px;text-align:center"/>
+            </div>
+            <button class="btn btn-green" style="margin-top:.75rem;width:100%;justify-content:center;padding:.75rem" onclick="saveSettings()">Save Pricing →</button>
+          </div>
+        </div>
+        <!-- Notifications -->
+        <div class="settings-section card" id="ss-notifications">
+          <div class="card-head"><div class="card-title">🔔 Notification Settings</div></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:.75rem">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border)"><div><div style="font-size:.85rem;font-weight:600;color:var(--text)">New Order Alert</div><div style="font-size:.72rem;color:var(--text3)">Notify when a new order is placed</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border)"><div><div style="font-size:.85rem;font-weight:600;color:var(--text)">Payment Received</div><div style="font-size:.72rem;color:var(--text3)">Notify on payment confirmation</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border)"><div><div style="font-size:.85rem;font-weight:600;color:var(--text)">Client Message</div><div style="font-size:.72rem;color:var(--text3)">Notify on new dashboard messages</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0"><div><div style="font-size:.85rem;font-weight:600;color:var(--text)">WhatsApp Alerts</div><div style="font-size:.72rem;color:var(--text3)">Forward alerts to WhatsApp</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            </div>
+          </div>
+        </div>
+        <!-- Security -->
+        <div class="settings-section card" id="ss-security">
+          <div class="card-head"><div class="card-title">🔒 Security</div></div>
+          <div class="card-body">
+            <div class="fi-group"><label class="fi-label">Current Password</label><input class="fi" type="password" placeholder="••••••••"/></div>
+            <div class="fi-row">
+              <div class="fi-group"><label class="fi-label">New Password</label><input class="fi" type="password" placeholder="Min 8 chars" id="newPass"/></div>
+              <div class="fi-group"><label class="fi-label">Confirm Password</label><input class="fi" type="password" placeholder="Repeat new password" id="confPass"/></div>
+            </div>
+            <div style="padding:.75rem;background:var(--yellow-dim);border:1px solid rgba(255,211,42,.2);border-radius:var(--r);font-size:.78rem;color:var(--yellow);margin-bottom:1rem">⚠️ Default credentials are admin / admin123. Change immediately in production.</div>
+            <button class="btn btn-green" onclick="changePassword()">Update Password →</button>
+            <div class="separator"></div>
+            <div style="padding:.75rem;background:var(--red-dim);border:1px solid rgba(255,71,87,.2);border-radius:var(--r);margin-bottom:.75rem">
+              <div style="font-size:.85rem;font-weight:700;color:var(--red);margin-bottom:.25rem">⚠️ Danger Zone</div>
+              <div style="font-size:.75rem;color:var(--text2);margin-bottom:.75rem">Permanently deletes all orders, messages and logs from this browser's storage. Cannot be undone.</div>
+              <button class="btn btn-red" onclick="clearAllData()">🗑 Clear All Data</button>
+            </div>
+          </div>
+        </div>
+        <!-- Integrations -->
+        <div class="settings-section card" id="ss-integrations">
+          <div class="card-head"><div class="card-title">🔗 Integrations</div></div>
+          <div class="card-body">
+            <div class="fi-group"><label class="fi-label">WhatsApp Number (for notifications)</label><input class="fi" value="+919999999999" id="s-wa2"/></div>
+            <div class="fi-group"><label class="fi-label">Razorpay Key (optional)</label><input class="fi" placeholder="rzp_live_xxxxxxxxxxxx"/></div>
+            <div class="fi-group"><label class="fi-label">Google Analytics ID</label><input class="fi" placeholder="G-XXXXXXXXXX"/></div>
+            <div class="fi-group"><label class="fi-label">Telegram Bot Token (alerts)</label><input class="fi" placeholder="123456:ABCdef…"/></div>
+            <button class="btn btn-green" onclick="saveSettings()">Save Integrations →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ ACTIVITY LOG PAGE ══════════════════ -->
+  <div class="page" id="page-logs">
+    <div class="page-hdr"><div><div class="ph-title">Activity <span>Log</span></div><div class="ph-sub">Full audit trail of all admin actions</div></div><div class="ph-actions"><button class="btn btn-ghost btn-sm" onclick="clearLogs()">🗑 Clear Logs</button></div></div>
+    <div class="card">
+      <div class="card-body" id="logsFeed" style="max-height:70vh;overflow-y:auto"></div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /layout -->
+</div><!-- /app -->
+
+<!-- ══════════════════════════ MODALS ══════════════════════════ -->
+
+<!-- NEW ORDER MODAL -->
+<div class="modal-overlay" id="new-order-modal" onclick="closeModalOutside(event,'new-order-modal')">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title">➕ Add New Order</span><button class="modal-close" onclick="closeModal('new-order-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="fi-row">
+        <div class="fi-group"><label class="fi-label">Client Name *</label><input class="fi" id="no-name" placeholder="Full name"/></div>
+        <div class="fi-group"><label class="fi-label">Email *</label><input class="fi" id="no-email" type="email" placeholder="email@example.com"/></div>
+      </div>
+      <div class="fi-row">
+        <div class="fi-group"><label class="fi-label">Phone</label><input class="fi" id="no-phone" placeholder="+91 96128 71060"/></div>
+        <div class="fi-group"><label class="fi-label">Role</label><input class="fi" id="no-role" placeholder="Frontend Developer"/></div>
+      </div>
+      <div class="fi-row">
+        <div class="fi-group"><label class="fi-label">Plan *</label>
+          <select class="fi" id="no-plan" onchange="updateNewOrderTotal()">
+            <option value="49|⚡ Founding Offer|founding">⚡ Founding Offer — ₹49</option>
+            <option value="99|Starter Portfolio|starter">Starter Portfolio — ₹99</option>
+            <option value="249|Pro Animated Portfolio|pro">Pro Animated — ₹249</option>
+            <option value="449|Premium Portfolio|premium">Premium Portfolio — ₹449</option>
+          </select>
+        </div>
+        <div class="fi-group"><label class="fi-label">Status</label>
+          <select class="fi" id="no-status">
+            <option>Pending Payment</option><option>In Progress</option>
+            <option>Preview Shared</option><option>Completed</option>
+          </select>
+        </div>
+      </div>
+      <div class="fi-row">
+        <div class="fi-group"><label class="fi-label">Payment Method</label>
+          <select class="fi" id="no-payment">
+            <option>UPI (GPay / PhonePe)</option><option>Bank Transfer</option>
+            <option>Razorpay</option><option>Pay After Delivery</option>
+          </select>
+        </div>
+        <div class="fi-group"><label class="fi-label">Total (₹)</label><input class="fi" id="no-total" type="number" value="49" readonly style="color:var(--green);font-weight:700"/></div>
+      </div>
+      <div class="fi-group"><label class="fi-label">Notes</label><textarea class="fi" id="no-notes" placeholder="Any special instructions…"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('new-order-modal')">Cancel</button>
+      <button class="btn btn-green" onclick="createOrder()">Create Order →</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT ORDER MODAL -->
+<div class="modal-overlay" id="edit-order-modal" onclick="closeModalOutside(event,'edit-order-modal')">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title">✏️ Edit Order</span><button class="modal-close" onclick="closeModal('edit-order-modal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="eo-id"/>
+      <div class="fi-row">
+        <div class="fi-group"><label class="fi-label">Status</label>
+          <select class="fi" id="eo-status">
+            <option>Pending Payment</option><option>In Progress</option>
+            <option>Preview Shared</option><option>Completed</option>
+            <option>Revision Requested</option><option>Cancelled</option>
+          </select>
+        </div>
+        <div class="fi-group"><label class="fi-label">Progress (%)</label><input class="fi" id="eo-progress" type="number" min="0" max="100"/></div>
+      </div>
+      <div class="fi-row">
+        <div class="fi-group"><label class="fi-label">Payment Status</label>
+          <select class="fi" id="eo-payment-status"><option value="unpaid">Unpaid</option><option value="paid">Paid</option></select>
+        </div>
+        <div class="fi-group"><label class="fi-label">Delivery URL</label><input class="fi" id="eo-url" type="url" placeholder="https://…"/></div>
+      </div>
+      <div class="fi-group"><label class="fi-label">Admin Notes</label><textarea class="fi" id="eo-notes" placeholder="Internal notes about this order…"></textarea></div>
+      <div class="fi-group"><label class="fi-label">Message to Client</label><textarea class="fi" id="eo-msg" placeholder="Optional message to send to client…" rows="3"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('edit-order-modal')">Cancel</button>
+      <button class="btn btn-green" onclick="saveOrderEdit()">Save Changes →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER DETAIL MODAL -->
+<div class="modal-overlay" id="order-detail-modal" onclick="closeModalOutside(event,'order-detail-modal')">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-head"><span class="modal-title" id="odm-title">Order Details</span><button class="modal-close" onclick="closeModal('order-detail-modal')">✕</button></div>
+    <div class="modal-body" id="odm-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('order-detail-modal')">Close</button>
+      <button class="btn btn-blue" onclick="copyOrderId()">📋 Copy ID</button>
+      <button class="btn btn-green" id="odm-edit-btn">✏️ Edit Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSB()"></div>
+
+<!-- TOAST -->
+<div id="toast" style="position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#000;padding:.6rem 1.5rem;border-radius:var(--r);font-size:.8rem;font-weight:800;z-index:9999;transition:transform .3s ease;white-space:nowrap;box-shadow:0 8px 24px rgba(0,232,122,.3)"></div>
+
+
+<!-- ═══════════════════════════════════════════
+  FIREBASE SDK (v10 modular via CDN compat)
+════════════════════════════════════════════ -->
+<script type="module">
+  
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, collection, doc, getDocs, getDoc, addDoc, setDoc, updateDoc, deleteDoc,
+  onSnapshot, query, orderBy, serverTimestamp, Timestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ══════════════════════════════════════════════
+   FIREBASE INIT
+══════════════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyA5p0Rf5lb_8AKoeW9WlAjb6EHmwP1xbTY",
+  authDomain: "portfolio-forge-73765.firebaseapp.com",
+  projectId: "portfolio-forge-73765",
+  storageBucket: "portfolio-forge-73765.firebasestorage.app",
+  messagingSenderId: "50141160465",
+  appId: "1:50141160465:web:5fcb8b96278d71def7fdb0",
+  measurementId: "G-P2BGNCQ2YP"
+};
+
+const app   = initializeApp(firebaseConfig);
+const auth  = getAuth(app);
+const db    = getFirestore(app);
+
+/* ══════════════════════════════════════════════
+   GLOBALS
+══════════════════════════════════════════════ */
+let darkMode     = true;
+let activeThread = null;
+let orders       = [];
+let activityLog  = [];
+let unsubOrders  = null;   // Firestore real-time listener unsubscribe fn
+
+/* ══════════════════════════════════════════════
+   AUTH — Firebase Email/Password only
+   Only YOUR account (set in Firebase Console) can log in
+══════════════════════════════════════════════ */
+window.doLogin = async function() {
+  const email  = document.getElementById('loginUser').value.trim();
+  const pass   = document.getElementById('loginPass').value.trim();
+  const errEl  = document.getElementById('loginErr');
+  const btn    = document.getElementById('loginBtn');
+
+  if (!email || !pass) { errEl.style.display='block'; errEl.textContent='❌ Enter email and password'; return; }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Signing in…'; }
+  errEl.style.display = 'none';
+
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    // onAuthStateChanged handles the rest
+  } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Sign In →'; }
+    errEl.style.display = 'block';
+    errEl.textContent = e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password'
+      ? '❌ Invalid email or password'
+      : e.code === 'auth/too-many-requests'
+      ? '⚠️ Too many attempts. Try again later.'
+      : '❌ ' + (e.message || 'Login failed');
+    document.getElementById('loginUser').classList.add('err');
+    document.getElementById('loginPass').classList.add('err');
+    setTimeout(() => {
+      document.getElementById('loginUser').classList.remove('err');
+      document.getElementById('loginPass').classList.remove('err');
+    }, 1000);
+  }
+};
+
+window.logout = async function() {
+  if (!confirm('Sign out of admin panel?')) return;
+  if (unsubOrders) unsubOrders(); // stop Firestore listener
+  await signOut(auth);
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+};
+
+// Listen for auth state — automatically shows/hides admin
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    // Update sidebar user display
+    const nameEl = document.querySelector('.sb-uname');
+    if (nameEl) nameEl.textContent = user.displayName || user.email.split('@')[0];
+    initApp();
+  } else {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    const btn2 = document.getElementById('loginBtn');
+    if (btn2) { btn2.disabled = false; btn2.textContent = 'Sign In →'; }
+  }
+});
+
+/* ══════════════════════════════════════════════
+   FIRESTORE DATA LAYER
+══════════════════════════════════════════════ */
+const ORDERS_COL = 'orders';
+const LOGS_COL   = 'activityLogs';
+
+async function saveOrder(orderData) {
+  const { id, ...data } = orderData;
+  data.updatedAt = serverTimestamp();
+  if (!data.createdAt) data.createdAt = serverTimestamp();
+  await setDoc(doc(db, ORDERS_COL, id), data, { merge: true });
+}
+
+async function deleteOrderFirestore(id) {
+  await deleteDoc(doc(db, ORDERS_COL, id));
+}
+
+async function addLogFirestore(icon, msg) {
+  await addDoc(collection(db, LOGS_COL), {
+    icon, msg,
+    time: new Date().toLocaleString(),
+    createdAt: serverTimestamp()
+  });
+}
+
+/* ════════════════════════════════════════════════════════════
+   REAL-TIME ORDERS LISTENER
+   onSnapshot fires instantly on any create/update/delete.
+   Normalises both data shapes:
+     Shape A (new): doc.id = orderId, plan = {name,price,id}
+     Shape B (old): doc.id = orderId, plan = string
+════════════════════════════════════════════════════════════ */
+function startOrdersListener() {
+  if (unsubOrders) unsubOrders(); // detach any old listener first
+
+  console.log('[Admin] 🔌 Starting Firestore real-time listener on "orders" collection…');
+
+  unsubOrders = onSnapshot(collection(db, ORDERS_COL), snapshot => {
+    const prev = orders.map(o => o.id);
+    console.log('[Admin] 📦 Firestore snapshot received |', snapshot.docs.length, 'documents');
+
+    orders = snapshot.docs.map(d => {
+      const raw  = d.data();
+      const data = { ...raw, id: d.id }; // ← always use Firestore doc ID as order ID
+
+      // Convert Firestore Timestamps to ms numbers
+      if (data.placedAt?.toMillis)  data.placedAt  = data.placedAt.toMillis();
+      if (data.updatedAt?.toMillis) data.updatedAt = data.updatedAt.toMillis();
+      if (data.createdAt?.toMillis) data.createdAt = data.createdAt.toMillis();
+
+      // Normalise plan — can be object {name,price,id} or plain string
+      if (typeof data.plan === 'string') {
+        data.plan = { name: data.plan, price: data.total || 0, id: 'unknown' };
+      } else if (!data.plan) {
+        data.plan = { name: 'Unknown Plan', price: data.total || 0, id: 'unknown' };
+      }
+
+      // Guarantee required display fields
+      data.name          = data.name          || '(no name)';
+      data.email         = data.email         || '(no email)';
+      data.status        = data.status        || 'Pending Payment';
+      data.paymentStatus = data.paymentStatus || 'unpaid';
+      data.total         = data.total         || data.plan?.price || 0;
+      data.placedAt      = data.placedAt      || data.createdAt   || Date.now();
+
+      return data;
+    }).sort((a, b) => (b.placedAt || 0) - (a.placedAt || 0)); // newest first
+
+    console.log('[Admin] ✅ Orders normalised:', orders.length, 'total');
+
+    // Detect brand-new orders (not on first load)
+    const newOnes = orders.filter(o => !prev.includes(o.id));
+    if (prev.length > 0 && newOnes.length > 0) {
+      newOnes.forEach(neo => {
+        const payBadge = neo.paymentStatus === 'paid' ? '💳 PAID' : '⏳ Pending';
+        console.log('[Admin] 🆕 New order detected:', neo.id, neo.name, payBadge);
+        showToast(`🆕 New order from ${neo.name}! ${payBadge}`);
+        showNewOrderPopup(neo);
+        addLog('🆕', `New order <strong>${neo.id}</strong> from ${neo.name} — ₹${neo.total} — ${payBadge}`);
+      });
+    }
+
+    // Re-render all live views
+    initDashboard();
+    renderNotifList();
+    const pendingCount = orders.filter(o => o.status === 'Pending Payment').length;
+    const ctEl = document.getElementById('sb-pending-ct');
+    if (ctEl) ctEl.textContent = pendingCount;
+
+    if (document.getElementById('page-orders')?.classList.contains('active'))        renderOrdersTable();
+    if (document.getElementById('page-messages')?.classList.contains('active'))      renderMessages();
+    if (document.getElementById('page-test-payments')?.classList.contains('active')) renderTestPaymentsPage();
+
+  }, err => {
+    console.error('[Admin] ❌ Firestore listener error:', err.code, err.message);
+    showToast('⚠️ Firestore connection issue — check console');
+  });
+}
+
+// Load activity log from Firestore
+async function loadActivityLog() {
+  try {
+    const q = collection(db, LOGS_COL); // no orderBy — avoids index
+    const snap = await getDocs(q);
+    activityLog = snap.docs.map(d => ({ id: d.id, ...d.data() })).slice(0, 200);
+  } catch(e) {
+    activityLog = [];
+  }
+}
+
+/* ══════════════════════════════════════════════
+   ACTIVITY LOG
+══════════════════════════════════════════════ */
+function addLog(icon, msg) {
+  const entry = { icon, msg, time: new Date().toLocaleString() };
+  activityLog.unshift(entry);
+  activityLog = activityLog.slice(0, 200);
+  addLogFirestore(icon, msg).catch(() => {}); // async, non-blocking
+  renderActivityFeed();
+  renderLogsPage();
+}
+
+/* ══════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════ */
+const PAGE_TITLES = {
+  dashboard:'Dashboard', analytics:'Analytics', orders:'Orders',
+  clients:'Clients', messages:'Messages', revenue:'Revenue',
+  'portfolio-builder':'Builder', settings:'Settings', logs:'Activity Log',
+  'test-payments':'Test Payments'
+};
+
+window.showPage = function(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('bcTitle').textContent = PAGE_TITLES[id] || id;
+  if (window.innerWidth < 900) closeSB();
+  const renders = {
+    orders: renderOrdersTable, clients: renderClientsTable,
+    revenue: renderRevenuePage, messages: renderMessages,
+    'portfolio-builder': renderBuilderPage, logs: renderLogsPage,
+    analytics: renderAnalytics, 'test-payments': renderTestPaymentsPage
+  };
+  if (renders[id]) renders[id]();
+};
+
+window.openSB  = function() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sbOverlay').classList.add('show'); };
+window.closeSB = function() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sbOverlay').classList.remove('show'); };
+
+/* ══════════════════════════════════════════════
+   THEME
+══════════════════════════════════════════════ */
+window.toggleTheme = function() {
+  darkMode = !darkMode;
+  const v = (d,l) => darkMode ? d : l;
+  document.documentElement.style.setProperty('--bg',      v('#080a0f','#f4f6fb'));
+  document.documentElement.style.setProperty('--bg2',     v('#0d0f16','#eceef6'));
+  document.documentElement.style.setProperty('--bg3',     v('#111420','#f8f9fd'));
+  document.documentElement.style.setProperty('--surface', v('#161924','#ffffff'));
+  document.documentElement.style.setProperty('--surface2',v('#1c2030','#f0f2fa'));
+  document.documentElement.style.setProperty('--border',  v('#1e2336','#dde0ee'));
+  document.documentElement.style.setProperty('--border2', v('#252c40','#c8cce0'));
+  document.documentElement.style.setProperty('--text',    v('#eef0f6','#0d0f14'));
+  document.documentElement.style.setProperty('--text2',   v('#8a92b2','#4a5070'));
+  document.documentElement.style.setProperty('--text3',   v('#454e6e','#8a90a8'));
+  document.getElementById('themeBtn').textContent = darkMode ? '🌙' : '☀️';
+};
+
+/* ══════════════════════════════════════════════
+   NOTIFICATIONS
+══════════════════════════════════════════════ */
+function renderNotifList() {
+  const el = document.getElementById('notifList');
+  if (!el) return;
+  const notifs = [];
+  const pending = orders.filter(o => o.status === 'Pending Payment');
+  const recent  = [...orders].sort((a,b) => (b.placedAt||0) - (a.placedAt||0)).slice(0,3);
+
+  recent.forEach(o => {
+    const icon = o.status==='Completed'?'✅':o.status==='In Progress'?'🔨':o.status==='Pending Payment'?'🆕':'📋';
+    notifs.push({
+      icon, unread: (Date.now() - (o.placedAt||0)) < 86400000,
+      title: o.status==='Pending Payment' ? 'New Order — Awaiting Payment' : `Order ${o.status}`,
+      text: `${o.name} — ${o.plan?.name?.replace('⚡ ','')||'Portfolio'} · ₹${o.total}`,
+      time: new Date(o.placedAt||Date.now()).toLocaleString('en-IN',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})
+    });
+  });
+
+  if (pending.length > 0) {
+    notifs.unshift({ icon:'⚠️', unread:true, title:`${pending.length} order${pending.length>1?'s':''} awaiting payment`, text:'Tap to view orders needing action', time:'Now' });
+  }
+
+  if (!notifs.length) {
+    el.innerHTML = '<div style="padding:1.25rem;text-align:center;font-size:.78rem;color:var(--text3)">No notifications yet.</div>';
+    return;
+  }
+
+  el.innerHTML = notifs.slice(0,5).map(n => `
+    <div class="nd-item" onclick="showPage('orders',document.querySelector('[data-page=orders]'))">
+      <span class="nd-ico">${n.icon}</span>
+      <div class="nd-txt"><b>${n.title}</b>${n.text}<div class="nd-t">${n.time}</div></div>
+      ${n.unread ? `<div class="nd-unread"></div>` : ''}
+    </div>
+  `).join('');
+}
+
+window.toggleNotif = function() {
+  const dd = document.getElementById('notifDD');
+  dd.classList.toggle('show');
+  renderNotifList();
+};
+window.clearNotifs = function() {
+  document.getElementById('notifDD').innerHTML = '<div class="nd-hdr"><span class="nd-hdr-title">Notifications</span></div><div style="padding:1.25rem;text-align:center;font-size:.78rem;color:var(--text3)">All caught up! ✓</div>';
+  document.getElementById('notifDot').style.display = 'none';
+};
+document.addEventListener('click', e => {
+  if (!e.target.closest('#notifToggleBtn') && !e.target.closest('#notifDD'))
+    document.getElementById('notifDD').classList.remove('show');
+});
+
+/* ══════════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════════ */
+function initDashboard() {
+  document.getElementById('dashDate').textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const totalRevenue  = orders.reduce((s,o) => s + (o.total||0), 0);
+  const pendingCount  = orders.filter(o => o.status === 'Pending Payment').length;
+  document.getElementById('ds-revenue').textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+  document.getElementById('ds-orders').textContent  = orders.length;
+  document.getElementById('ds-pending').textContent = pendingCount;
+  document.getElementById('ds-clients').textContent = new Set(orders.map(o => o.email)).size;
+
+  renderRecentOrders();
+  renderActivityFeed();
+  renderDonutChart();
+  renderRevenueChart();
+}
+
+function renderRecentOrders() {
+  const tbl = document.getElementById('recentOrdersTbl');
+  if (!tbl) return;
+  const recent = [...orders].sort((a,b) => (b.placedAt||0)-(a.placedAt||0)).slice(0,5);
+  tbl.innerHTML = `<thead><tr><th>ID</th><th>Client</th><th>Plan</th><th>Total</th><th>Status</th></tr></thead>
+    <tbody>${recent.map(o => `
+      <tr style="cursor:pointer" onclick="openOrderDetail('${o.id}')">
+        <td class="mono" style="font-size:.65rem;color:var(--blue)">${o.id}</td>
+        <td class="bold">${o.name}</td>
+        <td><span class="tag tag-green">${(o.plan?.name||'').replace('⚡ ','')}</span></td>
+        <td class="green bold">₹${o.total||0}</td>
+        <td>${statusBadge(o.status)}</td>
+      </tr>`).join('')}
+    </tbody>`;
+}
+
+function renderActivityFeed() {
+  const feed = document.getElementById('activityFeed');
+  if (!feed) return;
+  const real = orders.slice(0,8).map(o => {
+    const s = o.status || 'Pending';
+    return {
+      icon: s==='Completed'?'✅':s==='In Progress'?'🔨':s.includes('Preview')?'👁':'🆕',
+      color: s==='Completed'?'rgba(0,232,122,.15)':s==='In Progress'?'rgba(0,184,255,.15)':'rgba(255,211,42,.12)',
+      msg: `<strong>${o.id}</strong> — ${o.name} · ₹${o.total} · ${s}`,
+      time: new Date(o.placedAt||Date.now()).toLocaleString('en-IN',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})
+    };
+  });
+  if (!real.length) {
+    feed.innerHTML = '<div class="empty"><div class="empty-icon">⚡</div><div class="empty-text">No activity yet.</div></div>';
+    return;
+  }
+  feed.innerHTML = real.map(a => `
+    <div class="activity-item">
+      <div class="act-icon" style="background:${a.color}">${a.icon}</div>
+      <div class="act-text">${a.msg}</div>
+      <div class="act-time">${a.time}</div>
+    </div>`).join('');
+}
+
+function renderDonutChart() {
+  const canvas = document.getElementById('donutChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const plans = ['founding','starter','pro','premium'];
+  const colors = ['#ff4757','#00e87a','#00b8ff','#a855f7'];
+  const labels = ['⚡ Founding','Starter','Pro','Premium'];
+  const data   = plans.map(id => orders.filter(o => o.plan?.id===id).length);
+  const total  = data.reduce((s,v)=>s+v,0);
+  if (!total) { ctx.clearRect(0,0,canvas.width,canvas.height); return; }
+  let start = -Math.PI/2;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cx=55,cy=55,r=48,ir=28;
+  data.forEach((v,i) => {
+    if (!v) return;
+    const angle = (v/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,start,start+angle);
+    ctx.closePath(); ctx.fillStyle=colors[i]; ctx.fill();
+    start += angle;
+  });
+  ctx.beginPath(); ctx.arc(cx,cy,ir,0,Math.PI*2); ctx.fillStyle='var(--surface)'; ctx.fill();
+  const legend = document.getElementById('donutLegend');
+  if (legend) legend.innerHTML = labels.map((l,i) => `
+    <div class="dl-item"><div class="dl-dot" style="background:${colors[i]}"></div>${l}: ${data[i]}</div>`).join('');
+}
+
+function renderRevenueChart() {
+  const canvas = document.getElementById('revenueChart');
+  if (!canvas) return;
+  const days = parseInt(document.getElementById('chartRange')?.value||7);
+  const ctx   = canvas.getContext('2d');
+  const now   = Date.now();
+  const bins  = Array.from({length:days},(_,i)=>({label:'', rev:0}));
+  bins.forEach((_,i) => {
+    const d = new Date(now-(days-1-i)*86400000);
+    bins[i].label = d.toLocaleDateString('en-IN',{month:'short',day:'numeric'});
+  });
+  orders.forEach(o => {
+    const diff = Math.floor((now-(o.placedAt||0))/86400000);
+    if (diff >= 0 && diff < days) bins[days-1-diff].rev += (o.total||0);
+  });
+  const maxRev = Math.max(...bins.map(b=>b.rev),1);
+  const w=canvas.width=canvas.offsetWidth||400, h=canvas.height=120;
+  ctx.clearRect(0,0,w,h);
+  const bw=(w/days)*0.6, gap=(w/days)*0.4, pad=24;
+  bins.forEach((b,i) => {
+    const bh = Math.max((b.rev/maxRev)*(h-pad-4), b.rev>0?3:0);
+    const x  = i*(w/days)+gap/2;
+    const y  = h-pad-bh;
+    const grad = ctx.createLinearGradient(0,y,0,h-pad);
+    grad.addColorStop(0,'rgba(0,232,122,.9)'); grad.addColorStop(1,'rgba(0,232,122,.2)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(x,y,bw,bh,3) : ctx.rect(x,y,bw,bh);
+    ctx.fill();
+    ctx.fillStyle='rgba(138,146,178,.6)'; ctx.font='8px Fira Code'; ctx.textAlign='center';
+    if (i%Math.ceil(days/7)===0) ctx.fillText(b.label,x+bw/2,h-4);
+  });
+}
+window.renderRevenueChart = renderRevenueChart;
+
+/* ══════════════════════════════════════════════
+   ORDERS TABLE
+══════════════════════════════════════════════ */
+function renderOrdersTable() {
+  const statusF = document.getElementById('orderStatusFilter')?.value||'all';
+  const planF   = document.getElementById('orderPlanFilter')?.value||'all';
+  const searchF = document.getElementById('ordersSearchInput')?.value.toLowerCase()||'';
+  let filtered  = orders.filter(o => {
+    const matchStatus = statusF==='all'||o.status===statusF;
+    const matchPlan   = planF==='all'||o.plan?.id===planF;
+    const matchSearch = !searchF||o.name?.toLowerCase().includes(searchF)||o.id?.toLowerCase().includes(searchF)||o.email?.toLowerCase().includes(searchF);
+    return matchStatus && matchPlan && matchSearch;
+  });
+  document.getElementById('orders-count-label').textContent = `${filtered.length} orders found`;
+  document.getElementById('ordersFoundLabel').textContent   = filtered.length + ' results';
+  const tbody = document.getElementById('ordersBody');
+  if (!tbody) return;
+  tbody.innerHTML = filtered.map(o => {
+    const payBadge = o.paymentStatus==='paid'
+      ? `<span class="badge" style="background:rgba(0,232,122,.12);color:var(--green);border:1px solid rgba(0,232,122,.2)">💳 Paid</span>`
+      : o.paymentStatus==='failed'
+      ? `<span class="badge" style="background:rgba(255,71,87,.1);color:var(--red);border:1px solid rgba(255,71,87,.2)">❌ Failed</span>`
+      : `<span class="badge" style="background:rgba(255,211,42,.1);color:var(--yellow);border:1px solid rgba(255,211,42,.2)">⏳ Unpaid</span>`;
+    return `
+    <tr id="row-${o.id}">
+      <td class="row-check"><input type="checkbox" class="order-check" value="${o.id}" onchange="updateBulkBtn()"/></td>
+      <td><span class="mono" style="cursor:pointer;color:var(--blue)" onclick="openOrderDetail('${o.id}')">${o.id}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <div class="avatar-sm" style="background:${avatarColor(o.name||'?')};color:#000">${(o.name||'?')[0]}</div>
+          <div><div class="bold" style="font-size:.8rem">${o.name||'—'}</div><div style="font-size:.68rem;color:var(--text3)">${o.email||''}</div></div>
+        </div>
+      </td>
+      <td><span class="tag ${o.plan?.id==='premium'?'tag-purple':o.plan?.id==='pro'?'tag-blue':'tag-green'}">${(o.plan?.name||'').replace('⚡ ','')}</span></td>
+      <td class="green bold">₹${o.total||0}</td>
+      <td>${payBadge}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td class="mono" style="font-size:.65rem;color:var(--text3)">${new Date(o.placedAt||Date.now()).toLocaleDateString('en-IN')}</td>
+      <td>
+        <div style="display:flex;gap:.3rem">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="openOrderDetail('${o.id}')" title="View">👁</button>
+          <button class="btn btn-blue btn-sm btn-icon" onclick="openEditOrder('${o.id}')" title="Edit">✏️</button>
+          <button class="btn btn-green btn-sm btn-icon" onclick="openWhatsApp('${o.phone||''}')" title="WhatsApp">💬</button>
+          <button class="btn btn-red btn-sm btn-icon" onclick="deleteOrder('${o.id}')" title="Delete">🗑</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function statusBadge(status) {
+  const map = {'Pending Payment':'pending','In Progress':'active','Preview Shared':'revision','Completed':'complete','Revision Requested':'revision','Cancelled':'cancelled'};
+  return `<span class="badge ${map[status]||'pending'}">${status||'Pending'}</span>`;
+}
+function avatarColor(name) {
+  const colors = ['#00e87a','#00b8ff','#a855f7','#ffd32a','#ff8c00'];
+  let h=0; for(let c of (name||'?')) h=(h<<5)-h+c.charCodeAt(0)|0;
+  return colors[Math.abs(h)%colors.length];
+}
+window.updateBulkBtn = function() {
+  const checked = document.querySelectorAll('.order-check:checked').length;
+  const btn = document.getElementById('bulkDeleteBtn');
+  if (btn) btn.style.display = checked>0?'flex':'none';
+};
+window.toggleSelectAll = function(cb) {
+  document.querySelectorAll('.order-check').forEach(c=>c.checked=cb.checked);
+  updateBulkBtn();
+};
+window.bulkDelete = async function() {
+  const ids = [...document.querySelectorAll('.order-check:checked')].map(c=>c.value);
+  if (!ids.length || !confirm(`Delete ${ids.length} selected orders?`)) return;
+  await Promise.all(ids.map(id => deleteOrderFirestore(id)));
+  addLog('🗑', `Bulk deleted ${ids.length} orders`);
+  showToast('🗑 ' + ids.length + ' orders deleted');
+};
+
+/* ══════════════════════════════════════════════
+   ORDER DETAIL MODAL
+══════════════════════════════════════════════ */
+let currentDetailId = null;
+window.openOrderDetail = function(id) {
+  const o = orders.find(x => x.id===id);
+  if (!o) return;
+  currentDetailId = id;
+  document.getElementById('odm-title').textContent = '📋 '+o.id+' — '+o.name;
+  document.getElementById('odm-edit-btn').onclick = () => { closeModal('order-detail-modal'); openEditOrder(id); };
+  const pColor = o.progress>=100?'var(--green)':o.progress>=80?'var(--purple)':o.progress>=50?'var(--blue)':o.progress>=20?'var(--yellow)':'var(--red)';
+  document.getElementById('odm-body').innerHTML = `
+    <div class="detail-meta">
+      <div class="dm-item"><div class="dm-key">Order ID</div><div class="dm-val mono">${o.id}</div></div>
+      <div class="dm-item"><div class="dm-key">Status</div><div class="dm-val">${statusBadge(o.status)}</div></div>
+      <div class="dm-item"><div class="dm-key">Plan</div><div class="dm-val">${o.plan?.name||'—'}</div></div>
+      <div class="dm-item"><div class="dm-key">Total</div><div class="dm-val" style="color:var(--green);font-size:1rem">₹${o.total||0}</div></div>
+      <div class="dm-item"><div class="dm-key">Client</div><div class="dm-val">${o.name}</div></div>
+      <div class="dm-item"><div class="dm-key">Role</div><div class="dm-val">${o.role||'—'}</div></div>
+      <div class="dm-item"><div class="dm-key">Email</div><div class="dm-val" style="font-size:.75rem">${o.email}</div></div>
+      <div class="dm-item"><div class="dm-key">Phone</div><div class="dm-val">${o.phone||'—'}</div></div>
+      <div class="dm-item"><div class="dm-key">Payment</div><div class="dm-val">${o.payment||'—'}</div></div>
+      <div class="dm-item"><div class="dm-key">Payment Status</div><div class="dm-val">${o.paymentStatus==='paid'?'<span class="badge paid">Paid</span>':'<span class="badge unpaid">Unpaid</span>'}</div></div>
+      <div class="dm-item"><div class="dm-key">Placed</div><div class="dm-val" style="font-size:.75rem">${new Date(o.placedAt||Date.now()).toLocaleString()}</div></div>
+      <div class="dm-item"><div class="dm-key">Delivery URL</div><div class="dm-val" style="font-size:.72rem">${o.deliveryUrl?`<a href="${o.deliveryUrl}" target="_blank" style="color:var(--green)">${o.deliveryUrl}</a>`:'Not set'}</div></div>
+    </div>
+    <div style="margin-bottom:1rem">
+      <div style="font-family:var(--font-m);font-size:.6rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem">Build Progress</div>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <div class="prog-wrap" style="flex:1"><div class="prog-fill" style="width:${o.progress||0}%;background:${pColor}"></div></div>
+        <span style="font-family:var(--font-m);font-size:.72rem;color:${pColor};font-weight:700">${o.progress||0}%</span>
+      </div>
+    </div>
+    <div style="margin-bottom:1rem">
+      <div style="font-family:var(--font-m);font-size:.6rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem">Delivery Timeline</div>
+      <div class="tl">
+        ${(o.timeline||[]).map((t,i) => {
+          const curIdx = (o.timeline||[]).findIndex(x=>!x.done);
+          const cls = t.done?'done':i===curIdx?'cur':'next';
+          return `<div class="tl-row">
+            <div class="tl-dot ${cls}">${t.done?'✓':(i+1)}</div>
+            <div class="tl-content"><strong>${t.label}</strong><span>${t.done&&t.time?t.time:i===curIdx?'In progress…':'Pending'}</span></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    ${o.adminNotes?`<div style="padding:.75rem;background:var(--yellow-dim);border:1px solid rgba(255,211,42,.2);border-radius:var(--r);font-size:.78rem;color:var(--yellow);margin-bottom:.75rem">📝 Admin Note: ${o.adminNotes}</div>`:''}
+    ${o.skills?`<div class="dm-item" style="margin-top:.5rem"><div class="dm-key">Skills</div><div class="dm-val" style="font-size:.78rem;font-weight:400;color:var(--text2)">${o.skills}</div></div>`:''}
+  `;
+  openModal('order-detail-modal');
+};
+window.copyOrderId = function() {
+  if (currentDetailId) { navigator.clipboard.writeText(currentDetailId); showToast('📋 Order ID copied!'); }
+};
+
+/* ══════════════════════════════════════════════
+   EDIT ORDER — writes to Firestore
+══════════════════════════════════════════════ */
+window.openEditOrder = function(id) {
+  const o = orders.find(x => x.id===id);
+  if (!o) return;
+  document.getElementById('eo-id').value = id;
+  document.getElementById('eo-status').value = o.status;
+  document.getElementById('eo-progress').value = o.progress||0;
+  document.getElementById('eo-payment-status').value = o.paymentStatus||'unpaid';
+  document.getElementById('eo-url').value = o.deliveryUrl||'';
+  document.getElementById('eo-notes').value = o.adminNotes||'';
+  document.getElementById('eo-msg').value = '';
+  openModal('edit-order-modal');
+};
+
+window.saveOrderEdit = async function() {
+  const id = document.getElementById('eo-id').value;
+  const o  = orders.find(x => x.id===id);
+  if (!o) return;
+
+  const newStatus   = document.getElementById('eo-status').value;
+  const newProgress = parseInt(document.getElementById('eo-progress').value)||o.progress||0;
+  const newPayStat  = document.getElementById('eo-payment-status').value;
+  const msg         = document.getElementById('eo-msg').value.trim();
+
+  // Build update object
+  const update = {
+    status: newStatus,
+    progress: newProgress,
+    paymentStatus: newPayStat,
+    deliveryUrl: document.getElementById('eo-url').value,
+    adminNotes: document.getElementById('eo-notes').value,
+    updatedAt: serverTimestamp()
+  };
+
+  // Timeline auto-advance
+  const timeline = JSON.parse(JSON.stringify(o.timeline || []));
+  if (newStatus === 'In Progress' && timeline[1]) { timeline[1].done=true; timeline[1].time=new Date().toLocaleString(); }
+  if (newStatus === 'Preview Shared') { [1,2,3].forEach(i=>{ if(timeline[i]){timeline[i].done=true;timeline[i].time=new Date().toLocaleString();} }); }
+  if (newStatus === 'Completed') timeline.forEach(t=>{ t.done=true; if(!t.time) t.time=new Date().toLocaleString(); });
+  update.timeline = timeline;
+
+  // Append message if provided
+  if (msg) {
+    const msgs = [...(o.messages||[]), {from:'admin', text:msg, time:new Date().toLocaleString()}];
+    update.messages = msgs;
+  }
+
+  // Payment status update in timeline
+  if (newPayStat === 'paid' && timeline[1] && !timeline[1].done) {
+    timeline[1].done = true; timeline[1].time = new Date().toLocaleString();
+    update.timeline = timeline;
+  }
+
+  try {
+    await updateDoc(doc(db, ORDERS_COL, id), update);
+    closeModal('edit-order-modal');
+    addLog('✏️', `Updated order <strong>${id}</strong> → ${newStatus} (${newProgress}%)`);
+    showToast('✓ Order updated — Firestore synced!');
+    document.getElementById('sb-pending-ct').textContent = orders.filter(o=>o.status==='Pending Payment').length;
+  } catch(e) {
+    showToast('❌ Save failed: ' + e.message);
+  }
+};
+
+window.deleteOrder = async function(id) {
+  if (!confirm('Delete this order? This cannot be undone.')) return;
+  await deleteOrderFirestore(id);
+  addLog('🗑', `Deleted order <strong>${id}</strong>`);
+  showToast('🗑 Order deleted');
+};
+
+/* ══════════════════════════════════════════════
+   CREATE ORDER — saves to Firestore
+══════════════════════════════════════════════ */
+window.updateNewOrderTotal = function() {
+  const val = document.getElementById('no-plan').value;
+  const price = parseInt(val.split('|')[0])||0;
+  document.getElementById('no-total').value = price;
+};
+
+window.createOrder = async function() {
+  const name  = document.getElementById('no-name').value.trim();
+  const email = document.getElementById('no-email').value.trim();
+  if (!name||!email) { showToast('⚠️ Name and email required'); return; }
+  const planVal = document.getElementById('no-plan').value;
+  const [price, planName, planId] = planVal.split('|');
+  const orderId = `PF-2026-${1000+orders.length+1}`;
+  const newOrder = {
+    id: orderId, name, email,
+    phone: document.getElementById('no-phone').value,
+    role:  document.getElementById('no-role').value,
+    plan:  { id:planId, name:planName, price:parseInt(price) },
+    addons: [], total: parseInt(price),
+    status: document.getElementById('no-status').value,
+    progress: 10, paymentStatus: 'unpaid',
+    payment: document.getElementById('no-payment').value,
+    placedAt: Date.now(),
+    adminNotes: document.getElementById('no-notes').value,
+    deliveryUrl: '', source: 'admin',
+    timeline: [
+      {label:'Order Received',done:true,time:new Date().toLocaleString()},
+      {label:'Payment Confirmed',done:false,time:''},
+      {label:'Work In Progress',done:false,time:''},
+      {label:'Preview Shared',done:false,time:''},
+      {label:'Final Delivery',done:false,time:''},
+    ],
+    messages: [{from:'admin',text:'Order created by admin.',time:new Date().toLocaleString()}]
+  };
+  await saveOrder(newOrder);
+  closeModal('new-order-modal');
+  addLog('🆕', `Created new order <strong>${orderId}</strong> for ${name}`);
+  showToast('✓ Order created: ' + orderId);
+  ['no-name','no-email','no-phone','no-role','no-notes'].forEach(id => { document.getElementById(id).value=''; });
+};
+
+/* ══════════════════════════════════════════════
+   CLIENTS
+══════════════════════════════════════════════ */
+function renderClientsTable() {
+  const search   = document.getElementById('clientSearchInput')?.value.toLowerCase()||'';
+  const filtered = orders.filter(o => !search||o.name?.toLowerCase().includes(search)||o.email?.toLowerCase().includes(search));
+  const tbody    = document.getElementById('clientsBody');
+  if (!tbody) return;
+  tbody.innerHTML = filtered.map(o => `
+    <tr>
+      <td><div style="display:flex;align-items:center;gap:.5rem"><div class="avatar-sm" style="background:${avatarColor(o.name||'?')};color:#000">${(o.name||'?')[0]}</div><div class="bold">${o.name||'—'}</div></div></td>
+      <td>${o.email||'—'}</td>
+      <td class="mono" style="font-size:.7rem">${o.phone||'—'}</td>
+      <td style="font-size:.78rem;color:var(--text2)">${o.role||'—'}</td>
+      <td><span class="tag ${o.plan?.id==='premium'?'tag-purple':o.plan?.id==='pro'?'tag-blue':'tag-green'}">${(o.plan?.name||'').replace('⚡ ','')}</span></td>
+      <td class="green bold">₹${o.total||0}</td>
+      <td class="mono" style="font-size:.65rem;color:var(--text3)">${new Date(o.placedAt||Date.now()).toLocaleDateString('en-IN')}</td>
+      <td><div style="display:flex;gap:.3rem">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="openOrderDetail('${o.id}')" title="View">📋</button>
+        <button class="btn btn-green btn-sm btn-icon" onclick="openWhatsApp('${o.phone||''}')" title="WhatsApp">💬</button>
+        <button class="btn btn-blue btn-sm btn-icon" onclick="window.open('mailto:${o.email}')" title="Email">📧</button>
+      </div></td>
+    </tr>`).join('');
+}
+window.renderClientsTable = renderClientsTable;
+
+/* ══════════════════════════════════════════════
+   MESSAGES — reads/writes from Firestore order docs
+══════════════════════════════════════════════ */
+function renderMessages() {
+  const threadList = document.getElementById('threadList');
+  if (!threadList) return;
+  const withMsgs = [...orders].filter(o => o.messages && o.messages.length>0).sort((a,b)=>(b.placedAt||0)-(a.placedAt||0));
+  if (!withMsgs.length) {
+    threadList.innerHTML = '<div style="padding:2rem 1rem;text-align:center;font-size:.78rem;color:var(--text3)">No conversations yet.</div>';
+    return;
+  }
+  threadList.innerHTML = withMsgs.map(o => `
+    <div class="activity-item" style="padding:.75rem 1rem;cursor:pointer;border-bottom:1px solid var(--border)" onclick="openThread('${o.id}')">
+      <div class="avatar-sm" style="background:${avatarColor(o.name||'?')};color:#000;flex-shrink:0">${(o.name||'?')[0]}</div>
+      <div style="flex:1;overflow:hidden">
+        <div style="font-size:.8rem;font-weight:700;color:var(--text)">${o.name||'—'}</div>
+        <div style="font-size:.7rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${o.messages[o.messages.length-1]?.text||'No messages'}</div>
+      </div>
+      <div style="font-family:var(--font-m);font-size:.55rem;color:var(--text3);flex-shrink:0">${o.id}</div>
+    </div>`).join('');
+}
+window.renderMessages = renderMessages;
+
+window.openThread = function(orderId) {
+  const o = orders.find(x => x.id===orderId);
+  if (!o) return;
+  activeThread = orderId;
+  document.getElementById('threadHead').innerHTML = `
+    <div class="card-title">
+      <div class="avatar-sm" style="background:${avatarColor(o.name||'?')};color:#000">${(o.name||'?')[0]}</div>
+      ${o.name} <span class="badge active" style="margin-left:.35rem">${o.id}</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text3)">${o.email||''} · ${o.phone||''}</div>`;
+  renderThreadMessages(o);
+};
+
+function renderThreadMessages(o) {
+  const cont = document.getElementById('threadMessages');
+  if (!cont||!o.messages) return;
+  cont.innerHTML = o.messages.map(m => `
+    <div class="msg ${m.from==='admin'?'out':'in'}">
+      <div class="msg-bubble">${m.text}</div>
+      <div class="msg-time">${m.from==='admin'?'You':''+o.name} · ${m.time}</div>
+    </div>`).join('');
+  cont.scrollTop = cont.scrollHeight;
+}
+
+window.sendThreadMsg = async function() {
+  if (!activeThread) return;
+  const inp  = document.getElementById('threadInput');
+  const text = inp.value.trim();
+  if (!text) return;
+  const o = orders.find(x => x.id===activeThread);
+  if (!o) return;
+  const msgs = [...(o.messages||[]), {from:'admin', text, time:new Date().toLocaleString()}];
+  await updateDoc(doc(db, ORDERS_COL, activeThread), { messages: msgs, updatedAt: serverTimestamp() });
+  inp.value = '';
+  renderMessages();
+  addLog('💬', `Replied to <strong>${o.name}</strong> on ${o.id}`);
+  showToast('✓ Message sent — client will see it in real time');
+};
+
+/* ══════════════════════════════════════════════
+   REVENUE
+══════════════════════════════════════════════ */
+function renderRevenuePage() {
+  const totalRev  = orders.reduce((s,o)=>s+(o.total||0),0);
+  const paidRev   = orders.filter(o=>o.paymentStatus==='paid').reduce((s,o)=>s+(o.total||0),0);
+  const pendRev   = totalRev-paidRev;
+  const paidOrds  = orders.filter(o=>o.paymentStatus==='paid').length;
+  const avgOrder  = paidOrds ? Math.round(paidRev/paidOrds) : 0;
+  document.getElementById('rev-total').textContent     = '₹'+totalRev.toLocaleString('en-IN');
+  document.getElementById('rev-collected').textContent = '₹'+paidRev.toLocaleString('en-IN');
+  document.getElementById('rev-pending').textContent   = '₹'+pendRev.toLocaleString('en-IN');
+  document.getElementById('rev-orders').textContent    = paidOrds;
+  document.getElementById('rev-avg').textContent       = '₹'+avgOrder;
+  const plans = [
+    {name:'⚡ Founding',color:'var(--red)',   id:'founding'},
+    {name:'Starter',    color:'var(--green)', id:'starter'},
+    {name:'Pro',        color:'var(--blue)',  id:'pro'},
+    {name:'Premium',    color:'var(--purple)',id:'premium'},
+  ];
+  const maxRev = Math.max(...plans.map(p=>orders.filter(o=>o.plan?.id===p.id).reduce((s,o)=>s+(o.total||0),0)),1);
+  document.getElementById('planRevBars').innerHTML = plans.map(p => {
+    const tot = orders.filter(o=>o.plan?.id===p.id).reduce((s,o)=>s+(o.total||0),0);
+    return `<div style="margin-bottom:.75rem">
+      <div style="display:flex;justify-content:space-between;margin-bottom:.25rem">
+        <span style="font-size:.8rem;font-weight:600;color:var(--text)">${p.name}</span>
+        <span style="font-family:var(--font-m);font-size:.72rem;color:var(--text3)">₹${tot.toLocaleString('en-IN')}</span>
+      </div>
+      <div class="prog-wrap"><div class="prog-fill" style="width:${(tot/maxRev*100).toFixed(1)}%;background:${p.color}"></div></div>
+    </div>`;
+  }).join('');
+  const tbody = document.getElementById('ledgerBody');
+  if (tbody) tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td class="mono" style="font-size:.65rem;color:var(--blue)">${o.id}</td>
+      <td class="bold">${o.name||'—'}</td>
+      <td>${(o.plan?.name||'').replace('⚡ ','')}</td>
+      <td class="green bold">₹${o.total||0}</td>
+      <td>${o.payment||'—'}</td>
+      <td>${o.paymentStatus==='paid'?'<span class="badge paid">Paid</span>':'<span class="badge unpaid">Unpaid</span>'}</td>
+      <td class="mono" style="font-size:.65rem;color:var(--text3)">${new Date(o.placedAt||Date.now()).toLocaleDateString('en-IN')}</td>
+      <td><button class="btn btn-ghost btn-sm btn-icon" onclick="openOrderDetail('${o.id}')">👁</button></td>
+    </tr>`).join('');
+}
+window.renderRevenuePage = renderRevenuePage;
+
+/* ══════════════════════════════════════════════
+   ANALYTICS
+══════════════════════════════════════════════ */
+function renderAnalytics() {
+  const total    = orders.length;
+  const pending  = orders.filter(o=>o.status==='Pending Payment').length;
+  const complete = orders.filter(o=>o.status==='Completed').length;
+  const paidRevs = orders.filter(o=>o.paymentStatus==='paid').reduce((s,o)=>s+(o.total||0),0);
+  const paidCnt  = orders.filter(o=>o.paymentStatus==='paid').length;
+  const avg      = paidCnt ? Math.round(paidRevs/paidCnt) : 0;
+  document.getElementById('ana-total').textContent     = total;
+  document.getElementById('ana-pending').textContent   = pending;
+  document.getElementById('ana-completed').textContent = complete;
+  document.getElementById('ana-avg').textContent       = '₹'+avg;
+  const src = document.getElementById('orderSourcesTable');
+  if (src) {
+    const bySrc = {};
+    orders.forEach(o => { const s=o.source||'web'; bySrc[s]=(bySrc[s]||0)+1; });
+    src.innerHTML = Object.entries(bySrc).map(([s,c]) => `
+      <div style="display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.82rem">
+        <span style="color:var(--text)">${s}</span>
+        <span style="font-family:var(--font-m);font-size:.72rem;color:var(--green);font-weight:700">${c} orders</span>
+      </div>`).join('');
+  }
+}
+window.renderAnalytics = renderAnalytics;
+
+/* ══════════════════════════════════════════════
+   PORTFOLIO BUILDER
+══════════════════════════════════════════════ */
+function renderBuilderPage() {
+  const tbody = document.getElementById('builderBody');
+  if (!tbody) return;
+  const active = orders.filter(o => o.status!=='Completed'&&o.status!=='Cancelled');
+  tbody.innerHTML = active.map(o => {
+    const pct = o.progress||0;
+    return `<tr>
+      <td class="mono" style="font-size:.65rem;color:var(--blue)">${o.id}</td>
+      <td class="bold">${o.name}</td>
+      <td>${(o.plan?.name||'').replace('⚡ ','')}</td>
+      <td><div style="display:flex;align-items:center;gap:.5rem">
+        <div class="prog-wrap" style="flex:1"><div class="prog-fill" style="width:${pct}%"></div></div>
+        <span style="font-family:var(--font-m);font-size:.65rem;color:var(--green)">${pct}%</span>
+      </div></td>
+      <td class="mono" style="font-size:.65rem;color:var(--text3)">24h from order</td>
+      <td>${statusBadge(o.status)}</td>
+      <td><button class="btn btn-blue btn-sm btn-icon" onclick="openEditOrder('${o.id}')">✏️</button></td>
+    </tr>`;
+  }).join('');
+}
+window.renderBuilderPage = renderBuilderPage;
+
+/* ══════════════════════════════════════════════
+   LOGS
+══════════════════════════════════════════════ */
+function renderLogsPage() {
+  const wrap = document.getElementById('logsBody');
+  if (!wrap) return;
+  wrap.innerHTML = activityLog.slice(0,100).map(a => `
+    <div class="activity-item">
+      <div class="act-icon" style="background:rgba(0,232,122,.1)">${a.icon}</div>
+      <div class="act-text">${a.msg}</div>
+      <div class="act-time">${a.time}</div>
+    </div>`).join('') || '<div class="empty"><div class="empty-text">No log entries yet.</div></div>';
+}
+window.renderLogsPage = renderLogsPage;
+
+/* ══════════════════════════════════════════════
+   SETTINGS
+══════════════════════════════════════════════ */
+window.showSettingsSection = function(id, el) {
+  document.querySelectorAll('.settings-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sn-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('ss-'+id).classList.add('active');
+  el.classList.add('active');
+};
+window.saveSettings = function() { showToast('✓ Settings saved'); addLog('⚙️','Settings updated by admin'); };
+
+/* ══════════════════════════════════════════════
+   MODALS
+══════════════════════════════════════════════ */
+window.openModal  = function(id) { document.getElementById(id).classList.add('show'); };
+window.closeModal = function(id) { document.getElementById(id).classList.remove('show'); };
+window.closeModalOutside = function(e,id) { if(e.target.id===id) closeModal(id); };
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') document.querySelectorAll('.modal-overlay.show').forEach(m=>m.classList.remove('show'));
+});
+
+/* ══════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.style.transform='translateX(-50%) translateY(80px)', 2800);
+}
+window.showToast = showToast;
+
+window.openWhatsApp = function(phone) {
+  const clean = phone.replace(/[^0-9]/g,'');
+  window.open(`https://wa.me/${clean||'919999999999'}?text=Hi!+Regarding+your+PortfolioForge+order.`,'_blank');
+};
+
+window.globalSearchFn = function(q) {
+  q = q.toLowerCase().trim();
+  if (!q) return;
+  const found = orders.find(o=>o.name?.toLowerCase().includes(q)||o.id?.toLowerCase().includes(q)||o.email?.toLowerCase().includes(q));
+  if (found) { showPage('orders',document.querySelector('[data-page=orders]')); document.getElementById('ordersSearchInput').value=q; renderOrdersTable(); }
+};
+
+window.refreshOrders = function() { showToast('✓ Live sync active — Firestore updates automatically'); addLog('🔄','Admin manually refreshed'); };
+
+window.exportData  = function() { addLog('⬇','Exported dashboard data'); exportOrders(); };
+window.exportOrders = function() {
+  const headers = ['ID','Name','Email','Plan','Total','Status','Payment','Date'];
+  const rows    = orders.map(o=>[o.id,o.name,o.email,o.plan?.name,o.total,o.status,o.paymentStatus,new Date(o.placedAt||Date.now()).toLocaleDateString()]);
+  const csv     = [headers,...rows].map(r=>r.map(v=>`"${(v||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a       = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download = 'portfolioforge-orders.csv';
+  a.click();
+  showToast('⬇ CSV downloaded!');
+};
+window.exportRevenue = function() { showToast('⬇ Revenue report (see CSV export)'); };
+
+window.clearAllData = async function() {
+  if (!confirm('⚠️ PERMANENTLY delete ALL ' + orders.length + ' orders from Firestore?\n\nThis CANNOT be undone. Continue?')) return;
+  showToast('🗑 Deleting ' + orders.length + ' orders…');
+  try {
+    // Delete in batches of 20 to avoid timeout
+    const ids = orders.map(o => o.id);
+    for (let i = 0; i < ids.length; i += 20) {
+      await Promise.all(ids.slice(i, i+20).map(id => deleteOrderFirestore(id)));
+    }
+    addLog('🗑', 'All ' + ids.length + ' orders deleted from Firestore');
+    showToast('✓ All ' + ids.length + ' orders deleted');
+    // Clear localStorage too so nothing re-migrates
+    localStorage.removeItem('pf_admin_orders');
+    localStorage.removeItem('pf_order');
+  } catch(e) {
+    showToast('❌ Delete failed: ' + e.message);
+  }
+};
+
+/* ══════════════════════════════════════════════
+   LIVE NEW ORDER POPUP
+══════════════════════════════════════════════ */
+let popupOrderId = null;
+let popupTimeout = null;
+
+function showNewOrderPopup(order) {
+  popupOrderId = order.id;
+  const payLabel = order.paymentStatus==='paid' ? '💳 PAID' : '⏳ Pending payment';
+  document.getElementById('popName').textContent   = order.name + ' — ' + order.plan?.name;
+  document.getElementById('popDetail').textContent = '₹'+order.total+' · '+payLabel+' · Just now';
+  const popup = document.getElementById('newOrderPopup');
+  popup.classList.add('show');
+  clearTimeout(popupTimeout);
+  popupTimeout = setTimeout(() => popup.classList.remove('show'), 8000);
+}
+
+window.dismissPopup = function() {
+  document.getElementById('newOrderPopup').classList.remove('show');
+  clearTimeout(popupTimeout);
+};
+window.popViewOrder = function() {
+  dismissPopup();
+  if (!popupOrderId) return;
+  showPage('orders', document.querySelector('[data-page=orders]'));
+  setTimeout(() => openOrderDetail(popupOrderId), 200);
+};
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+
+async function initApp() {
+  console.log('[Admin] 🚀 initApp() starting…');
+  await loadActivityLog();
+  console.log('[Admin] 📜 Activity log loaded:', activityLog.length, 'entries');
+  startOrdersListener(); // Firestore real-time — fires immediately with current docs
+  initDashboard();
+  renderNotifList();
+  setTimeout(() => { if (window.renderTestPaymentsPage) renderTestPaymentsPage(); }, 1500);
+  addLog('🔑','Admin signed in via Firebase Auth');
+
+  const dateEl = document.getElementById('dashDate');
+  if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  console.log('[Admin] ✅ initApp() complete — Firestore listener active');
+}
+
+
+
+/* ══════════════════════════════════════════════
+   TEST PAYMENTS PAGE
+══════════════════════════════════════════════ */
+window.renderTestPaymentsPage = function() {
+  // Show all orders from demo/test payments
+  const testOrders = orders.filter(o =>
+    o.payment === 'demo' ||
+    o.source === 'demo' ||
+    (o.id || '').startsWith('PF-') // include all for testing
+  );
+
+  // Stats
+  const successes = testOrders.filter(o => o.paymentStatus === 'paid').length;
+  const failures  = testOrders.filter(o => o.paymentStatus === 'failed').length;
+  const pending   = testOrders.filter(o => !o.paymentStatus || o.paymentStatus === 'unpaid').length;
+
+  const sEl = document.getElementById('tp-success-ct');
+  const fEl = document.getElementById('tp-fail-ct');
+  const pEl = document.getElementById('tp-pending-ct');
+  if (sEl) sEl.textContent = successes;
+  if (fEl) fEl.textContent = failures;
+  if (pEl) pEl.textContent = pending;
+
+  const tbody = document.getElementById('testPayBody');
+  if (!tbody) return;
+
+  if (!testOrders.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:2.5rem;color:var(--text3);font-size:.8rem">No orders yet. Open the order form, fill it in, select "Demo Test Payment" and submit.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = [...testOrders].sort((a,b)=>(b.placedAt||0)-(a.placedAt||0)).map(o => {
+    const payBadge = o.paymentStatus === 'paid'
+      ? `<span class="badge" style="background:rgba(0,232,122,.12);color:var(--green);border:1px solid rgba(0,232,122,.2)">✅ Paid (Demo)</span>`
+      : o.paymentStatus === 'failed'
+      ? `<span class="badge" style="background:rgba(255,71,87,.1);color:var(--red);border:1px solid rgba(255,71,87,.2)">❌ Failed (Demo)</span>`
+      : `<span class="badge" style="background:rgba(255,211,42,.1);color:var(--yellow);border:1px solid rgba(255,211,42,.2)">⏳ Pending</span>`;
+    const srcBadge = o.payment === 'demo'
+      ? `<span style="font-family:var(--font-m);font-size:.58rem;background:rgba(245,158,11,.12);color:#f59e0b;padding:.12rem .45rem;border-radius:100px;border:1px solid rgba(245,158,11,.2)">🧪 DEMO</span>`
+      : `<span style="font-family:var(--font-m);font-size:.58rem;background:var(--blue-dim);color:var(--blue);padding:.12rem .45rem;border-radius:100px;border:1px solid rgba(0,184,255,.2)">${o.payment || 'web'}</span>`;
+    return `<tr>
+      <td><span class="mono" style="cursor:pointer;color:var(--blue);font-size:.68rem" onclick="openOrderDetail('${o.id}')">${o.id}</span></td>
+      <td><div style="font-size:.8rem;font-weight:700;color:var(--text)">${o.name||'—'}</div><div style="font-size:.65rem;color:var(--text3)">${o.email||''}</div></td>
+      <td><span class="tag tag-green" style="font-size:.65rem">${(o.plan?.name||'').replace('⚡ ','')}</span></td>
+      <td style="color:var(--green);font-weight:700">₹${o.total||0}</td>
+      <td>${srcBadge}</td>
+      <td>${payBadge}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td style="font-family:var(--font-m);font-size:.62rem;color:var(--text3)">${new Date(o.placedAt||Date.now()).toLocaleString('en-IN',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</td>
+      <td><div style="display:flex;gap:.3rem">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="openOrderDetail('${o.id}')" title="View">👁</button>
+        <button class="btn btn-red btn-sm btn-icon" onclick="deleteOrder('${o.id}')" title="Delete">🗑</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+};
+
+window.clearTestOrders = async function() {
+  const testOrders = orders.filter(o => o.payment === 'demo');
+  if (!testOrders.length) { showToast('No demo orders to clear'); return; }
+  if (!confirm(`Delete ${testOrders.length} demo/test order(s)? This cannot be undone.`)) return;
+  showToast('🗑 Deleting test orders…');
+  try {
+    await Promise.all(testOrders.map(o => deleteOrderFirestore(o.id)));
+    addLog('🧪', `Cleared ${testOrders.length} demo/test orders`);
+    showToast(`✓ ${testOrders.length} test orders deleted`);
+    renderTestPaymentsPage();
+  } catch(e) {
+    showToast('❌ Delete failed: ' + e.message);
+  }
+};
+
+window.checkFirestoreConnection = async function() {
+  const dot  = document.getElementById('fsStatusDot');
+  const text = document.getElementById('fsStatusText');
+  const sub  = document.getElementById('fsStatusSub');
+  if (!dot || !text) return;
+
+  dot.style.background  = '#ffd32a';
+  text.textContent      = 'Checking connection…';
+  sub.textContent       = 'Writing a test ping to Firestore…';
+
+  try {
+    // Try a lightweight Firestore read (get order count)
+    const snap = await getDocs(collection(db, ORDERS_COL));
+    dot.style.background  = 'var(--green)';
+    dot.style.boxShadow   = '0 0 8px var(--green)';
+    text.textContent      = `✅ Firestore connected — ${snap.size} order(s) in database`;
+    sub.textContent       = 'Orders from the submit form will appear in your admin panel in real time.';
+    addLog('🔌', `Firestore connection verified — ${snap.size} orders found`);
+  } catch(e) {
+    dot.style.background  = 'var(--red)';
+    text.textContent      = '❌ Firestore connection failed';
+    sub.textContent       = 'Error: ' + e.message + ' — Check your Firebase config in the Firestore script block.';
+    addLog('⚠️', 'Firestore connection check failed: ' + e.message);
+  }
+};
+
+/* ══════════════════════════════════════════════
+   CLEAR LOGS
+══════════════════════════════════════════════ */
+window.clearLogs = async function() {
+  if (!confirm('Clear all activity logs from Firestore?')) return;
+  activityLog = [];
+  try {
+    const snap = await getDocs(collection(db, LOGS_COL));
+    await Promise.all(snap.docs.map(d => deleteDoc(doc(db, LOGS_COL, d.id))));
+  } catch(e) { console.warn('Log clear error:', e); }
+  renderLogsPage();
+  showToast('✓ Activity logs cleared');
+};
+
+/* ══════════════════════════════════════════════
+   CHANGE PASSWORD (Firebase Auth)
+══════════════════════════════════════════════ */
+window.changePassword = async function() {
+  const { updatePassword, EmailAuthProvider, reauthenticateWithCredential } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+  const currentPass = document.querySelector('#ss-security input[type="password"]:first-of-type')?.value || '';
+  const newPass     = document.getElementById('newPass')?.value || '';
+  const confirmPass = document.querySelectorAll('#ss-security input[type="password"]')[2]?.value || '';
+
+  if (!newPass || newPass.length < 8) { showToast('⚠️ Password must be at least 8 characters'); return; }
+  if (newPass !== confirmPass)         { showToast('⚠️ Passwords do not match'); return; }
+
+  const user = auth.currentUser;
+  if (!user) { showToast('❌ Not logged in'); return; }
+
+  try {
+    // Re-authenticate first
+    if (currentPass) {
+      const cred = EmailAuthProvider.credential(user.email, currentPass);
+      await reauthenticateWithCredential(user, cred);
+    }
+    await updatePassword(user, newPass);
+    addLog('🔒', 'Admin password updated');
+    showToast('✓ Password updated successfully!');
+  } catch(e) {
+    showToast('❌ ' + (e.code === 'auth/wrong-password' ? 'Current password is wrong' : e.message));
+  }
+};
+
+</script>
+
+</body>
+</html>
