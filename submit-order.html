@@ -1107,7 +1107,7 @@ nav {
         <!-- PLANS -->
         <div class="sec-title">Choose Your Plan</div>
         <div class="plan-grid">
-          <label class="plan-card plan-card-v selected" id="plan-starter" onclick="selectPlan(this,'Starter',1,'starter')">
+          <label class="plan-card plan-card-v selected" id="plan-starter" onclick="selectPlan(this,'Starter',49,'starter')">
             <input type="radio" name="plan" value="starter" checked/>
             <div class="plan-radio"></div>
             <div class="plan-body">
@@ -1830,7 +1830,7 @@ function selectPayment(el, val) { selectAltPayment(el, val); }
 /* ════════════════════════════════════════════════════════
    COUPON SYSTEM
    Coupon: NEW5%OFF → only for ₹239 Pro plan
-   Discount: ₹239 → ₹209
+   Discount: ₹239 → ₹109
 ════════════════════════════════════════════════════════ */
 var COUPONS = {
   'NEW5%OFF': { planId: 'pro', discount: 30, finalPrice: 109, label: 'FORGE21OFF' }
